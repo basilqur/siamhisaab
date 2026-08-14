@@ -246,6 +246,8 @@ textarea.edit{resize:vertical;min-height:56px;line-height:1.42}
 .prev tr.bad td{background:var(--neg-soft);color:var(--neg)}
 .hint{font-size:12px;color:var(--ink-3);line-height:1.6}
 .kbd{display:inline-block;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;font-size:11px;font-family:ui-monospace,monospace;background:var(--panel-2);color:var(--ink-2)}
+.helpgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px}
+.helprow{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px solid var(--line-2);font-size:12.5px;color:var(--ink-2)}
 .acctrow{display:flex;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line-2)}
 .acctrow input{height:30px;border:1px solid var(--line);border-radius:7px;background:var(--panel-2);padding:0 8px;outline:none;font-size:12.5px}
 .acctrow input.nm{flex:1}
@@ -289,11 +291,12 @@ textarea.edit{resize:vertical;min-height:56px;line-height:1.42}
     <div class="spacer"></div>
     <div class="people" id="people"></div>
     <div class="sync" id="sync" title="Sync status"><i></i><span>Live</span></div>
-    <button class="tbtn" id="btn-history">History</button>
     <button class="tbtn" id="btn-import">⊕ Import</button>
+    <button class="tbtn" id="btn-history">History</button>
     <button class="tbtn" id="btn-export">↧ Export</button>
     <button class="tbtn" id="btn-accounts">⚙ Accounts</button>
     <button class="tbtn" id="btn-theme">Dark</button>
+    <button class="tbtn" id="btn-help">Help</button>
     <button class="tbtn ghost" id="btn-out">Sign out</button>
   </div>
 
@@ -1198,6 +1201,24 @@ function addAccount(){
   S.activeId=a.id; rebuild(); renderAll();
 }
 
+/* ---- help ---- */
+function openHelp(){
+  function r(k,v){ return '<div class="helprow"><span>'+v+'</span><span class="kbd">'+k+'</span></div>'; }
+  openModal('<header><div><h3>How this works</h3><p>Same habit as your sheet — newest on top, balance at the top — shared by all four of you.</p></div><button class="tbtn" data-close>✕</button></header>'+
+  '<div class="body"><div class="hint" style="margin-bottom:14px">'+
+    '<b>Everyone sees the same ledger.</b> Changes appear on the others’ screens within a few seconds. The faces at the top right show who is online right now.<br>'+
+    '<b>Adding.</b> Fill the blue row and press Enter. OUT makes it negative, IN positive.<br>'+
+    '<b>Editing.</b> Click any cell, type, press Enter. Escape cancels.<br>'+
+    '<b>Right-click a row</b> for colour tags, this entry’s history, moving it to another account, duplicate, flip sign, delete.<br>'+
+    '<b>Nothing is ever really lost.</b> Every change is written to the AUDIT tab of your Google Sheet with who, when, and the old and new value. Deleted entries can be restored from <b>History</b>.<br>'+
+    '<b>If the internet drops</b>, keep working — your changes queue on your device and go up by themselves when you are back online.'+
+  '</div><div class="helpgrid">'+
+    r("/","Jump to search")+r("N","New entry (focus the blue row)")+
+    r("Enter","Save the cell you are editing")+r("Esc","Cancel editing / close")+
+    r("Ctrl / ⌘ + P","Print or save as PDF")+r("Right-click","Row actions")+
+  '</div></div><footer><button class="tbtn primary" data-close>Got it</button></footer>');
+}
+
 /* =============================================================== ADD ===== */
 var sign=-1;
 function addEntry(){
@@ -1262,6 +1283,7 @@ function bind(){
   $("#btn-import").onclick=openImport;
   $("#btn-export").onclick=openExport;
   $("#btn-accounts").onclick=openAccounts;
+  $("#btn-help").onclick=openHelp;
   $("#btn-history").onclick=function(){ openHistory(null); };
   $("#feed-all").onclick=function(){ openHistory(null); };
   $("#btn-theme").onclick=function(){ S.theme=S.theme==="dark"?"light":"dark"; cacheAll(); renderAll(); };
