@@ -1,0 +1,3741 @@
+{
+"source": "SARIM CARS.xlsx",
+"vehicles": 62,
+"charges": 23,
+"costLines": 290,
+"shipments": 24,
+"cars": [
+{
+"kind": "unit",
+"chassis": "MR0KA3FS300213204",
+"make": "TOYOTA",
+"model": "FORTUNER",
+"year": "2021",
+"body": "SUV",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Rehan Motors",
+"date": "2024-12-24",
+"aed": 86245.0,
+"status": "PAID",
+"batch": "S01 \u00b7 Feb 2025",
+"destination": "",
+"driveUrl": "https://drive.google.com/drive/folders/1GyfcGWqROdVXLQzrHB5fa-UTFEZSlU8J?usp=sharing",
+"detail": "TOYOTA FORTUNER 2021 SUV Black",
+"notes": "",
+"pos": 1
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29G501633777",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2011",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Grey",
+"supplier": "KHALID",
+"date": "2025-02-17",
+"aed": 27500.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "",
+"detail": "TOYOTA HILUX VIGO 2011 Double Cab Grey",
+"notes": "",
+"pos": 2
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29G101726876",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2012",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Blue",
+"supplier": "KHALID",
+"date": "2025-02-19",
+"aed": 32500.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "",
+"detail": "TOYOTA HILUX VIGO 2012 Double Cab Blue",
+"notes": "",
+"pos": 3
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29G902531165",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2014",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Hadi",
+"date": "2025-02-19",
+"aed": 33000.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "",
+"detail": "TOYOTA HILUX VIGO 2014 Double Cab White",
+"notes": "",
+"pos": 4
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29GX01679234",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2013",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Grey",
+"supplier": "Ayoun",
+"date": "2025-02-19",
+"aed": 38535.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "https://drive.google.com/drive/folders/1wjZ3SuvpCkkh4g9xBwJTfNZJyi6x45ty?usp=sharing",
+"detail": "TOYOTA HILUX VIGO 2013 Double Cab Grey",
+"notes": "",
+"pos": 5
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29G601732186",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2013",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Grey",
+"supplier": "Ayoun",
+"date": "2025-02-19",
+"aed": 38535.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "https://drive.google.com/drive/folders/15O36mdy-9HY9lvbYrKwA56XvF6iF9YFD?usp=sharing",
+"detail": "TOYOTA HILUX VIGO 2013 Double Cab Grey",
+"notes": "",
+"pos": 6
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29GX01636254",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2011",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-02-19",
+"aed": 38535.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "https://drive.google.com/drive/folders/1WNzxGuo80ewgv28JLAmCqHhtuw-XGEoH?usp=sharing",
+"detail": "TOYOTA HILUX VIGO 2011 Double Cab White",
+"notes": "",
+"pos": 7
+},
+{
+"kind": "unit",
+"chassis": "MR0FZ29G002574552",
+"make": "TOYOTA",
+"model": "HILUX VIGO",
+"year": "2015",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Silver",
+"supplier": "KHALID",
+"date": "2025-05-10",
+"aed": 33000.0,
+"status": "PAID",
+"batch": "S03 \u00b7 DAR ES SALAAM \u00b7 Jul 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "https://drive.google.com/drive/folders/1Fto2idAtwE2WDDfzuKlF-v9S3iu_6yF_?usp=sharing",
+"detail": "TOYOTA HILUX VIGO 2015 Double Cab Silver",
+"notes": "",
+"pos": 8
+},
+{
+"kind": "unit",
+"chassis": "MR0EX3CB001100093",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2015",
+"body": "Single Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-06-30",
+"aed": 29000.0,
+"status": "PAID",
+"batch": "S03 \u00b7 DAR ES SALAAM \u00b7 Jul 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "",
+"detail": "TOYOTA HILUX REVO 2015 Single Cab White",
+"notes": "",
+"pos": 9
+},
+{
+"kind": "unit",
+"chassis": "MR0EX3CB001103706",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2016",
+"body": "Single Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-06-30",
+"aed": 29000.0,
+"status": "PAID",
+"batch": "S03 \u00b7 DAR ES SALAAM \u00b7 Jul 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "",
+"detail": "TOYOTA HILUX REVO 2016 Single Cab White",
+"notes": "",
+"pos": 10
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3CC301175917",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2022",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-05-10",
+"aed": 50000.0,
+"status": "PAID",
+"batch": "S04 \u00b7 GUYANA \u00b7 Jul 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1hjzVyMlIRT5lMxIoFY3bX10aXQGcettY?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2022 Smart Cab White",
+"notes": "",
+"pos": 11
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3CC501172310",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2021",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-07-09",
+"aed": 65000.0,
+"status": "PAID",
+"batch": "S04 \u00b7 GUYANA \u00b7 Jul 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1Y2m8uVMTYTphRXNtHbopsDfIzo2t0eLC?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2021 Smart Cab White",
+"notes": "",
+"pos": 12
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3CB701131586",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2022",
+"body": "Single Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-07-08",
+"aed": 46000.0,
+"status": "PAID",
+"batch": "S05 \u00b7 DURBAN \u00b7 Jul 2025",
+"destination": "DURBAN",
+"driveUrl": "https://drive.google.com/drive/folders/1McFHPXYqLfNXL0-GOIK9mEizT7cYEfv-?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2022 Single Cab White",
+"notes": "",
+"pos": 13
+},
+{
+"kind": "unit",
+"chassis": "MR0DA3FS400004031",
+"make": "TOYOTA",
+"model": "FORTUNER",
+"year": "2020",
+"body": "SUV",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-08-14",
+"aed": 76000.0,
+"status": "PAID",
+"batch": "S06 \u00b7 DAR ES SALAAM \u00b7 Aug 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "https://drive.google.com/drive/folders/1rewagwKVF8NsV11Uq-jghknmgjiR7R1u?usp=sharing",
+"detail": "TOYOTA FORTUNER 2020 SUV White",
+"notes": "",
+"pos": 14
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3FS300217821",
+"make": "TOYOTA",
+"model": "FORTUNER",
+"year": "2023",
+"body": "SUV",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-08-14",
+"aed": 91000.0,
+"status": "PAID",
+"batch": "S06 \u00b7 DAR ES SALAAM \u00b7 Aug 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "https://drive.google.com/drive/folders/1Yf1sqiJ65YK0IfUc_CXs3IMEoy80LmBO?usp=sharing",
+"detail": "TOYOTA FORTUNER 2023 SUV White",
+"notes": "",
+"pos": 15
+},
+{
+"kind": "unit",
+"chassis": "MR0BA3CD100084174",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2023",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Siam",
+"date": "2025-08-03",
+"aed": 67000.0,
+"status": "PAID",
+"batch": "S07 \u00b7 GUYANA \u00b7 Sep 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1_PU4afCQ38pGvFbbXEQDbYvjKtmoHiiG?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2023 Smart Cab White",
+"notes": "",
+"pos": 16
+},
+{
+"kind": "unit",
+"chassis": "MR0HA3CC700321882",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2019",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2025-06-20",
+"aed": 51000.0,
+"status": "PAID",
+"batch": "S07 \u00b7 GUYANA \u00b7 Sep 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1h7dCG9EZdaX-IojekcxKdU8X6V4_xygT?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2019 Smart Cab White",
+"notes": "",
+"pos": 17
+},
+{
+"kind": "unit",
+"chassis": "MR0BA3CD506612568",
+"make": "TOYOTA",
+"model": "HILUX REVO GR",
+"year": "2024",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Ayoun",
+"date": "2025-07-29",
+"aed": 117807.0,
+"status": "PAID",
+"batch": "S07 \u00b7 GUYANA \u00b7 Sep 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/13k4CBff3dwgx9Ap9WEcKql3sxyznIzbw?usp=sharing",
+"detail": "TOYOTA HILUX REVO GR 2024 Double Cab Black",
+"notes": "",
+"pos": 18
+},
+{
+"kind": "unit",
+"chassis": "JTFHB8CP5060580339",
+"make": "TOYOTA",
+"model": "HIACE",
+"year": "2024",
+"body": "Van",
+"transmission": "Automatic",
+"colour": "Green",
+"supplier": "Perfect Motors",
+"date": "2025-10-16",
+"aed": 158790.0,
+"status": "PAID",
+"batch": "S08 \u00b7 GUYANA \u00b7 Oct 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "TOYOTA HIACE 2024 Van Green",
+"notes": "",
+"pos": 19
+},
+{
+"kind": "unit",
+"chassis": "MR0BA3CD800188273",
+"make": "TOYOTA",
+"model": "HILUX REVO GR",
+"year": "2023",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Silver",
+"supplier": "Ayoun",
+"date": "2025-10-28",
+"aed": 115605.0,
+"status": "PAID",
+"batch": "S09 \u00b7 DURBAN \u00b7 Nov 2025",
+"destination": "DURBAN",
+"driveUrl": "https://drive.google.com/drive/folders/1J-BPwxnQXmS3YZIeiXuvyuB-d4aUREVw?usp=sharing",
+"detail": "TOYOTA HILUX REVO GR 2023 Double Cab Silver",
+"notes": "",
+"pos": 20
+},
+{
+"kind": "unit",
+"chassis": "MNAUM2F50GW653664",
+"make": "FORD",
+"model": "RANGER XLT",
+"year": "2017",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Jaftim",
+"date": "2025-10-30",
+"aed": 58560.0,
+"status": "PAID",
+"batch": "S10 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1_tJUDN9IcezemBJdIYZgjHnYqrTb8LOU?usp=sharing",
+"detail": "FORD RANGER XLT 2017 Smart Cab Black",
+"notes": "",
+"pos": 21
+},
+{
+"kind": "unit",
+"chassis": "JTNKY3BX301020066",
+"make": "TOYOTA",
+"model": "CHR",
+"year": "2019",
+"body": "SUV",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Siam",
+"date": "2025-11-01",
+"aed": 40500.0,
+"status": "PAID",
+"batch": "S10 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1298cC6w328Ldn3E3KRFSYN2BHGnOl65a?usp=sharing",
+"detail": "TOYOTA CHR 2019 SUV Black",
+"notes": "",
+"pos": 22
+},
+{
+"kind": "unit",
+"chassis": "JTEBV71J807015634",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2019",
+"body": "Double Cab",
+"transmission": "Manual",
+"colour": "Grey",
+"supplier": "Jaftim",
+"date": "2025-11-06",
+"aed": 102760.0,
+"status": "PAID",
+"batch": "S10 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1-F9t8XS1tMXqBTB7uUUiXptpsPM3zWZq?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2019 Double Cab Grey",
+"notes": "",
+"pos": 23
+},
+{
+"kind": "unit",
+"chassis": "JTELV73J809012402",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2014",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Horizon",
+"date": "2025-11-01",
+"aed": 64225.0,
+"status": "PAID",
+"batch": "S11 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1Bm1_JHSwVRgDWUipixdKtK7ojHxIgl3e?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2014 Single Cab White",
+"notes": "",
+"pos": 24
+},
+{
+"kind": "unit",
+"chassis": "JTELV73J709013380",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2016",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Horizon",
+"date": "2025-11-01",
+"aed": 64225.0,
+"status": "PAID",
+"batch": "S11 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1gdeObrBor63HmsjqvTuwq7MpsWRfpa7U?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2016 Single Cab White",
+"notes": "",
+"pos": 25
+},
+{
+"kind": "unit",
+"chassis": "JTELV73J709009829",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2012",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "Dark Red",
+"supplier": "Horizon",
+"date": "2025-11-01",
+"aed": 64225.0,
+"status": "PAID",
+"batch": "S11 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1SImNtX9voKhaslDmMPo8SfYsjDPMBFVt?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2012 Single Cab Dark Red",
+"notes": "",
+"pos": 26
+},
+{
+"kind": "unit",
+"chassis": "MR0EX3CBX01129004",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2019",
+"body": "Single Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-12-09",
+"aed": 30000.0,
+"status": "PAID",
+"batch": "S12 \u00b7 DURBAN \u00b7 Dec 2025",
+"destination": "DURBAN",
+"driveUrl": "https://drive.google.com/drive/folders/1hI2YuXJ346MrJVi4Ck8STIITIGGErdei?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2019 Single Cab White",
+"notes": "",
+"pos": 27
+},
+{
+"kind": "unit",
+"chassis": "MR0EB3CB000445757",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2018",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Ayoun",
+"date": "2025-12-09",
+"aed": 30000.0,
+"status": "PAID",
+"batch": "S12 \u00b7 DURBAN \u00b7 Dec 2025",
+"destination": "DURBAN",
+"driveUrl": "https://drive.google.com/drive/folders/1Q59QrNajYkasJ9r60EPFRtIoiizIXf6q?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2018 Single Cab White",
+"notes": "",
+"pos": 28
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J607003616",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2015",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "Beige",
+"supplier": "Irfan",
+"date": "2025-12-06",
+"aed": 73400.0,
+"status": "PAID",
+"batch": "S13 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1FkuzL92BUGeZccCizFO-uZzyRv-cSaIm?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2015 Single Cab Beige",
+"notes": "",
+"pos": 29
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J007402571",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-12-09",
+"aed": 65000.0,
+"status": "PAID",
+"batch": "S13 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser Pickup 2018 Single Cabin White",
+"notes": "",
+"pos": 30
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J107010053",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2016",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Shahid",
+"date": "2025-11-01",
+"aed": 60000.0,
+"status": "PAID",
+"batch": "S13 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1oA3mdjGW4nAU76PgtSPAjBcAKVFXhtdT?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2016 Single Cab White",
+"notes": "",
+"pos": 31
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J107405673",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2019",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2025-12-15",
+"aed": 72000.0,
+"status": "PAID",
+"batch": "S14 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1p29qkoq2N5GpW7EF5XkIiJPNxgEl5DY7?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2019 Single Cab White",
+"notes": "",
+"pos": 32
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J00B036866",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2021",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2025-11-01",
+"aed": 74000.0,
+"status": "PAID",
+"batch": "S14 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1MQQDETMbyC88n_Rqefs5LQ_z3eEaHcX7?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2021 Single Cab White",
+"notes": "",
+"pos": 33
+},
+{
+"kind": "unit",
+"chassis": "JTELV71JX07404733",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2018",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Shahid",
+"date": "2025-11-01",
+"aed": 63000.0,
+"status": "PAID",
+"batch": "S14 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1o_0MPKTfIRD9X_9mtSpwHu8l4IjsR4Cq?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2018 Single Cab White",
+"notes": "",
+"pos": 34
+},
+{
+"kind": "unit",
+"chassis": "MNTCBND23A0023655",
+"make": "NISSAN",
+"model": "NAVARA PRO4X",
+"year": "2024",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Aryana Motors",
+"date": "2026-01-05",
+"aed": 91500.0,
+"status": "PAID",
+"batch": "S15 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1wg1zYoF2LsFS3WIfIYI_mI6N_SVFVWJ9?usp=sharing",
+"detail": "NISSAN NAVARA PRO4X 2024 Double Cab Black",
+"notes": "",
+"pos": 35
+},
+{
+"kind": "unit",
+"chassis": "GUN1253948779",
+"make": "TOYOTA",
+"model": "HILUX REVO GR",
+"year": "2023",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Xrteme Motors",
+"date": "2026-01-05",
+"aed": 109800.0,
+"status": "PAID",
+"batch": "S15 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1gskBpX_gpte-dAzeXeqX0IKZDCC3djKm?usp=sharing",
+"detail": "TOYOTA HILUX REVO GR 2023 Double Cab White",
+"notes": "",
+"pos": 36
+},
+{
+"kind": "unit",
+"chassis": "GUN1253923518",
+"make": "TOYOTA",
+"model": "HILUX REVO GR",
+"year": "2022",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Xrteme Motors",
+"date": "2026-01-05",
+"aed": 109800.0,
+"status": "PAID",
+"batch": "S15 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1kY1euSKnN4CoIZL8dm2Y2M6JakdnwXjz?usp=sharing",
+"detail": "TOYOTA HILUX REVO GR 2022 Double Cab Black",
+"notes": "",
+"pos": 37
+},
+{
+"kind": "unit",
+"chassis": "MR0JA3DC401220311",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2019",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ashqullah",
+"date": "2025-12-17",
+"aed": 72000.0,
+"status": "PAID",
+"batch": "S16 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1_XCvuu_4sCAGRaq6OdCWIWPG9_O_sBi0?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2019 Smart Cab White",
+"notes": "",
+"pos": 38
+},
+{
+"kind": "unit",
+"chassis": "JTELV73J009011714",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2013",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2026-01-07",
+"aed": 52000.0,
+"status": "PAID",
+"batch": "S16 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1WpwGj73UPHFAzCVLYU2qSnHqjjc0xqYs?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2013 Single Cab White",
+"notes": "",
+"pos": 39
+},
+{
+"kind": "unit",
+"chassis": "JTELV71JX00030939",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2013",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2026-01-07",
+"aed": 52000.0,
+"status": "PAID",
+"batch": "S16 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1jZWhuWWuwlsx8lhIRUWveIXVL5fyWBKm?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2013 Single Cab White",
+"notes": "",
+"pos": 40
+},
+{
+"kind": "unit",
+"chassis": "JTELV73J107802944",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2018",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "Grey",
+"supplier": "Jaftim",
+"date": "2026-12-29",
+"aed": 86200.0,
+"status": "PAID",
+"batch": "S17 \u00b7 GUYANA \u00b7 Dec 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1RQzc5nJaPYSdQye6MCRgViITx20OdejB?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2018 Single Cab Grey",
+"notes": "",
+"pos": 41
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J00035852",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2015",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2026-01-07",
+"aed": 60000.0,
+"status": "PAID",
+"batch": "S17 \u00b7 GUYANA \u00b7 Dec 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1OSXSc-gD5eGUc-23t0dkcxbQCasT5M2e?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2015 Single Cab White",
+"notes": "",
+"pos": 42
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J700034947",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2015",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Sitama",
+"date": "2025-12-09",
+"aed": 63000.0,
+"status": "PAID",
+"batch": "S17 \u00b7 GUYANA \u00b7 Dec 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1UNVuKa5BeP-5boO5NWjt4mS-OHXtJMd9?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2015 Single Cab White",
+"notes": "",
+"pos": 43
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3FSX00200451",
+"make": "TOYOTA",
+"model": "FORTUNER",
+"year": "2015",
+"body": "SUV",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2025-09-01",
+"aed": 56000.0,
+"status": "PAID",
+"batch": "S18 \u00b7 MOMBASA \u00b7 Feb 2026",
+"destination": "MOMBASA",
+"driveUrl": "https://drive.google.com/drive/folders/1ce-cy7XXgKhhaeVL89B1rZXA6GjuBnZc?usp=sharing",
+"detail": "TOYOTA FORTUNER 2015 SUV White",
+"notes": "",
+"pos": 44
+},
+{
+"kind": "unit",
+"chassis": "MR0HA3FS700045089",
+"make": "TOYOTA",
+"model": "FORTUNER",
+"year": "2017",
+"body": "Suv",
+"transmission": "Automatic",
+"colour": "Grey",
+"supplier": "KHALID",
+"date": "2026-01-26",
+"aed": 65500.0,
+"status": "PAID",
+"batch": "S18 \u00b7 MOMBASA \u00b7 Feb 2026",
+"destination": "MOMBASA",
+"driveUrl": "https://drive.google.com/drive/folders/1Wc3IpO91yAq1mRo4wMCCPyakRqQ2Blnl?usp=sharing",
+"detail": "TOYOTA FORTUNER 2017 Suv Grey",
+"notes": "",
+"pos": 45
+},
+{
+"kind": "unit",
+"chassis": "AHTBB3CD201789803",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2024",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Grey",
+"supplier": "KHALID",
+"date": "2026-01-08",
+"aed": 70000.0,
+"status": "PAID",
+"batch": "S19 \u00b7 LOCAL SALE \u00b7 Feb 2026",
+"destination": "LOCAL SALE",
+"driveUrl": "https://drive.google.com/drive/folders/1RIrGNvv7UevmH3bhFHk_bAqITlcPA2ht?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2024 Double Cab Grey",
+"notes": "",
+"pos": 46
+},
+{
+"kind": "unit",
+"chassis": "MR0DB3CD703751690",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2022",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2026-01-28",
+"aed": 59000.0,
+"status": "PAID",
+"batch": "S19 \u00b7 LOCAL SALE \u00b7 Feb 2026",
+"destination": "LOCAL SALE",
+"driveUrl": "https://drive.google.com/drive/folders/1_3CCca92y7rtEE7QvaDMErAgJ5CGVTDJ?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2022 Double Cab White",
+"notes": "",
+"pos": 47
+},
+{
+"kind": "unit",
+"chassis": "MR0FB3CD600290010",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2016",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2026-02-16",
+"aed": 37500.0,
+"status": "PAID",
+"batch": "S20 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1GHSGVZUFDrH8NdO66cwM_QPYEQ5Up1hX?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2016 Double Cab White",
+"notes": "",
+"pos": 48
+},
+{
+"kind": "unit",
+"chassis": "GUN1253906558",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2018",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "Abu Mosa",
+"date": "2026-03-07",
+"aed": 75000.0,
+"status": "PAID",
+"batch": "S20 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1Ftdmmd7WNYKM_Bp1tpaAPHcfwCVa7b38?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2018 Double Cab Black",
+"notes": "",
+"pos": 49
+},
+{
+"kind": "unit",
+"chassis": "MR0DB3CD803752749",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2023",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2026-02-16",
+"aed": 53000.0,
+"status": "PAID",
+"batch": "S20 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1I9x_1vGOR4i6x3Kv0HZiuv52h7RrN666?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2023 Double Cab White",
+"notes": "",
+"pos": 50
+},
+{
+"kind": "unit",
+"chassis": "MR0FB3CD400270497",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2016",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2026-02-02",
+"aed": 41500.0,
+"status": "PAID",
+"batch": "S21 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1-sNnzWD4sUf__EpjR86HHcc5XqFnUGGa?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2016 Double Cab White",
+"notes": "",
+"pos": 51
+},
+{
+"kind": "unit",
+"chassis": "GUN1253902395",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2018",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "AL INSAF",
+"date": "2026-04-16",
+"aed": 72330.0,
+"status": "PAID",
+"batch": "S21 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1Cq_BD9eobhKtxZ6j8apUiy6hLyqQCauu?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2018 Double Cab White",
+"notes": "",
+"pos": 52
+},
+{
+"kind": "unit",
+"chassis": "AHTBB3CD001757318",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2019",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "BLACK",
+"supplier": "KHALID",
+"date": "2026-01-30",
+"aed": 63000.0,
+"status": "PAID",
+"batch": "S21 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1ajwufyYFnVWrvFp31V7QhuJls642rA8L?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2019 Double Cab BLACK",
+"notes": "",
+"pos": 53
+},
+{
+"kind": "unit",
+"chassis": "MR0FB3CD100272403",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2018",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "KHALID",
+"date": "2026-01-08",
+"aed": 41500.0,
+"status": "PAID",
+"batch": "S22 \u00b7 GUYANA \u00b7 Jul 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1UCuZqYVfw3WX1bQrwpuk2DtkkXo-lbpd?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2018 Double Cab White",
+"notes": "",
+"pos": 54
+},
+{
+"kind": "unit",
+"chassis": "JTFLA3CW606024187",
+"make": "TOYOTA",
+"model": "HIACE",
+"year": "2024",
+"body": "Van",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Darussalam motors",
+"date": "2026-07-14",
+"aed": 117440.0,
+"status": "PAID",
+"batch": "S22 \u00b7 GUYANA \u00b7 Jul 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/11C2MSi8x3PQiaUurPmrt5xtx8wX1stxE?usp=sharing",
+"detail": "TOYOTA HIACE 2024 Van White",
+"notes": "",
+"pos": 55
+},
+{
+"kind": "unit",
+"chassis": "AHTBB3CD901738850",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2017",
+"body": "Double Cab",
+"transmission": "Automatic",
+"colour": "Black",
+"supplier": "KHALID",
+"date": "2026-07-07",
+"aed": 55000.0,
+"status": "PAID",
+"batch": "S23 \u00b7 GUYANA \u00b7 Aug 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/11qzSgCfYhGsGtyj26_4qkuvUtTgOAfwh?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2017 Double Cab Black",
+"notes": "",
+"pos": 56
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J207401115",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2017",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2026-08-05",
+"aed": 57500.0,
+"status": "PAID",
+"batch": "S23 \u00b7 GUYANA \u00b7 Aug 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1Z3EbGkxD-X1HI5UHFQKM0Ye7s3Tz2Acf?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2017 Single Cab White",
+"notes": "",
+"pos": 57
+},
+{
+"kind": "unit",
+"chassis": "JTELV71J907009054",
+"make": "TOYOTA",
+"model": "Land Cruiser Pickup",
+"year": "2016",
+"body": "Single Cab",
+"transmission": "Manual",
+"colour": "White",
+"supplier": "Razaa",
+"date": "2026-08-05",
+"aed": 57500.0,
+"status": "PAID",
+"batch": "S23 \u00b7 GUYANA \u00b7 Aug 2026",
+"destination": "GUYANA",
+"driveUrl": "https://drive.google.com/drive/folders/1V98LSHluDOIwmjSecJAqx9iYnieNt946?usp=sharing",
+"detail": "TOYOTA Land Cruiser Pickup 2016 Single Cab White",
+"notes": "",
+"pos": 58
+},
+{
+"kind": "unit",
+"chassis": "MHFAB1BY1R3130246",
+"make": "TOYOTA",
+"model": "Valos",
+"year": "2024",
+"body": "Suv",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Copart (Left Hand)",
+"date": "2025-11-01",
+"aed": 36700.0,
+"status": "PAID",
+"batch": "S24 \u00b7 Sep 2025",
+"destination": "",
+"driveUrl": "",
+"detail": "TOYOTA Valos 2024 Suv White",
+"notes": "",
+"pos": 59
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3CC901171449",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2021",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "Red",
+"supplier": "KHALID",
+"date": "2025-08-10",
+"aed": 56000.0,
+"status": "PAID",
+"batch": "",
+"destination": "",
+"driveUrl": "https://drive.google.com/drive/folders/1Vpyvg2xHW6gdk83tsEFtKAyTG3tLM-j8?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2021 Smart Cab Red",
+"notes": "",
+"pos": 60
+},
+{
+"kind": "unit",
+"chassis": "MR0KA3CC50117462",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2022",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "White",
+"supplier": "Ashqullah",
+"date": "2025-12-09",
+"aed": 71500.0,
+"status": "PAID",
+"batch": "",
+"destination": "",
+"driveUrl": "",
+"detail": "TOYOTA HILUX REVO 2022 Smart Cab White",
+"notes": "",
+"pos": 61
+},
+{
+"kind": "unit",
+"chassis": "MR0BA3CC605950039",
+"make": "TOYOTA",
+"model": "HILUX REVO",
+"year": "2022",
+"body": "Smart Cab",
+"transmission": "Automatic",
+"colour": "Silver",
+"supplier": "KHALID",
+"date": "2025-11-27",
+"aed": 70500.0,
+"status": "PAID",
+"batch": "",
+"destination": "",
+"driveUrl": "https://drive.google.com/drive/folders/1phsYHewf1aeSK2jv6UjnvGCo_pDdTCYs?usp=sharing",
+"detail": "TOYOTA HILUX REVO 2022 Smart Cab Silver",
+"notes": "",
+"pos": 62
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-02-05",
+"aed": 10276.0,
+"status": "PAID",
+"batch": "S01 \u00b7 Feb 2025",
+"destination": "",
+"driveUrl": "",
+"detail": "Toyota Fortuner 2021 Black (MR0KA3FS300213204) Shipping Charges",
+"notes": "",
+"pos": 63
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-02-25",
+"aed": 56518.0,
+"status": "PAID",
+"batch": "S02 \u00b7 SURINAME \u00b7 Feb 2025",
+"destination": "SURINAME",
+"driveUrl": "",
+"detail": "Toyota Hilux 6 Units Suriname Shipping Charges",
+"notes": "",
+"pos": 64
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-07-07",
+"aed": 7266.6,
+"status": "PAID",
+"batch": "S03 \u00b7 DAR ES SALAAM \u00b7 Jul 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "",
+"detail": "Toyota Hilux 3 Units Dar as Salam Shipping Charges",
+"notes": "",
+"pos": 65
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-07-31",
+"aed": 21469.5,
+"status": "PAID",
+"batch": "S04 \u00b7 GUYANA \u00b7 Jul 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux Revo 2 Units Guyana Shipping Charges",
+"notes": "",
+"pos": 66
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-07-22",
+"aed": 5688.5,
+"status": "PAID",
+"batch": "S05 \u00b7 DURBAN \u00b7 Jul 2025",
+"destination": "DURBAN",
+"driveUrl": "",
+"detail": "Toyota Hilux 1 Units Durban Shipping Charges",
+"notes": "",
+"pos": 67
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-08-21",
+"aed": 11006.88,
+"status": "PAID",
+"batch": "S06 \u00b7 DAR ES SALAAM \u00b7 Aug 2025",
+"destination": "DAR ES SALAAM",
+"driveUrl": "",
+"detail": "Toyota Fortuner 2 Units to Dar Es Salam shipping Charges",
+"notes": "",
+"pos": 68
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-09-26",
+"aed": 21836.5,
+"status": "PAID",
+"batch": "S07 \u00b7 GUYANA \u00b7 Sep 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux 3 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 69
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-10-23",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S08 \u00b7 GUYANA \u00b7 Oct 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hiace Ambulance Van 1 Unit Guyana Shipping Charges",
+"notes": "",
+"pos": 70
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-11-25",
+"aed": 4734.3,
+"status": "PAID",
+"batch": "S09 \u00b7 DURBAN \u00b7 Nov 2025",
+"destination": "DURBAN",
+"driveUrl": "",
+"detail": "Toyota Hilux GR Sports 1 Unit Durban Shipping Charges",
+"notes": "",
+"pos": 71
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-11-12",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S10 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "1 Unit Ford & Toyota Hilux 2 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 72
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-11-12",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S11 \u00b7 GUYANA \u00b7 Nov 2025",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser 3 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 73
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2025-11-12",
+"aed": 7831.78,
+"status": "PAID",
+"batch": "S12 \u00b7 DURBAN \u00b7 Dec 2025",
+"destination": "DURBAN",
+"driveUrl": "",
+"detail": "Toyota Hilux 2 Units to Durban Shipping Charges",
+"notes": "",
+"pos": 74
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-01-15",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S13 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser 3 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 75
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-01-15",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S14 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser 3 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 76
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-01-15",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S15 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux Revo 2 Units & 1 Unit Nissan Navara to Guyana shipping Charges",
+"notes": "",
+"pos": 77
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-01-15",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S16 \u00b7 GUYANA \u00b7 Jan 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser 2 Units & Hilux to Guyana shipping Charges",
+"notes": "",
+"pos": 78
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-01-15",
+"aed": 21286.0,
+"status": "PAID",
+"batch": "S17 \u00b7 GUYANA \u00b7 Dec 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Land Cruiser 3 Units to Guyana shipping Charges",
+"notes": "",
+"pos": 79
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-02-02",
+"aed": 10819.2,
+"status": "PAID",
+"batch": "S18 \u00b7 MOMBASA \u00b7 Feb 2026",
+"destination": "MOMBASA",
+"driveUrl": "",
+"detail": "Toyota Fortuner 2 Units to Mombasa Shipping Charges",
+"notes": "",
+"pos": 80
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-02-23",
+"aed": 0.0,
+"status": "PAID",
+"batch": "S19 \u00b7 LOCAL SALE \u00b7 Feb 2026",
+"destination": "LOCAL SALE",
+"driveUrl": "",
+"detail": "Toyota Hilux 2 Units to Sold Local To Central Motors FZE",
+"notes": "",
+"pos": 81
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-05-08",
+"aed": 61656.0,
+"status": "PAID",
+"batch": "S20 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux 3 Units to Guyana Shipping Charges",
+"notes": "",
+"pos": 82
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-05-08",
+"aed": 61656.0,
+"status": "PAID",
+"batch": "S21 \u00b7 GUYANA \u00b7 May 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux 3 Units to Guyana Shipping Charges",
+"notes": "",
+"pos": 83
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "2026-07-25",
+"aed": 62390.0,
+"status": "UNPAID",
+"batch": "S22 \u00b7 GUYANA \u00b7 Jul 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux & Toyota Hiace 2 Units to Guyana Shipping Charges",
+"notes": "",
+"pos": 84
+},
+{
+"kind": "charge",
+"chassis": "",
+"make": "",
+"model": "",
+"year": "",
+"body": "",
+"transmission": "",
+"colour": "",
+"supplier": "",
+"date": "",
+"aed": 51380.0,
+"status": "UNPAID",
+"batch": "S23 \u00b7 GUYANA \u00b7 Aug 2026",
+"destination": "GUYANA",
+"driveUrl": "",
+"detail": "Toyota Hilux 1 & Toyota Land Cruiser 2 Units to Guyana Shipping Charges",
+"notes": "",
+"pos": 85
+}
+],
+"costs": [
+{
+"chassis": "MR0KA3FS300213204",
+"description": "Recovery",
+"amount": 50.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3FS300213204",
+"description": "Towbar 850 + fitting 150+ Minor work 50)",
+"amount": 1050.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3FS300213204",
+"description": "Recovery to loading yard",
+"amount": 80.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "Complete facelift accessories",
+"amount": 1491.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "denting painting labour",
+"amount": 2725.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "Recovery",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "deep cleaning",
+"amount": 350.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "bedliner",
+"amount": 550.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "streeing",
+"amount": 130.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "leather seat and gear nob",
+"amount": 500.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 log,o, mudflap, wheelcap,tyre bolt, backcamera, remote  Programming, wiper, labour",
+"amount": 1683.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0FZ29G501633777",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "Recovery",
+"amount": 300.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "Angle sensor",
+"amount": 100.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "denting painting labour and front glass rear bumper backlights footsteps front light right side",
+"amount": 3830.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "rim tyre balancing and aligment",
+"amount": 1400.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo, backcamera, remote Programming , wiper,multimedia left lightfront and foglights labour",
+"amount": 1623.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29G101726876",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "Recovery",
+"amount": 250.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "leather seat and gear nob",
+"amount": 500.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo, backcamera, remote, wiper,multimedia  labour",
+"amount": 1203.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G902531165",
+"description": "breakpad, disc poshlish, brakeoil, brakeboostor service charges",
+"amount": 560.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "FRONT windsheld change",
+"amount": 260.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo, remote, wiper,multimedia, back camera, tyre bolt labour",
+"amount": 1273.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29GX01679234",
+"description": "chassis paint",
+"amount": 100.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo, backcamera, remote, wiper,multimedia labour",
+"amount": 1203.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "chassis paint",
+"amount": 100.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "rear axle repair",
+"amount": 1200.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29G601732186",
+"description": "rim tyre balancing and aligment",
+"amount": 1400.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0FZ29GX01636254",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29GX01636254",
+"description": "meter reverce",
+"amount": 100.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29GX01636254",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo, remote, wiper,multimedia, tool kit, Ac gas, Angle sensor labour",
+"amount": 1373.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29GX01636254",
+"description": "Recovery to loading yard",
+"amount": 50.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29GX01636254",
+"description": "chassis paint",
+"amount": 100.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "BackTray SR5",
+"amount": 2000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "Recovery to Garage",
+"amount": 250.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "Front Windshield",
+"amount": 250.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "sunvisor, 4x4 sticker toyota d4d vigo 3.0 logo,cabel tank, mudflap,2 headrest,bedliner Labour",
+"amount": 2020.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "WASHING",
+"amount": 300.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "KEY AND PROGRAMMING",
+"amount": 500.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "Kit and bumper",
+"amount": 1500.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "denting painting labour oil change gear oil fill ac and etc",
+"amount": 3000.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "Tyre alignment and",
+"amount": 280.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "leather steering gear nob complete seat wraping",
+"amount": 360.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0FZ29G002574552",
+"description": "Meter reverse",
+"amount": 100.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0EX3CB001100093",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0EX3CB001100093",
+"description": "Meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0EX3CB001100093",
+"description": "Chassis paint",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0EX3CB001103706",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0EX3CB001103706",
+"description": "Meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0EX3CB001103706",
+"description": "chassis paint",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Hilux Revo GR Kit",
+"amount": 2415.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Recovery to Garage",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Paint labour",
+"amount": 1200.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Hilux roof light",
+"amount": 405.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "bedliner",
+"amount": 600.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Sarim toyota Hilux Smart Cabin Gr Streeing, 1 pcs rim type",
+"amount": 1730.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Toyota logo and Gear Nob",
+"amount": 130.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "3 pcs Rim and Tyre Rocoo",
+"amount": 2035.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "4 pcs rim and tyre sold",
+"amount": -1500.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "roll bar",
+"amount": 700.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "auto leather Gr seats",
+"amount": 1100.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "deep clening",
+"amount": 300.0,
+"date": "",
+"pos": 11
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Bracket bedliner Back camera battery Bracket key programming and lbour",
+"amount": 2000.0,
+"date": "",
+"pos": 12
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Guyana inpection nd recovey",
+"amount": 1000.0,
+"date": "",
+"pos": 13
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "GR sticker and adventure sticker",
+"amount": 350.0,
+"date": "",
+"pos": 14
+},
+{
+"chassis": "MR0KA3CC301175917",
+"description": "Airbag Sensor and labour",
+"amount": 400.0,
+"date": "",
+"pos": 15
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "Meter Reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "Chassis Paint",
+"amount": 250.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "leather seats",
+"amount": 450.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "Key with Programming and battery clamp",
+"amount": 1050.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0KA3CC501172310",
+"description": "3 pcs wiring and complete wiring labour",
+"amount": 850.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "Meter Reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "Chassis Paint",
+"amount": 250.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "back bumper and fixing",
+"amount": 1570.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "fog lamp button & Relay fog lamp & wire & labour",
+"amount": 530.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "4pcs Gr Sports rims & Bedliner",
+"amount": 1650.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "leather seats",
+"amount": 450.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "Key with Programming and back camera and battery clamp",
+"amount": 1250.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0KA3CB701131586",
+"description": "Chassis stircker 3pcs",
+"amount": 1200.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0DA3FS400004031",
+"description": "Recovery",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0DA3FS400004031",
+"description": "Meter Reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0DA3FS400004031",
+"description": "key with programming",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3FS300217821",
+"description": "Recovery",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3FS300217821",
+"description": "key with programming",
+"amount": 300.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Deep clean",
+"amount": 300.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Rim and tyre",
+"amount": 400.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "full car compound polish",
+"amount": 400.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Leather seats",
+"amount": 450.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "roof light",
+"amount": 380.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "GR and Adventure",
+"amount": 450.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Monogram Hilux",
+"amount": 190.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Chassis Sticker",
+"amount": 300.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Labour",
+"amount": 500.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Inspection for Guyana",
+"amount": 1000.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0BA3CD100084174",
+"description": "Roll bar",
+"amount": 700.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Hilux Revo GR Kit 2021",
+"amount": 1800.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Recovery to Garage and warehouse",
+"amount": 300.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Back tray with bedliner",
+"amount": 4500.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Mudflap rear door cover roll bar adventure",
+"amount": 1150.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "back bumper and front bumper support",
+"amount": 386.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Gr and adventure Sticker Hilux logo SR5 Toyota logo Bolt for rims Labour",
+"amount": 1000.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Guyana Inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Labout denting painting Chassis paint accessories fiting abs sensor oil coolant trucklock",
+"amount": 3555.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "Gr Sports seats and auto",
+"amount": 1000.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "meter reveres",
+"amount": 150.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0HA3CC700321882",
+"description": "RIGHT SIDE REAR AXCEL, BODY ALIGNMENT, BREAK OIL, LABOUR FOR 2018 WHITE SMART CAB (882) 1 spare tyre",
+"amount": 1000.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0BA3CD506612568",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0BA3CD506612568",
+"description": "meter Reverse",
+"amount": 200.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0BA3CD506612568",
+"description": "CAR WASH",
+"amount": 100.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0BA3CD506612568",
+"description": "Engine Mounting",
+"amount": 325.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0BA3CD506612568",
+"description": "Guayana passing",
+"amount": 1000.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0BA3CD800188273",
+"description": "Recovery",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0BA3CD800188273",
+"description": "meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MNAUM2F50GW653664",
+"description": "inspection again",
+"amount": 500.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MNAUM2F50GW653664",
+"description": "Remote with program",
+"amount": 500.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTNKY3BX301020066",
+"description": "Battery",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTNKY3BX301020066",
+"description": "Guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTNKY3BX301020066",
+"description": "Remote with program",
+"amount": 800.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTEBV71J807015634",
+"description": "inspection again",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV73J809012402",
+"description": "Remote",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV73J809012402",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV73J809012402",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV73J809012402",
+"description": "Rim Paint",
+"amount": 25.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV73J709013380",
+"description": "Remote",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV73J709013380",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV73J709013380",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV73J709013380",
+"description": "Rim Paint",
+"amount": 25.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV73J709009829",
+"description": "Remote",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV73J709009829",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV73J709009829",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV73J709009829",
+"description": "Rim Paint",
+"amount": 25.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "Front head light, bedliner, back breakpads, front break pads, dics pohlish 4 pcs Machinoc labour, Chassis paint",
+"amount": 2440.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "leather seats",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "rear bumper, front bolber bumper, Ac gas 2 bolt, 2 relay, tank cable, labour",
+"amount": 1100.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0EX3CBX01129004",
+"description": "spare key mats",
+"amount": 250.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0EB3CB000445757",
+"description": "Recovery",
+"amount": 140.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0EB3CB000445757",
+"description": "Back Breakpads, Front breakpads, car polish, Machanic Labour Charges, Chassis Paint",
+"amount": 810.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0EB3CB000445757",
+"description": "leather seats",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0EB3CB000445757",
+"description": "meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV71J607003616",
+"description": "Inspection for Guyana",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J007402571",
+"description": "METER REVERSE",
+"amount": 100.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J007402571",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71J007402571",
+"description": "BELT STICKER",
+"amount": 150.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71J007402571",
+"description": "STREEING ROD, FRONT DISK CLIPPER, FRONT AND REAR BREAK PADS, WHEEL ALIGMENT, CHASSIS PAINT AND LABOUR",
+"amount": 1700.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "Right Side cover",
+"amount": 250.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "Rim Paint",
+"amount": 25.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "back breakpads, back leather, front breakpads, stearing shock, dics polish, back trunk lock, chassis paint, gear liver 4x4, Machanic labour",
+"amount": 2165.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "JTELV71J107010053",
+"description": "Guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "JTELV71J107405673",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J00B036866",
+"description": "Inspection for Guyana",
+"amount": 1300.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J00B036866",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71J00B036866",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71J00B036866",
+"description": "BELT STICKER",
+"amount": 150.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Seat plate wrap",
+"amount": 50.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Desiel Tank Cap",
+"amount": 100.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Inteiror part",
+"amount": 100.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Labour zaki",
+"amount": 50.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Rim Paint",
+"amount": 25.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "Breakpads, Stearing rack, Electrican work, Disc polish, Rust spray, breakpipe, dent and Bold, Paint service, strearing pipe repair, silicone, labour",
+"amount": 2605.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "ANGLE SENSOR AND SPARE TYRE BRAKET",
+"amount": 450.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "GUYANA INSEPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "BELT STICKER",
+"amount": 150.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "JTELV71JX07404733",
+"description": "STREEING ROD AND SHOCK, WHEEL ALIGHMENT",
+"amount": 540.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MNTCBND23A0023655",
+"description": "PAID TO ARYAN MOTORS BANK TRANSFER, DOCUMENT, RECOVCERY CHARGES",
+"amount": 770.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MNTCBND23A0023655",
+"description": "METER REVERSE",
+"amount": 250.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MNTCBND23A0023655",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MNTCBND23A0023655",
+"description": "WASH",
+"amount": 25.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "GUN1253948779",
+"description": "METER REVERSE",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "GUN1253948779",
+"description": "Recovery",
+"amount": 70.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "GUN1253948779",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "GUN1253948779",
+"description": "KEY REMOTE WITH PROGRAMMING",
+"amount": 800.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "GUN1253948779",
+"description": "WASH",
+"amount": 25.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "GUN1253923518",
+"description": "METER REVERSE",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "GUN1253923518",
+"description": "Recovery",
+"amount": 70.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "GUN1253923518",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "GUN1253923518",
+"description": "KEY REMOTE WITH PROGRAMMING",
+"amount": 800.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "GUN1253923518",
+"description": "WASH",
+"amount": 25.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "JTELV73J009011714",
+"description": "METER REVERSE",
+"amount": 100.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV73J009011714",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV73J009011714",
+"description": "BEDLINER",
+"amount": 500.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71JX00030939",
+"description": "METER REVERSE",
+"amount": 100.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71JX00030939",
+"description": "BEDLINER",
+"amount": 500.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71JX00030939",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71J00035852",
+"description": "METER REVERSE",
+"amount": 100.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J00035852",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71J700034947",
+"description": "BEDLINER",
+"amount": 500.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J700034947",
+"description": "PAID TO IBRAHIM AUTO GARAGE FOR (4947) COMPLETE GEAR WITH 4X4 FRONT BREAK PADS, ENGINE OIL, GEAR OIL, LABOUR CHARGES, WHEEL ALIGHMNET, WHEEL BALACING, NUT",
+"amount": 5000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "JTELV71J700034947",
+"description": "GUYANA INSPECTION",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Recovery",
+"amount": 300.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "2023 fortuner legender kit complete",
+"amount": 2300.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Front bumper support, hood, right side fender, hood brackets",
+"amount": 550.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Radiator, condensor, fan cover, hood lock, seat belt, side mirror, engine oil, oil filter, air filter, coolant, break cylender, raditor bottle pipe, break oil, ac gas, denting and full car color change",
+"amount": 6310.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "windshield",
+"amount": 310.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Roof, Roof airbag, streeing airbag down, dashboard, dashboard airbag, programming , fender cover, lobour",
+"amount": 4270.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Car wash",
+"amount": 300.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "Battery",
+"amount": 150.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "PAINT CHANGE",
+"amount": 4500.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "METER REVERSE",
+"amount": 150.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0KA3FSX00200451",
+"description": "UGANDA INSPECTION",
+"amount": 825.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0HA3FS700045089",
+"description": "UGANDA INSPECTION",
+"amount": 825.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "AHTBB3CD201789803",
+"description": "METER REVERSE",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "AHTBB3CD201789803",
+"description": "complete garage bill",
+"amount": 9733.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0DB3CD703751690",
+"description": "Complete garage bill",
+"amount": 11000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0DB3CD703751690",
+"description": "RIMS AND FIXING",
+"amount": 410.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0DB3CD703751690",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0DB3CD703751690",
+"description": "FULL WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "Both Fendre, tank pipe, cable tank, hood bracket, wiper, down wash, recovery, bavcklight, streeing rod, light bracket, backtray, fornt nose cut, hood, 2 fender sheet, complete rocco kit, rear bumper, side step, front windshehild, engine sensor",
+"amount": 14070.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "rims and tyre fixing",
+"amount": 1300.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "key with programming and logo and rocco stickere",
+"amount": 800.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "leather seats",
+"amount": 500.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "ROLL BAR",
+"amount": 600.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FB3CD600290010",
+"description": "full wrap",
+"amount": 300.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "GUN1253906558",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "GUN1253906558",
+"description": "full wrap",
+"amount": 300.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "Complete kit and",
+"amount": 4320.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "rims and fixing balancing, alignment",
+"amount": 1240.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "ROLL BAR",
+"amount": 600.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "CHASSIS FRAME",
+"amount": 1100.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "BONET LOCK",
+"amount": 250.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "RADIATOR FAN CLUTER",
+"amount": 225.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "ENGINE OIL",
+"amount": 180.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "WIND SCREEN",
+"amount": 280.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "LABOUR CHARGES",
+"amount": 4500.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "radar and all airbag",
+"amount": 3300.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "belt rpair",
+"amount": 400.0,
+"date": "",
+"pos": 11
+},
+{
+"chassis": "MR0DB3CD803752749",
+"description": "FULL WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 12
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "back tray",
+"amount": 4500.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "COMPLETE KIT",
+"amount": 2137.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "REAR BUMPER",
+"amount": 370.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "SIDE MIRROR",
+"amount": 300.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "rims and fixing balancing, alignment",
+"amount": 1240.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "Sidesteps and logo",
+"amount": 410.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "GARAGE BILL",
+"amount": 5000.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "ROLL BAR",
+"amount": 600.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0FB3CD400270497",
+"description": "FULL WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "GUN1253902395",
+"description": "Guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "GUN1253902395",
+"description": "BUMPER, GRILL BLACK, FOGLAMPS, BUMPERGRILL",
+"amount": 675.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "GUN1253902395",
+"description": "FRONT BUMPER PAINT AND FIXING, FULL POLISH, SIDESTPS, OVRFENDER, RCOVRY, SEAT LEATHER, LOGO, METER RVERSE",
+"amount": 2550.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "GUN1253902395",
+"description": "Full WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "AHTBB3CD001757318",
+"description": "COMPLETE GARAGEE BILL",
+"amount": 8500.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "AHTBB3CD001757318",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "AHTBB3CD001757318",
+"description": "FULL WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FB3CD100272403",
+"description": "complete garage bill",
+"amount": 10770.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0FB3CD100272403",
+"description": "leather seats",
+"amount": 500.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0FB3CD100272403",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0FB3CD100272403",
+"description": "FULL WRAP",
+"amount": 300.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "JTFLA3CW606024187",
+"description": "guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "AHTBB3CD901738850",
+"description": "RECOVRY TO WAREHOUSE",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "AHTBB3CD901738850",
+"description": "COMPLETE GR KIT 2024",
+"amount": 2450.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "AHTBB3CD901738850",
+"description": "Brake pads front, laboutr, complete hub, battery",
+"amount": 6960.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "JTELV71J207401115",
+"description": "meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "JTELV71J907009054",
+"description": "meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MHFAB1BY1R3130246",
+"description": "Garage Bill",
+"amount": 9680.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MHFAB1BY1R3130246",
+"description": "Airbags and Labor",
+"amount": 1400.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MHFAB1BY1R3130246",
+"description": "REGISTRATION",
+"amount": 1290.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Recovery to garage",
+"amount": 240.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Smart Cabin front Body",
+"amount": 6000.0,
+"date": "",
+"pos": 1
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "2024 GR kit complete",
+"amount": 2500.0,
+"date": "",
+"pos": 2
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "roof light, Mudflp Gr, Roll bar Rocco",
+"amount": 1250.0,
+"date": "",
+"pos": 3
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Hood scoop",
+"amount": 460.0,
+"date": "",
+"pos": 4
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "front bumper support and rear bumper",
+"amount": 365.0,
+"date": "",
+"pos": 5
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "windsheild",
+"amount": 300.0,
+"date": "",
+"pos": 6
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "body change with complete coloe change & rear shock absorber Collant radiator repair Bush break oil",
+"amount": 6960.0,
+"date": "",
+"pos": 7
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Gr Rims and tyres with bolts",
+"amount": 2600.0,
+"date": "",
+"pos": 8
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Guyana inspection",
+"amount": 1000.0,
+"date": "",
+"pos": 9
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Meter reverse",
+"amount": 150.0,
+"date": "",
+"pos": 10
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Radiator Wheel aligment servie and labour",
+"amount": 500.0,
+"date": "",
+"pos": 11
+},
+{
+"chassis": "MR0KA3CC901171449",
+"description": "Remote",
+"amount": 150.0,
+"date": "",
+"pos": 12
+},
+{
+"chassis": "MR0BA3CC605950039",
+"description": "KHALID COMISSION",
+"amount": 1000.0,
+"date": "",
+"pos": 0
+},
+{
+"chassis": "MR0BA3CC605950039",
+"description": "Chassis paint",
+"amount": 250.0,
+"date": "",
+"pos": 1
+}
+]
+}

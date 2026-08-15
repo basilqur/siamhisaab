@@ -127,6 +127,9 @@ button{cursor:pointer;background:none;border:none}
 .tab .bal.neg{color:var(--neg)}
 .tab.all{color:var(--accent);font-weight:800;letter-spacing:.08em}
 .tab.all.active{background:var(--accent-soft)}
+.tab.cars{color:#7c3aed;font-weight:800;letter-spacing:.06em}
+.tab.cars.active{background:color-mix(in srgb,#7c3aed 12%,transparent)}
+html[data-theme="dark"] .tab.cars{color:#b48cff}
 
 .banner{display:none;align-items:center;gap:10px;padding:8px 14px;background:var(--warn-soft);color:var(--warn);
   border-bottom:1px solid var(--line);font-size:12.5px;font-weight:500;flex:0 0 auto}
@@ -138,6 +141,8 @@ button{cursor:pointer;background:none;border:none}
 .card .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);font-weight:600}
 .card .v{font-size:19px;font-weight:700;margin-top:3px;letter-spacing:-.02em}
 .card .s{font-size:11px;color:var(--ink-3);margin-top:2px}
+.setbal{color:var(--accent);font-weight:600;cursor:pointer;border-bottom:1px dashed color-mix(in srgb,var(--accent) 45%,transparent)}
+.setbal:hover{color:var(--ink)}
 .card.hero{background:linear-gradient(135deg,var(--panel),var(--panel-2))}
 .card.hero .v{font-size:27px}
 .v.pos{color:var(--pos)} .v.neg{color:var(--neg)}
@@ -175,6 +180,22 @@ select.mini{height:30px;border-radius:8px;border:1px solid var(--line);backgroun
 .chk.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .amt.zero{color:var(--ink-3);font-weight:500}
 tbody tr.blank td{background:var(--panel-2)}
+.bell{color:var(--warn);margin-right:6px;vertical-align:-1px;flex:0 0 auto}
+.anch{color:var(--ink-3);margin-right:6px;vertical-align:-2px;flex:0 0 auto}
+.eyeoff{vertical-align:-2px}
+.unhide{color:var(--ink-3);margin-right:6px;vertical-align:-2px;padding:0;line-height:0}
+.unhide:hover{color:var(--accent)}
+.eye{width:24px;height:22px;border-radius:6px;color:var(--ink-3);display:inline-grid;place-items:center;opacity:0}
+tr:hover .eye{opacity:.55}
+.eye:hover{opacity:1!important;background:var(--line);color:var(--ink)}
+tbody tr.hid td{opacity:.42}
+tbody tr.hid .c-amt{text-decoration:line-through;text-decoration-thickness:1px}
+tbody tr.hid:hover td{opacity:.62}
+tbody tr.anch-row td{background:var(--panel-2);font-style:normal;color:var(--ink-2)}
+tbody tr.anch-row .c-det{font-weight:600}
+tbody tr.rem:not([data-tag]) td{background:var(--warn-soft)}
+tbody tr.rem td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+tbody tr.rem[data-tag] td:first-child::before{background:var(--warn)}
 tbody tr.blank .c-det{min-height:19px}
 .usd.on{background:var(--pos-soft);border-color:var(--pos);color:var(--pos)}
 #usd-hint{font-size:11.5px;color:var(--ink-3);font-weight:600;white-space:nowrap}
@@ -246,11 +267,101 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .exbadge{display:inline-block;margin-left:7px;font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
   color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:1px 7px;vertical-align:middle}
 
+/* ---------- SARIM CARS ---------- */
+.carswrap{flex:1 1 auto;display:flex;flex-direction:column;min-height:0}
+#carswrap>.subtabs,#carswrap>.toolbar{flex:0 0 auto}
+.subtabs{display:flex;gap:4px;padding:9px 11px 0;background:var(--panel-2);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+.subtabs::-webkit-scrollbar{display:none}
+.subtab{padding:7px 13px;border-radius:8px 8px 0 0;font-size:12.5px;font-weight:700;letter-spacing:.03em;color:var(--ink-3);
+  border-bottom:2px solid transparent;white-space:nowrap}
+.subtab:hover{color:var(--ink)}
+.subtab.on{color:var(--ink);border-bottom-color:var(--accent);background:var(--panel)}
+.carsbody{flex:1 1 auto;overflow:auto;min-height:0;-webkit-overflow-scrolling:touch}
+.ctable{width:100%;border-collapse:separate;border-spacing:0}
+.ctable th{position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line);font-size:10px;
+  text-transform:uppercase;letter-spacing:.08em;color:var(--ink-3);font-weight:700;text-align:left;padding:8px 10px;white-space:nowrap}
+.ctable th.r,.ctable td.r{text-align:right}
+.ctable td{padding:7px 10px;border-bottom:1px solid var(--line-2);vertical-align:top;font-size:12.5px}
+.ctable tbody tr:hover td{background:var(--panel-2)}
+.ctable .chs{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.ctable td.num{white-space:nowrap;font-variant-numeric:tabular-nums}
+.ctable td.c-menu,.ctable thead th:last-child{position:sticky;right:0;background:var(--panel);box-shadow:-6px 0 6px -6px rgba(0,0,0,.14)}
+.ctable tbody tr:hover td.c-menu{background:var(--panel-2)}
+.ctable .det{min-width:220px;overflow-wrap:anywhere}
+.ctable tr.grp td{background:var(--panel-2);font-weight:800;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);border-top:2px solid var(--line)}
+.ctable tr.tot td{background:var(--panel-2);font-weight:800;border-top:1px solid var(--line)}
+.ctable tr.charge td{color:var(--ink-2);font-style:italic}
+.stat{display:inline-block;padding:1px 8px;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.05em;border:1px solid var(--line)}
+.stat.paid{color:var(--pos);background:var(--pos-soft);border-color:transparent}
+.stat.unpaid{color:var(--neg);background:var(--neg-soft);border-color:transparent}
+.stat.credit{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+.doclink{display:inline-grid;place-items:center;min-width:34px;padding:0 7px;height:22px;border-radius:6px;border:1px solid var(--line);
+  font-size:9px;font-weight:800;letter-spacing:.03em;color:var(--ink-3);margin-right:3px}
+.doclink.has{color:#fff;background:var(--accent);border-color:transparent}
+.doclink:hover{border-color:var(--accent);color:var(--accent)}
+.doclink.has:hover{color:#fff;filter:brightness(1.1)}
+.costbox{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-top:10px}
+.costrow{display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:1px solid var(--line-2);font-size:12.5px}
+.costrow:last-child{border-bottom:none}
+.costrow .d{flex:1;min-width:0;overflow-wrap:anywhere}
+.costrow .a{width:110px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.costrow .x{opacity:.35;color:var(--ink-3);padding:2px 5px;border-radius:5px}
+.costrow:hover .x{opacity:1}
+.costrow .x:hover{color:var(--neg);background:var(--neg-soft)}
+.costadd{display:flex;gap:6px;padding:8px 10px;background:var(--panel-2)}
+.costadd input{height:32px;border:1px solid var(--line);border-radius:7px;background:var(--panel);padding:0 8px;outline:none;font-size:13px}
+.costadd input.d{flex:1;min-width:0}
+.costadd input.a{width:110px;text-align:right}
+.costadd button{height:32px;padding:0 12px;border-radius:7px;background:var(--accent);color:#fff;font-weight:700}
+.cempty{padding:44px 20px;text-align:center;color:var(--ink-3)}
+.ctable .det .sub{display:block;font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.ctable tr.yard td{background:var(--warn-soft)}
+.ctable tr.yard:hover td{background:var(--warn-soft);filter:brightness(.98)}
+.yardtag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--warn)}
+.ctable tr.gtot td{border-top:3px double var(--line);font-size:13.5px}
+.ctable .num.neg{color:var(--neg)}
+.warn{color:var(--warn);font-weight:800;cursor:help}
+.vsum{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 4px}
+.vsum>div{flex:1 1 130px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--panel-2)}
+.vsum>div.big{background:var(--accent-soft);border-color:transparent}
+.vsum span{display:block;font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.vsum b{font-size:17px;font-weight:800}
+.vsum i{display:block;font-style:normal;font-size:11px;color:var(--ink-3);margin-top:1px}
+.vfields{margin-top:12px}
+.vfields .field{flex:1 1 150px}
+.vfields .field.wide{flex:1 1 100%}
+.vfields .field.wide input{width:100%}
+h5.vh{margin:16px 0 0;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+#c-showpur-wrap{white-space:nowrap;font-size:12px;color:var(--ink-2);text-transform:none;letter-spacing:0}
+#ci-tabs .subtab{border-bottom-width:2px}
+
+.cempty h3{color:var(--ink-2);margin:0 0 6px;font-size:15px}
+
 /* ---------- panels ---------- */
 .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;flex:0 0 auto}
-.panel h4{margin:0;padding:10px 12px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid var(--line);background:var(--panel-2)}
+.panel h4{margin:0;padding:10px 12px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;justify-content:flex-start;gap:8px;border-bottom:1px solid var(--line);background:var(--panel-2)}
 .panel h4 .tot{font-size:12.5px;letter-spacing:0;text-transform:none;font-weight:700}
 .panel h4 .tot.recv{color:var(--pos)} .panel h4 .tot.pay{color:var(--neg)}
+.panel h4{gap:7px}
+.pgrip{width:18px;height:20px;border-radius:5px;color:var(--ink-3);display:inline-grid;place-items:center;
+  cursor:grab;touch-action:none;opacity:.4;flex:0 0 auto;margin-left:-3px}
+.panel:hover .pgrip{opacity:1}
+.pgrip:active{cursor:grabbing}
+.pgrip svg{pointer-events:none}
+.panel.pdragging{box-shadow:0 14px 34px -10px rgba(16,24,40,.45);opacity:.97;border-color:var(--accent)}
+body.pdrag-on{user-select:none;-webkit-user-select:none}
+.rem-item{display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line-2);font-size:12.5px;cursor:pointer}
+.rem-item:hover{background:var(--panel-2)}
+.rem-item .bd{flex:1;min-width:0}
+.rem-item .nm{overflow-wrap:anywhere;line-height:1.35}
+.rem-item .mt{color:var(--ink-3);font-size:11px;margin-top:2px}
+.rem-item .am{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.rem-item .x{opacity:.35;color:var(--ink-3);font-size:15px;line-height:1;padding:2px 4px;border-radius:5px;align-self:center}
+.rem-item:hover .x{opacity:1}
+.rem-item .x:hover{color:var(--neg);background:var(--neg-soft)}
+body.cars-on #panel-recv,body.cars-on #panel-pay,body.cars-on #panel-position,
+body.cars-on #panel-reminders,body.cars-on #panel-tags{display:none}
+body.cars-on .fab{display:none!important}
 .panel h4 .lnk{font-size:11px;letter-spacing:0;text-transform:none;color:var(--accent);font-weight:600;cursor:pointer}
 .plist{max-height:210px;overflow:auto}
 .pitem{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line-2);font-size:12.5px}
@@ -387,7 +498,7 @@ body.allview-on .fab{display:none!important}
   .who{width:27px;height:27px;font-size:9px}
   .sync span{display:none}
   .sync{padding:0 8px}
-  .fi .undo{opacity:1}          /* no hover on a phone — always show it */
+  .fi .undo,.pgrip{opacity:1}   /* no hover on a phone — always show them */
   .fi{padding:10px 11px}
   .toolbar{padding:8px 10px;gap:7px}
   .search{max-width:none;flex:1 1 140px}
@@ -447,6 +558,37 @@ body.allview-on .fab{display:none!important}
   .atable td:first-child{display:block;font-size:15px;font-weight:700;border-bottom:1px solid var(--line-2);padding-bottom:7px;margin-bottom:5px;text-align:left}
   .atable td:first-child::before{content:none}
   .atable tfoot tr{background:var(--panel-2);border:2px solid var(--line)}
+
+  /* SARIM CARS: the register becomes cards, the two money views scroll sideways */
+  .carsbody{padding:10px 10px 14px}
+  .creg,.creg tbody,.creg tr,.creg td,
+  .ccost,.ccost tbody,.ccost tr,.ccost td{display:block}
+  .creg thead,.ccost thead{display:none}
+  .creg tr,.ccost tr{border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--panel);position:relative}
+  .creg tr.charge{background:var(--panel-2)}
+  .creg td,.ccost td{border:none!important;display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    padding:3px 0;text-align:right;font-size:13px;overflow-wrap:anywhere}
+  .creg td:empty,.ccost td:empty{display:none}
+  .creg td::before,.ccost td::before{content:attr(data-l);color:var(--ink-3);font-weight:500;text-align:left;font-size:12px;white-space:nowrap;flex:0 0 auto}
+  .creg td.c-n,.ccost td.c-n{display:none}
+  .creg td.det,.ccost td.det{display:block;font-size:15px;font-weight:700;text-align:left;padding-right:34px;
+    border-bottom:1px solid var(--line-2);padding-bottom:7px;margin-bottom:5px}
+  .creg td.det::before,.ccost td.det::before{content:none}
+  .creg td.det .sub,.ccost td.det .sub{font-weight:500}
+  .creg td.chs,.ccost td.chs{order:-1;justify-content:flex-start;font-size:11.5px;color:var(--ink-3);padding-bottom:4px}
+  .creg td.chs::before,.ccost td.chs::before{content:none}
+  .creg td.c-docs{justify-content:flex-end;gap:6px}
+  .creg td.c-menu,.ccost td.c-menu{position:absolute;top:8px;right:8px;padding:0}
+  .ctable.cship{min-width:600px}
+  .carsbody>table.cship{display:block;overflow-x:auto}
+  .vsum>div{flex:1 1 100%}
+  .subtabs{padding:8px 8px 0}
+  #carswrap .toolbar{flex-wrap:wrap;gap:6px;padding:8px}
+  #carswrap .toolbar .search{flex:1 1 100%}
+  #carswrap .toolbar .mini{flex:1 1 40%;min-width:0}
+  #carswrap .toolbar #c-showpur-wrap{flex:1 1 100%;justify-content:center}
+  #carswrap .toolbar .tbtn{flex:1 1 auto;justify-content:center}
+  #carswrap .toolbar .only-wide{display:none}
 
   /* history rows stack */
   .htable,.htable tbody,.htable tr,.htable td{display:block}
@@ -580,27 +722,56 @@ body.allview-on .fab{display:none!important}
       </div>
 
       <div class="allview" id="allview" style="display:none"></div>
+      <div class="carswrap" id="carswrap" style="display:none">
+        <div class="subtabs" id="car-subtabs">
+          <button class="subtab" data-cv="register">Vehicles</button>
+          <button class="subtab" data-cv="shipping">Cars &amp; shipping</button>
+          <button class="subtab" data-cv="costing">Car costing</button>
+        </div>
+        <div class="toolbar">
+          <div class="search">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input id="cq" type="search" placeholder="Chassis, model, year, supplier, destination…">
+          </div>
+          <select class="mini" id="c-model"><option value="all">Any model</option></select>
+          <select class="mini" id="c-status"><option value="all">Any status</option><option>PAID</option><option>UNPAID</option><option>CREDIT</option></select>
+          <select class="mini" id="c-batch"><option value="all">Any shipment</option></select>
+          <label class="chk" id="c-showpur-wrap" title="Show what each vehicle cost to buy, before any work"><input type="checkbox" id="c-showpur"> Purchase column</label>
+          <div class="spacer only-wide"></div>
+          <button class="tbtn ghost" id="btn-car-add">+ Vehicle</button>
+          <button class="tbtn ghost" id="btn-car-charge">+ Shipping charge</button>
+          <button class="tbtn ghost" id="btn-car-import">⊕ Import</button>
+        </div>
+        <div class="carsbody" id="carsbody"></div>
+      </div>
       <div class="footnote" id="footnote"></div>
     </div>
 
     <aside class="side" id="side">
-      <div class="panel">
-        <h4>Activity <span class="lnk" id="feed-all">See all →</span></h4>
+      <div class="panel" id="panel-activity">
+        <h4><button class="pgrip" data-pdrag="activity" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Activity <div class="spacer"></div><span class="lnk" id="feed-all">See all &rarr;</span></h4>
         <div class="feed" id="feed"></div>
       </div>
+      <div class="panel" id="panel-reminders">
+        <h4><button class="pgrip" data-pdrag="reminders" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Reminders <div class="spacer"></div><span class="tot" id="rem-tot"></span></h4>
+        <div class="plist" id="rem-list"></div>
+      </div>
       <div class="panel" id="panel-recv">
-        <h4>Receivable <span class="tot recv" id="recv-tot"></span></h4>
+        <h4><button class="pgrip" data-pdrag="recv" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Receivable <div class="spacer"></div><span class="tot recv" id="recv-tot"></span></h4>
         <div class="plist" id="recv-list"></div>
         <div class="padd"><input id="recv-n" placeholder="Who owes you"><input class="a" id="recv-a" inputmode="decimal" placeholder="0"><button data-add="recv">+</button></div>
       </div>
       <div class="panel" id="panel-pay">
-        <h4>Payable <span class="tot pay" id="pay-tot"></span></h4>
+        <h4><button class="pgrip" data-pdrag="pay" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Payable <div class="spacer"></div><span class="tot pay" id="pay-tot"></span></h4>
         <div class="plist" id="pay-list"></div>
         <div class="padd"><input id="pay-n" placeholder="Who you owe"><input class="a" id="pay-a" inputmode="decimal" placeholder="0"><button data-add="pay">+</button></div>
       </div>
-      <div class="panel"><h4>Position</h4><div id="position"></div></div>
-      <div class="panel">
-        <h4>Colour tags <span style="letter-spacing:0;text-transform:none;font-weight:500">long-press a row</span></h4>
+      <div class="panel" id="panel-position">
+        <h4><button class="pgrip" data-pdrag="position" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Position</h4>
+        <div id="position"></div>
+      </div>
+      <div class="panel" id="panel-tags">
+        <h4><button class="pgrip" data-pdrag="tags" title="Drag to reorder"><svg width="10" height="14" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true"><circle cx="3.5" cy="3" r="1.4"/><circle cx="8.5" cy="3" r="1.4"/><circle cx="3.5" cy="8" r="1.4"/><circle cx="8.5" cy="8" r="1.4"/><circle cx="3.5" cy="13" r="1.4"/><circle cx="8.5" cy="13" r="1.4"/></svg></button>Colour tags <div class="spacer"></div><span style="letter-spacing:0;text-transform:none;font-weight:500">long-press a row</span></h4>
         <div class="legend" id="legend"></div>
       </div>
     </aside>
@@ -639,6 +810,8 @@ var SPLIT_ACCOUNTS = ["AUS/JPN","UK/USA"];   /* the pair for the 50/50 split opt
 
 var LS = "hisaab.v2";
 var ALL_ID = "__ALL__";
+var CARS_ID = "__CARS__";
+var NOSHIP  = "IN THE YARD";        /* label for a vehicle that has not shipped yet */
 var TAGS = [
   {id:"blue",  label:"SARIM",       cls:"t-blue",  color:"#2563eb"},
   {id:"red",   label:"SIAM",        cls:"t-red",   color:"#dc2626"},
@@ -654,6 +827,12 @@ var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySele
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function isTouch(){ return window.matchMedia("(max-width:760px)").matches; }
+var BELL='<svg class="bell" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'+
+  '<path d="M12 2a1.6 1.6 0 0 0-1.6 1.6v.7A6 6 0 0 0 6 10v4l-1.6 2.2A.8.8 0 0 0 5 17.5h14a.8.8 0 0 0 .6-1.3L18 14v-4a6 6 0 0 0-4.4-5.7v-.7A1.6 1.6 0 0 0 12 2zm0 20a2.6 2.6 0 0 0 2.5-2h-5A2.6 2.6 0 0 0 12 22z"/></svg>';
+var EYE='<svg class="eyeoff" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'+
+  '<path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="3"/><path d="M3.5 20.5 20.5 3.5"/></svg>';
+var ANCH='<svg class="anch" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">'+
+  '<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
 var GRIP='<svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor" aria-hidden="true">'+
   '<circle cx="3.5" cy="3" r="1.5"/><circle cx="8.5" cy="3" r="1.5"/>'+
   '<circle cx="3.5" cy="8" r="1.5"/><circle cx="8.5" cy="8" r="1.5"/>'+
@@ -661,10 +840,10 @@ var GRIP='<svg width="12" height="16" viewBox="0 0 12 16" fill="currentColor" ar
 
 /* ------------------------------------------------------------------ state */
 var AUTH = {token:"", user:"", people:[]};
-var DB   = {rev:0, since:"", accounts:{}, entries:{}, side:{}, audit:[], online:[]};
+var DB   = {rev:0, since:"", accounts:{}, entries:{}, side:{}, cars:{}, costs:{}, audit:[], online:[]};
 var Q    = [];
-var S    = {accounts:[], activeId:null, theme:"light", tagLabels:{}};
-var ui   = {q:"", tag:"all", payBy:"all", month:"all", lastPick:null};
+var S    = {accounts:[], cars:[], activeId:null, carsView:"register", theme:"light", tagLabels:{}};
+var ui   = {q:"", tag:"all", payBy:"all", month:"all", lastPick:null, cq:"", cstatus:"all", cbatch:"all", cmodel:"all"};
 var PICK = {};
 var net  = {state:"live", lastErr:"", sending:false, lastPull:0, bannerHidden:false};
 var lastActivity = Date.now();
@@ -674,8 +853,9 @@ var DEMO = false;
 function lsGet(k,d){ try{ var v=localStorage.getItem(LS+"."+k); return v==null?d:JSON.parse(v); }catch(e){ return d; } }
 function lsSet(k,v){ try{ localStorage.setItem(LS+"."+k, JSON.stringify(v)); }catch(e){} }
 function cacheAll(){
-  lsSet("db",{rev:DB.rev,since:DB.since,accounts:DB.accounts,entries:DB.entries,side:DB.side,audit:DB.audit.slice(0,60)});
-  lsSet("q",Q); lsSet("ui",{theme:S.theme,activeId:S.activeId,tagLabels:S.tagLabels});
+  lsSet("db",{rev:DB.rev,since:DB.since,accounts:DB.accounts,entries:DB.entries,side:DB.side,
+    cars:DB.cars,costs:DB.costs,audit:DB.audit.slice(0,60)});
+  lsSet("q",Q); lsSet("ui",{theme:S.theme,activeId:S.activeId,tagLabels:S.tagLabels,panelOrder:S.panelOrder,carsView:S.carsView});
 }
 
 /* ------------------------------------------------------------------- utils */
@@ -819,6 +999,10 @@ function ingest(res){
   (res.side||[]).forEach(function(s){ DB.side[s.id]=s; });
   (res.deletedEntries||[]).forEach(function(id){ delete DB.entries[id]; delete PICK[id]; });
   (res.deletedSide||[]).forEach(function(id){ delete DB.side[id]; });
+  (res.cars||[]).forEach(function(c){ DB.cars[c.id]=c; });
+  (res.costs||[]).forEach(function(c){ DB.costs[c.id]=c; });
+  (res.deletedCars||[]).forEach(function(id){ delete DB.cars[id]; });
+  (res.deletedCosts||[]).forEach(function(id){ delete DB.costs[id]; });
   if(res.audit && res.audit.length) DB.audit=res.audit;
   rebuild(); cacheAll(); renderAll();
   flashIds.forEach(function(id){
@@ -844,12 +1028,80 @@ function rebuild(){
   });
   accs.forEach(function(a){ byAcct[a.id].entries.sort(function(x,y){ return x.pos-y.pos; }); });
   S.accounts = accs.map(function(a){ return byAcct[a.id]; });
-  if(S.activeId!==ALL_ID && (!S.activeId || !S.accounts.filter(function(a){return a.id===S.activeId;}).length))
+  if(S.activeId!==ALL_ID && S.activeId!==CARS_ID && (!S.activeId || !S.accounts.filter(function(a){return a.id===S.activeId;}).length))
     S.activeId = S.accounts[0] ? S.accounts[0].id : ALL_ID;
+  rebuildCars();
+}
+function rebuildCars(){
+  var byCar={};
+  Object.keys(DB.costs).forEach(function(k){
+    var c=DB.costs[k]; if(isTrue(c.deleted)) return;
+    (byCar[c.carId]=byCar[c.carId]||[]).push({id:c.id,carId:c.carId,date:c.date,description:c.description,
+      amount:Number(c.amount)||0,pos:Number(c.pos)||0});
+  });
+  Object.keys(byCar).forEach(function(k){ byCar[k].sort(function(a,b){return a.pos-b.pos;}); });
+  S.cars = Object.keys(DB.cars).map(function(k){return DB.cars[k];})
+    .filter(function(c){ return !isTrue(c.deleted); })
+    .sort(function(a,b){ return (Number(a.pos)||0)-(Number(b.pos)||0); })
+    .map(function(c){
+      var costs=byCar[c.id]||[], ct=0;
+      costs.forEach(function(x){ ct+=x.amount; });
+      var aed=Number(c.aed)||0;
+      return {id:c.id, kind:c.kind||"unit", chassis:c.chassis||"", detail:c.detail||"",
+        make:c.make||"", model:c.model||"", year:String(c.year||""), body:c.body||"",
+        colour:c.colour||"", transmission:c.transmission||"", engineNo:c.engineNo||"",
+        supplier:c.supplier||"", date:c.date||"", aed:aed, usd:Number(c.usd)||0,
+        status:String(c.status||"").toUpperCase(), customer:c.customer||"", destination:c.destination||"",
+        batch:c.batch||"", driveUrl:c.driveUrl||"", notes:c.notes||"", pos:Number(c.pos)||0,
+        costs:costs, costTotal:ct, landed:aed+ct,
+        createdBy:c.createdBy, createdAt:c.createdAt, updatedBy:c.updatedBy, updatedAt:c.updatedAt};
+    });
+}
+function isCars(){ return S.activeId===CARS_ID; }
+function carUsd(aed){ return Math.round((Number(aed)||0)/USD_RATE*100)/100; }
+function fmtAed(n){ return "AED "+(Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtUsd(n){ return "$"+(Number(n)||0).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function carsFiltered(){
+  var q=ui.cq.trim().toLowerCase();
+  return S.cars.filter(function(c){
+    if(ui.cstatus!=="all" && c.status!==ui.cstatus) return false;
+    if(ui.cbatch!=="all" && (c.batch||NOSHIP)!==ui.cbatch) return false;
+    if(ui.cmodel!=="all" && carModel(c)!==ui.cmodel) return false;
+    if(q && carHay(c).indexOf(q)<0) return false;
+    return true;
+  });
+}
+function carHay(c){
+  return (c.chassis+" "+c.detail+" "+c.make+" "+c.model+" "+c.year+" "+c.body+" "+c.colour+" "+
+          c.supplier+" "+c.customer+" "+c.destination+" "+c.batch+" "+c.transmission).toLowerCase();
+}
+function carModel(c){ return ((c.make?c.make.trim()+" ":"")+(c.model||"").trim()).trim() || "—"; }
+function carName(c){
+  if(c.detail) return c.detail;
+  var p=[c.make,c.model,c.year,c.body,c.colour].filter(Boolean);
+  return p.join(" ") || c.chassis || "Vehicle";
+}
+function carTotals(list){
+  /* aed = what the vehicles cost to buy.  costs = the work done on them.
+     landed = the two together, on the ground in Dubai.  ship = freight, kept
+     apart because it belongs to a shipment, not to a car.                    */
+  var t={units:0,charges:0,aed:0,usd:0,costs:0,ship:0,unpaid:0,shipped:0,yard:0};
+  list.forEach(function(c){
+    if(c.kind==="charge"){ t.charges++; t.ship+=c.aed; }
+    else {
+      t.units++; if(c.batch) t.shipped++; else t.yard++;
+      t.aed+=c.aed; t.usd+=(c.usd||carUsd(c.aed)); t.costs+=c.costTotal;
+    }
+    if(c.status && c.status!=="PAID") t.unpaid++;
+  });
+  t.landed=t.aed+t.costs;
+  t.grand=t.landed+t.ship;
+  return t;
 }
 function isTrue(v){ return v===true||v==="TRUE"||v==="true"||v===1||v==="1"; }
 function isAll(){ return S.activeId===ALL_ID; }
 function acct(){
+  if(isCars()) return {id:CARS_ID, name:"SARIM CARS", currency:"AED", opening:0, entries:[], recv:[], pay:[]};
   if(isAll()) return {id:ALL_ID, name:"ALL ACCOUNTS", currency:mainCurrency(), opening:0, entries:[], recv:[], pay:[]};
   var a=S.accounts.filter(function(x){return x.id===S.activeId;})[0];
   if(!a) a=S.accounts[0];
@@ -916,18 +1168,30 @@ function signedOut(){
 
 /* =========================================================== COMPUTE ===== */
 function totals(a){
-  var bal=Number(a.opening)||0,inn=0,out=0,cash=0,bank=0;
+  var bal=Number(a.opening)||0,inn=0,out=0,cash=0,bank=0,hidden=0,hiddenSum=0;
   a.entries.forEach(function(e){
-    var v=Number(e.amount)||0; bal+=v; if(v>=0) inn+=v; else out+=v;
+    var v=Number(e.amount)||0;
+    if(isHidden(e)){ hidden++; hiddenSum+=v; return; }      /* hidden rows count for nothing */
+    bal+=v;
+    if(!isAnchor(e)){ if(v>=0) inn+=v; else out+=v; }        /* an anchor is a carried balance, not a movement */
     if(String(e.payBy||"").toUpperCase()==="BANK") bank+=v; else cash+=v;
   });
   var r=0,p=0; a.recv.forEach(function(x){r+=x.amount;}); a.pay.forEach(function(x){p+=x.amount;});
-  return {bal:bal,in:inn,out:out,cash:cash,bank:bank,recv:r,pay:p,n:a.entries.length};
+  return {bal:bal,in:inn,out:out,cash:cash,bank:bank,recv:r,pay:p,n:a.entries.length,hidden:hidden,hiddenSum:hiddenSum};
+}
+function anchorOf(a,kind){
+  for(var i=0;i<a.entries.length;i++){
+    var e=a.entries[i];
+    if(isAnchor(e) && String(e.payBy||"").toUpperCase()===kind) return e;
+  }
+  return null;
 }
 function filtered(a){
   var q=ui.q.trim().toLowerCase();
   return a.entries.filter(function(e){
-    if(ui.tag!=="all"){ if(ui.tag==="none"?!!e.tag:e.tag!==ui.tag) return false; }
+    if(ui.tag==="rem"){ if(!isRem(e)) return false; }
+    else if(ui.tag==="hide"){ if(!isHidden(e)) return false; }
+    else if(ui.tag!=="all"){ var col=colourOf(e); if(ui.tag==="none"?!!col:col!==ui.tag) return false; }
     if(ui.payBy!=="all" && String(e.payBy||"").toUpperCase()!==ui.payBy) return false;
     if(ui.month!=="all" && monthKey(e.date)!==ui.month) return false;
     if(q && ((e.details||"")+" "+(e.payBy||"")+" "+fmtDate(e.date)+" "+e.amount).toLowerCase().indexOf(q)<0) return false;
@@ -936,6 +1200,23 @@ function filtered(a){
 }
 function filtersOn(){ return !!(ui.q.trim()||ui.tag!=="all"||ui.payBy!=="all"||ui.month!=="all"); }
 function tagOf(id){ return TAGS.filter(function(t){return t.id===id;})[0]; }
+/* e.tag holds a small comma list, e.g. "red" or "red,rem" or just "rem" */
+function tagTokens(e){ return String((e&&e.tag)||"").split(",").map(function(t){return t.trim();}).filter(Boolean); }
+function colourOf(e){ var t=tagTokens(e); for(var i=0;i<t.length;i++) if(tagOf(t[i])) return t[i]; return ""; }
+function isRem(e){ return tagTokens(e).indexOf("rem")>-1; }
+function isHidden(e){ return tagTokens(e).indexOf("hide")>-1; }
+function isAnchor(e){ return tagTokens(e).indexOf("anchor")>-1; }
+function withTok(e,tok,on){ var t=tagTokens(e).filter(function(x){return x!==tok;}); if(on) t.push(tok); return t.join(","); }
+function withColour(e,id){ var t=tagTokens(e).filter(function(x){return !tagOf(x);}); if(id) t.unshift(id); return t.join(","); }
+function withRem(e,on){ return withTok(e,"rem",on); }
+function withHide(e,on){ return withTok(e,"hide",on); }
+function remList(){
+  var out=[];
+  (isAll()?S.accounts:[acct()]).forEach(function(a){
+    (a.entries||[]).forEach(function(e){ if(isRem(e)) out.push({e:e,acc:a}); });
+  });
+  return out;
+}
 function tagLabel(id){ return (S.tagLabels&&S.tagLabels[id])||(TAGS.filter(function(t){return t.id===id;})[0]||{}).label||id; }
 function includedInAll(a){ return !EXCLUDE_FROM_ALL.test(a.name); }
 
@@ -944,8 +1225,10 @@ function renderAll(){
   document.documentElement.setAttribute("data-theme", S.theme||"light");
   $("#btn-theme").textContent = S.theme==="dark"?"Light":"Dark";
   applyRole();
-  renderPeople(); renderTabs(); renderStats(); renderChips(); renderMonths();
-  if(isAll()) renderAllView(); else renderTable();
+  document.body.classList.toggle("cars-on", isCars());
+  renderPeople(); renderTabs(); renderStats();
+  if(isCars()){ renderCars(); }
+  else { renderChips(); renderMonths(); if(isAll()) renderAllView(); else renderTable(); }
   renderSide(); renderFeed(); renderBulk();
 }
 function applyRole(){
@@ -971,6 +1254,8 @@ function renderTabs(){
     return '<button class="tab '+(a.id===S.activeId?"active":"")+'" data-id="'+a.id+'">'+esc(a.name)+
       ' <span class="bal num '+(t.bal<0?"neg":"")+'">'+fmtShort(t.bal,a.currency)+'</span></button>';
   }).join("");
+  html+='<button class="tab cars '+(isCars()?"active":"")+'" data-id="'+CARS_ID+'">SARIM CARS <span class="bal num">'+
+    (S.cars.length?S.cars.filter(function(c){return c.kind!=="charge";}).length+" units":"")+'</span></button>';
   html+='<button class="tab" id="tab-add" style="color:var(--ink-3)">+</button>';
   el.innerHTML=html;
   $$(".tab[data-id]",el).forEach(function(b){
@@ -984,11 +1269,11 @@ function renderTabs(){
   $("#tab-add").onclick=addAccount;
 }
 function allTotals(){
-  var t={bal:0,in:0,out:0,recv:0,pay:0,n:0,byCur:{}};
+  var t={bal:0,in:0,out:0,cash:0,bank:0,recv:0,pay:0,n:0,byCur:{}};
   S.accounts.forEach(function(a){
     if(!includedInAll(a)) return;
     var x=totals(a);
-    t.bal+=x.bal; t.in+=x.in; t.out+=x.out; t.recv+=x.recv; t.pay+=x.pay; t.n+=x.n;
+    t.bal+=x.bal; t.in+=x.in; t.out+=x.out; t.cash+=x.cash; t.bank+=x.bank; t.recv+=x.recv; t.pay+=x.pay; t.n+=x.n;
     var c=a.currency||"AED";
     if(!t.byCur[c]) t.byCur[c]={bal:0,recv:0,pay:0,n:0};
     t.byCur[c].bal+=x.bal; t.byCur[c].recv+=x.recv; t.byCur[c].pay+=x.pay; t.byCur[c].n+=x.n;
@@ -997,36 +1282,58 @@ function allTotals(){
 }
 function renderStats(){
   var a=acct();
+  if(isCars()){
+    var T=carTotals(S.cars);
+    $("#stats").innerHTML =
+      card("hero","Sarim cars — spent in total", fmtAed(T.grand), "",
+           T.units+" vehicles · "+T.charges+" shipping charges · "+fmtUsd(carUsd(T.grand)))+
+      card("","Purchases", fmtAed(T.aed), "", fmtUsd(T.usd)+" at "+USD_RATE)+
+      card("","Work done", fmtAed(T.costs), "", "landed "+fmtAed(T.landed))+
+      card("","Shipping", fmtAed(T.ship), "", T.charges+" charges")+
+      card("","In the yard", String(T.yard), T.yard?"":"pos",
+           T.yard?"bought, not shipped yet":"everything has shipped");
+    $("#brandsub").textContent=(AUTH.user?AUTH.user+" · ":"")+"Sarim cars";
+    return;
+  }
   if(isAll()){
     var T=allTotals(), curs=Object.keys(T.byCur);
     var main=mainCurrency();
     $("#stats").innerHTML =
       card("hero","All accounts — balance", fmt(T.byCur[main]?T.byCur[main].bal:T.bal, main), (T.bal<0?"neg":"pos"),
            S.accounts.filter(includedInAll).length+" accounts · "+T.n+" entries")+
-      card("","Money in",fmt(T.in,main),"pos","all credits")+
-      card("","Money out",fmt(T.out,main),"neg","all debits")+
+      card("","Cash balance",fmt(T.cash,main),T.cash<0?"neg":"","all counted accounts")+
+      card("","Bank balance",fmt(T.bank,main),T.bank<0?"neg":"","all counted accounts")+
       card("","Receivable",fmt(T.recv,main),"pos","owed to you")+
       card("","Payable",fmt(T.pay,main),"neg","you owe");
     $("#brandsub").textContent=(AUTH.user?AUTH.user+" · ":"")+"All accounts";
     return;
   }
   var t=totals(a);
+  var ca=anchorOf(a,"CASH"), ba=anchorOf(a,"BANK");
   $("#stats").innerHTML =
-    card("hero", esc(a.name)+" — balance", fmt(t.bal,a.currency), t.bal<0?"neg":"pos", t.n+(t.n===1?" entry":" entries")+" · opening "+fmt(a.opening,a.currency))+
+    card("hero", esc(a.name)+" — balance", fmt(t.bal,a.currency), t.bal<0?"neg":"pos",
+         t.n+(t.n===1?" entry":" entries")+(a.opening?" · opening "+fmt(a.opening,a.currency):"")+
+         (t.hidden?' · <b style="color:var(--ink-3)">'+t.hidden+" not counted</b>":""))+
     card("","Money in",fmt(t.in,a.currency),"pos","all credits")+
     card("","Money out",fmt(t.out,a.currency),"neg","all debits")+
-    card("","Cash",fmt(t.cash,a.currency),t.cash<0?"neg":"","net cash movement")+
-    card("","Bank",fmt(t.bank,a.currency),t.bank<0?"neg":"","net bank movement");
+    card("","Cash balance",fmt(t.cash,a.currency),t.cash<0?"neg":"",
+         (ca?"opening "+fmt(ca.amount,a.currency)+" · ":"")+"<span class='setbal' data-setbal='CASH'>set balance</span>")+
+    card("","Bank balance",fmt(t.bank,a.currency),t.bank<0?"neg":"",
+         (ba?"opening "+fmt(ba.amount,a.currency)+" · ":"")+"<span class='setbal' data-setbal='BANK'>set balance</span>");
+  $$("#stats [data-setbal]").forEach(function(b){ b.onclick=function(){ setPayBalance(b.dataset.setbal); }; });
   $("#brandsub").textContent=(AUTH.user?AUTH.user+" · ":"")+a.name;
   function card(c,k,v,vc,s){ return '<div class="card '+c+'"><div class="k">'+k+'</div><div class="v num '+vc+'">'+v+'</div><div class="s">'+s+'</div></div>'; }
 }
 function renderChips(){
-  var used={}; acct().entries.forEach(function(e){ if(e.tag) used[e.tag]=true; });
+  var used={}, anyRem=false, anyHid=false;
+  acct().entries.forEach(function(e){ var c=colourOf(e); if(c) used[c]=true; if(isRem(e)) anyRem=true; if(isHidden(e)) anyHid=true; });
   var html='<button class="chip '+(ui.tag==="all"?"on":"")+'" data-tag="all">All</button>';
   TAGS.forEach(function(t){
     if(!used[t.id] && ui.tag!==t.id) return;
     html+='<button class="chip '+(ui.tag===t.id?"on":"")+'" data-tag="'+t.id+'"><i class="sw" style="background:'+t.color+'"></i>'+esc(tagLabel(t.id))+'</button>';
   });
+  if(anyRem) html+='<button class="chip '+(ui.tag==="rem"?"on":"")+'" data-tag="rem">🔔 Reminders</button>';
+  if(anyHid) html+='<button class="chip '+(ui.tag==="hide"?"on":"")+'" data-tag="hide">Not counted</button>';
   if(Object.keys(used).length) html+='<button class="chip '+(ui.tag==="none"?"on":"")+'" data-tag="none">Untagged</button>';
   $("#tagchips").innerHTML=html;
   $$("#tagchips .chip").forEach(function(c){ c.onclick=function(){ ui.tag=c.dataset.tag; renderChips(); renderTable(); }; });
@@ -1043,27 +1350,36 @@ function renderMonths(){
 function renderTable(){
   document.body.classList.remove("allview-on");
   $("#allview").style.display="none";
+  $("#carswrap").style.display="none";
   $("#tablewrap").style.display="";
   $("#toolbar").style.display="";
   $("#addrow").style.display = isTouch() && !document.body.classList.contains("addopen") ? "none" : "";
   var a=acct(), rows=filtered(a), off=filtersOn();
   var bal={}, run=Number(a.opening)||0;
-  for(var i=a.entries.length-1;i>=0;i--){ run+=Number(a.entries[i].amount)||0; bal[a.entries[i].id]=run; }
+  for(var i=a.entries.length-1;i>=0;i--){
+    var ee=a.entries[i];
+    if(!isHidden(ee)) run+=Number(ee.amount)||0;
+    bal[ee.id]=run;
+  }
   var html=rows.map(function(e,idx){
-    var t=tagOf(e.tag), v=Number(e.amount)||0;
+    var col=colourOf(e), t=tagOf(col), rem=isRem(e), hid=isHidden(e), anc=isAnchor(e), v=Number(e.amount)||0;
     var isBlank = !String(e.details||"").trim() && !e.date && v===0;
     var tip="Added by "+(e.createdBy||"?")+" · "+fmtWhen(e.createdAt)+
       (e.updatedAt&&e.updatedAt!==e.createdAt?"\nLast edit by "+(e.updatedBy||"?")+" · "+fmtWhen(e.updatedAt):"");
-    var cls=[]; if(t) cls.push(t.cls); if(PICK[e.id]) cls.push("picked");
+    var cls=[]; if(t) cls.push(t.cls); if(rem) cls.push("rem"); if(hid) cls.push("hid"); if(anc) cls.push("anch-row");
+    if(PICK[e.id]) cls.push("picked");
     if(isBlank) cls.push("blank");
-    return '<tr data-id="'+e.id+'" title="'+esc(tip)+'" '+(t?'data-tag="'+e.tag+'" ':'')+(cls.length?'class="'+cls.join(" ")+'"':'')+'>'+
+    return '<tr data-id="'+e.id+'" title="'+esc(tip)+'" '+(t?'data-tag="'+col+'" ':'')+(cls.length?'class="'+cls.join(" ")+'"':'')+'>'+
       '<td class="c-sel"><input type="checkbox" data-pick="'+e.id+'" '+(PICK[e.id]?"checked":"")+'></td>'+
       '<td class="c-date" data-field="date">'+(isBlank?"":esc(isTouch()?fmtDateShort(e.date):fmtDate(e.date)))+'</td>'+
-      '<td class="c-det" data-field="details">'+esc(e.details||"")+'</td>'+
+      '<td class="c-det" data-field="details">'+(rem?BELL:"")+(anc?ANCH:"")+
+        (hid?'<button class="unhide" data-hide="'+e.id+'" title="Not counted — click to count it again">'+EYE+'</button>':'')+
+        esc(e.details||"")+'</td>'+
       '<td class="c-pay" data-field="payBy">'+(isBlank?"":'<span class="pill '+(String(e.payBy).toUpperCase()==="BANK"?"bank":"")+'">'+esc(e.payBy||"CASH")+'</span>')+'</td>'+
       '<td class="c-amt num amt '+(v===0?"zero":(v<0?"neg":"pos"))+'" data-field="amount">'+(isBlank?"":fmt(v,a.currency,{plus:true}))+'</td>'+
-      '<td class="c-bal num">'+(isBlank?"":(off?"·":esc(fmt(bal[e.id],a.currency))))+'</td>'+
+      '<td class="c-bal num">'+(isBlank?"":(hid?"—":(off?"·":esc(fmt(bal[e.id],a.currency)))))+'</td>'+
       '<td class="c-act">'+
+        '<button class="eye only-wide" data-hide="'+e.id+'" title="'+(hid?"Count this entry again":"Leave this entry out of the totals")+'">'+EYE+'</button>'+
         (off?'':'<button class="drag" data-drag="'+e.id+'" title="Hold and drag to move this row">'+GRIP+'</button>')+
         '<button class="rowmenu" data-id="'+e.id+'" title="Row actions">⋯</button>'+
       '</td></tr>';
@@ -1088,12 +1404,15 @@ function renderTable(){
   rows.forEach(function(e){ var v=Number(e.amount)||0; ft+=v; if(v>=0)fin+=v; else fout+=v; });
   $("#footnote").innerHTML = off
     ? '<b>'+rows.length+'</b> of '+a.entries.length+' shown · in <b class="num" style="color:var(--pos)">'+fmt(fin,a.currency)+'</b> · out <b class="num" style="color:var(--neg)">'+fmt(fout,a.currency)+'</b> · net <b class="num">'+fmt(ft,a.currency)+'</b>'
-    : '<b>'+a.entries.length+'</b> '+(a.entries.length===1?'entry':'entries')+' · newest first · tap a cell to edit · hold the dots on the right and drag to move a row · '+(isTouch()?"long-press":"right-click")+' a row for more';
+    : '<b>'+a.entries.length+'</b> '+(a.entries.length===1?'entry':'entries')+
+      (totals(a).hidden?' · <b>'+totals(a).hidden+'</b> not counted ('+fmt(totals(a).hiddenSum,a.currency)+')':'')+
+      ' · newest first · tap a cell to edit · hold the dots on the right and drag to move a row · '+(isTouch()?"long-press":"right-click")+' a row for more';
   if(!off){ var oc=$("#opening-cell"); if(oc){ oc.style.cursor="text"; oc.onclick=function(){ editOpening(oc); }; } }
   syncSelAllBox();
 }
 function renderAllView(){
   document.body.classList.add("allview-on");
+  $("#carswrap").style.display="none";
   $("#tablewrap").style.display="none";
   $("#toolbar").style.display="none";
   $("#addrow").style.display="none";
@@ -1117,15 +1436,18 @@ function renderAllView(){
       '<td class="num" data-l="Entries">'+t.n+'</td>'+
       '<td class="num" data-l="Money in" style="color:var(--pos)">'+fmt(t.in,a.currency)+'</td>'+
       '<td class="num" data-l="Money out" style="color:var(--neg)">'+fmt(t.out,a.currency)+'</td>'+
+      '<td class="num" data-l="Cash">'+fmt(t.cash,a.currency)+'</td>'+
+      '<td class="num" data-l="Bank">'+fmt(t.bank,a.currency)+'</td>'+
       '<td class="num" data-l="Receivable">'+fmt(t.recv,a.currency)+'</td>'+
       '<td class="num" data-l="Payable">'+fmt(t.pay,a.currency)+'</td>'+
       '<td class="num" data-l="Balance" style="font-weight:700;color:'+(t.bal<0?"var(--neg)":"var(--ink)")+'">'+fmt(t.bal,a.currency)+'</td></tr>';
   }).join("");
   av.innerHTML = head+
-    '<table class="atable"><thead><tr><th>Account</th><th>Entries</th><th>In</th><th>Out</th><th>Receivable</th><th>Payable</th><th>Balance</th></tr></thead>'+
+    '<table class="atable"><thead><tr><th>Account</th><th>Entries</th><th>In</th><th>Out</th><th>Cash</th><th>Bank</th><th>Receivable</th><th>Payable</th><th>Balance</th></tr></thead>'+
     '<tbody>'+rows+'</tbody>'+
     '<tfoot><tr><td>TOTAL <span style="font-weight:500;color:var(--ink-3)">(counted accounts)</span></td><td class="num" data-l="Entries">'+T.n+'</td>'+
     '<td class="num" data-l="Money in" style="color:var(--pos)">'+fmt(T.in,main)+'</td><td class="num" data-l="Money out" style="color:var(--neg)">'+fmt(T.out,main)+'</td>'+
+    '<td class="num" data-l="Cash">'+fmt(T.cash,main)+'</td><td class="num" data-l="Bank">'+fmt(T.bank,main)+'</td>'+
     '<td class="num" data-l="Receivable">'+fmt(T.recv,main)+'</td><td class="num" data-l="Payable">'+fmt(T.pay,main)+'</td>'+
     '<td class="num" data-l="Balance" style="color:'+(T.bal<0?"var(--neg)":"var(--pos)")+'">'+fmt(T.bal,main)+'</td></tr></tfoot></table>'+
     '<p class="hint" style="margin-top:14px">Any account with “CASH” in its name is listed but left out of the total, so cash held inside another account is not counted twice. Tap a row to open that account.</p>';
@@ -1133,6 +1455,32 @@ function renderAllView(){
     tr.onclick=function(){ S.activeId=tr.dataset.go; cacheAll(); renderAll(); };
   });
   $("#footnote").innerHTML='<b>'+S.accounts.length+'</b> accounts · read-only summary · open an account to make changes';
+}
+function renderReminders(){
+  var list=remList(), a=acct();
+  var sum=0; list.forEach(function(o){ sum+=Number(o.e.amount)||0; });
+  $("#rem-tot").textContent = list.length ? list.length+" · "+fmt(sum,a.currency) : "";
+  $("#rem-list").innerHTML = list.length ? list.map(function(o){
+    var v=Number(o.e.amount)||0;
+    return '<div class="rem-item" data-go="'+o.e.id+'" data-acc="'+o.acc.id+'">'+
+      '<div class="bd"><div class="nm">'+(esc(o.e.details||"")||'<span style="color:var(--ink-3)">(no details)</span>')+'</div>'+
+      '<div class="mt">'+esc(o.e.date?fmtDateShort(o.e.date):"no date")+(isAll()?' · '+esc(o.acc.name):'')+'</div></div>'+
+      '<span class="am" style="color:'+(v<0?"var(--neg)":(v>0?"var(--pos)":"var(--ink-3)"))+'">'+(v?fmt(v,o.acc.currency):"")+'</span>'+
+      '<button class="x" data-remoff="'+o.e.id+'" title="Remove from reminders">✕</button></div>';
+  }).join("") : '<div class="pitem" style="color:var(--ink-3)">Nothing flagged — right-click an entry to add one</div>';
+  $$("#rem-list [data-remoff]").forEach(function(b){
+    b.onclick=function(ev){ ev.stopPropagation(); toggleRem([b.dataset.remoff], false); };
+  });
+  $$("#rem-list .rem-item").forEach(function(el){
+    el.onclick=function(){ jumpToEntry(el.dataset.acc, el.dataset.go); };
+  });
+}
+function jumpToEntry(accId, id){
+  if(S.activeId!==accId){ S.activeId=accId; ui.q="";$("#q").value="";ui.tag="all";ui.payBy="all";ui.month="all"; cacheAll(); renderAll(); }
+  var tr=$('#tbody tr[data-id="'+id+'"]');
+  if(!tr) return;
+  tr.scrollIntoView({block:"center", behavior:"smooth"});
+  tr.classList.add("flash"); setTimeout(function(){ tr.classList.remove("flash"); },1800);
 }
 function renderSide(){
   var a=acct(), t=isAll()?allTotals():totals(a), cur=a.currency;
@@ -1158,6 +1506,7 @@ function renderSide(){
     '<div class="kv" style="background:var(--panel-2)"><span style="color:var(--ink)">Net position</span><b class="num" style="color:'+(net2<0?"var(--neg)":"var(--pos)")+'">'+fmt(net2,cur)+'</b></div>';
   function kv(k,v){ return '<div class="kv"><span>'+k+'</span><b class="num">'+v+'</b></div>'; }
 
+  renderReminders();
   $("#legend").innerHTML=TAGS.map(function(t2){
     return '<span class="lg" data-tag="'+t2.id+'" title="Double-click to rename on this device"><i style="background:'+t2.color+'"></i>'+esc(tagLabel(t2.id))+'</span>';
   }).join("");
@@ -1188,7 +1537,15 @@ function auditLine(r){
   switch(r.action){
     case "ADD":     return "added <b>"+esc(r.note||"an entry")+"</b> ("+esc(r.newValue)+")"+acc;
     case "EDIT":    return "changed <b>"+esc(r.field)+"</b>"+acc+" from <span class='old'>"+esc(r.oldValue)+"</span> to <span class='new'>"+esc(r.newValue)+"</span>"+what;
-    case "TAG":     return "re-tagged an entry"+acc+what;
+    case "TAG": {
+      var wasH=/(^|,)hide(,|$)/.test(String(r.oldValue||"")), isH=/(^|,)hide(,|$)/.test(String(r.newValue||""));
+      if(!wasH && isH) return "left <b>"+esc(r.note||"an entry")+"</b> out of the totals"+acc;
+      if(wasH && !isH) return "counted <b>"+esc(r.note||"an entry")+"</b> again"+acc;
+      var wasR=/(^|,)rem(,|$)/.test(String(r.oldValue||"")), isR=/(^|,)rem(,|$)/.test(String(r.newValue||""));
+      if(!wasR && isR) return "flagged <b>"+esc(r.note||"an entry")+"</b> as a reminder"+acc;
+      if(wasR && !isR) return "cleared the reminder on <b>"+esc(r.note||"an entry")+"</b>"+acc;
+      return "re-tagged an entry"+acc+what;
+    }
     case "DELETE":  return "deleted <b>"+esc(r.note||"an entry")+"</b> ("+esc(r.oldValue)+")"+acc;
     case "RESTORE": return "restored <b>"+esc(r.note||"an entry")+"</b>"+acc;
     case "MOVE":    return "moved <b>"+esc(r.note||"an entry")+"</b> from <span class='old'>"+esc(r.oldValue)+"</span> to <span class='new'>"+esc(r.newValue)+"</span>";
@@ -1329,8 +1686,14 @@ function renderBulk(){
   $("#bulk-n").textContent=n+" selected";
   $("#bulk-tags").innerHTML=TAGS.map(function(t){
     return '<button class="sw2" style="background:'+t.color+'" data-tag="'+t.id+'" title="Tag as '+esc(tagLabel(t.id))+'"></button>';
-  }).join("")+'<button class="sw2" style="background:var(--panel-2);border:1px dashed var(--line);color:var(--ink-3)" data-tag="" title="Clear tag">✕</button>';
-  $$("#bulk-tags .sw2").forEach(function(b){ b.onclick=function(){ bulkTag(b.dataset.tag); }; });
+  }).join("")+'<button class="sw2" style="background:var(--panel-2);border:1px dashed var(--line);color:var(--ink-3)" data-tag="" title="Clear tag">✕</button>'+
+    '<button class="sw2" id="bulk-rem" style="background:var(--warn-soft);color:var(--warn)" title="Add to reminders">🔔</button>'+
+    '<button class="sw2" id="bulk-hide" style="background:var(--panel-2);color:var(--ink-3);border:1px solid var(--line)" title="Leave out of the totals">'+EYE+'</button>'+
+    '<button class="sw2" id="bulk-show" style="background:var(--panel-2);color:var(--pos);border:1px solid var(--line)" title="Count them again">✓</button>';
+  $$("#bulk-tags .sw2[data-tag]").forEach(function(b){ b.onclick=function(){ bulkTag(b.dataset.tag); }; });
+  $("#bulk-rem").onclick=function(){ toggleRem(Object.keys(PICK), true); };
+  $("#bulk-hide").onclick=function(){ toggleHide(Object.keys(PICK), true); };
+  $("#bulk-show").onclick=function(){ toggleHide(Object.keys(PICK), false); };
   var mv=$("#bulk-move");
   mv.innerHTML='<option value="">Move to…</option>'+S.accounts.filter(function(a){return a.id!==S.activeId;})
     .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption();
@@ -1338,9 +1701,10 @@ function renderBulk(){
 function bulkTag(tag){
   var ids=Object.keys(PICK);
   ids.forEach(function(id){
-    if(!DB.entries[id]) return;
-    DB.entries[id].tag=tag;
-    op({t:"update", id:id, field:"tag", val:tag});
+    var e=DB.entries[id]; if(!e) return;
+    var val=withColour(e,tag);
+    e.tag=val;
+    op({t:"update", id:id, field:"tag", val:val});
   });
   clearPick(); rebuild(); renderAll();
   toast(ids.length+" entries "+(tag?"tagged "+tagLabel(tag):"untagged"));
@@ -1519,6 +1883,145 @@ function commitDrag(id){
   if(tr){ tr.classList.add("flash"); setTimeout(function(){tr.classList.remove("flash");},900); }
 }
 
+/* ------------------------------------------------------- side panel ordering */
+var PANELS=["activity","reminders","recv","pay","position","tags"];
+function applyPanelOrder(){
+  var side=$("#side"); if(!side) return;
+  var order=(S.panelOrder&&S.panelOrder.length?S.panelOrder.slice():PANELS.slice());
+  PANELS.forEach(function(p){ if(order.indexOf(p)<0) order.push(p); });
+  order=order.filter(function(p){ return PANELS.indexOf(p)>-1; });
+  order.forEach(function(p){ var el=$("#panel-"+p); if(el) side.appendChild(el); });
+  S.panelOrder=order;
+}
+var pdrag=null, pdragY=0, pdragRaf=null;
+function startPanelDrag(ev,id){
+  var el=$("#panel-"+id); if(!el) return;
+  ev.preventDefault();
+  pdrag={id:id, el:el, moved:false};
+  pdragY=ev.clientY;
+  el.classList.add("pdragging");
+  document.body.classList.add("pdrag-on");
+  window.addEventListener("pointermove",onPanelMove,{passive:false});
+  window.addEventListener("pointerup",endPanelDrag);
+  window.addEventListener("pointercancel",endPanelDrag);
+  pdragRaf=requestAnimationFrame(panelEdgeScroll);
+}
+function onPanelMove(ev){
+  if(!pdrag) return;
+  ev.preventDefault(); pdragY=ev.clientY; pdrag.moved=true;
+  var el=document.elementFromPoint(ev.clientX, ev.clientY);
+  var over=el&&el.closest?el.closest("#side .panel"):null;
+  if(over&&over!==pdrag.el){
+    var r=over.getBoundingClientRect();
+    if(ev.clientY < r.top+r.height/2) over.parentNode.insertBefore(pdrag.el, over);
+    else over.parentNode.insertBefore(pdrag.el, over.nextSibling);
+  }
+}
+function panelEdgeScroll(){
+  if(!pdrag) return;
+  var side=$("#side"), edge=60, step=12;
+  var scroller = side.scrollHeight>side.clientHeight+2 ? side : null;
+  var top,bottom;
+  if(scroller){ var r=scroller.getBoundingClientRect(); top=r.top; bottom=r.bottom; }
+  else { top=0; bottom=window.innerHeight; }
+  if(pdragY<top+edge){ if(scroller) scroller.scrollTop-=step; else window.scrollBy(0,-step); }
+  else if(pdragY>bottom-edge){ if(scroller) scroller.scrollTop+=step; else window.scrollBy(0,step); }
+  pdragRaf=requestAnimationFrame(panelEdgeScroll);
+}
+function endPanelDrag(){
+  window.removeEventListener("pointermove",onPanelMove);
+  window.removeEventListener("pointerup",endPanelDrag);
+  window.removeEventListener("pointercancel",endPanelDrag);
+  if(pdragRaf) cancelAnimationFrame(pdragRaf);
+  var d=pdrag; pdrag=null;
+  document.body.classList.remove("pdrag-on");
+  if(!d) return;
+  d.el.classList.remove("pdragging");
+  if(!d.moved) return;
+  S.panelOrder=$$("#side .panel").map(function(el){ return el.id.replace("panel-",""); });
+  cacheAll();
+  toast("Panel order saved on this device");
+}
+
+/* ------------------------------------------------------------------ reminders */
+function toggleRem(ids, force){
+  var on = (force==null) ? !isRem(findEntry(ids[0])||DB.entries[ids[0]]) : !!force;
+  ids.forEach(function(id){
+    var e=DB.entries[id]; if(!e) return;
+    var val=withRem(e,on);
+    if(val===e.tag) return;
+    e.tag=val;
+    op({t:"update", id:id, field:"tag", val:val});
+  });
+  clearPick(); rebuild(); renderAll();
+  toast(ids.length>1 ? ids.length+(on?" entries added to reminders":" reminders cleared")
+                     : (on?"Added to reminders":"Removed from reminders"));
+}
+
+/* ------------------------------- set the real cash / bank balance of an account */
+function setPayBalance(kind){
+  var a=acct(); if(isAll()||!a.id) return;
+  var t=totals(a), now=(kind==="CASH"?t.cash:t.bank), anchor=anchorOf(a,kind);
+  openModal('<header><div><h3>Set the '+kind.toLowerCase()+' balance</h3><p>'+esc(a.name)+'</p></div><button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body">'+
+      '<div class="fields" style="margin-top:0">'+
+        '<div class="field"><label>'+kind+' balance right now</label>'+
+          '<input id="sb-val" data-autofocus inputmode="decimal" value="'+esc(String(Math.round(now*100)/100))+'" style="min-width:200px;text-align:right;font-weight:700;height:40px;font-size:16px"></div>'+
+      '</div>'+
+      '<p class="hint">The app currently makes it <b class="num">'+fmt(now,a.currency)+'</b>. Type what it really is and it will '+
+      (anchor?'update the <b>OPENING '+kind+' BALANCE</b> row at the bottom of this account.'
+             :'add one <b>OPENING '+kind+' BALANCE</b> row at the bottom of this account to bridge the difference.')+
+      '<br><br>Nothing else is touched — every entry from now on moves the balance on from that figure, and the row stays visible so the gap is never hidden from anyone.</p>'+
+    '</div>'+
+    '<footer><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="sb-go">Set balance</button></footer>');
+  $("#sb-val").addEventListener("keydown",function(e){ if(e.key==="Enter") $("#sb-go").click(); });
+  $("#sb-go").onclick=function(){
+    var target=parseAmount($("#sb-val").value);
+    if(isNaN(target)) return toast("Enter a number");
+    var others=0;
+    a.entries.forEach(function(e){
+      if(isHidden(e)) return;
+      if(anchor && e.id===anchor.id) return;
+      if(String(e.payBy||"").toUpperCase()===kind) others+=Number(e.amount)||0;
+    });
+    var need=Math.round((target-others)*100)/100;
+    if(anchor){
+      if(need!==Number(anchor.amount)){
+        var old=anchor.amount;
+        DB.entries[anchor.id].amount=need;
+        op({t:"update", id:anchor.id, field:"amount", val:need, old:old});
+      }
+    } else {
+      var maxPos=a.entries.reduce(function(m,x){return Math.max(m,Number(x.pos)||0);},0)+1;
+      var e={id:uid(), accountId:a.id, date:todayISO(), details:"OPENING "+kind+" BALANCE",
+             payBy:kind, amount:need, tag:"anchor"};
+      DB.entries[e.id]=Object.assign({pos:maxPos, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, e);
+      op({t:"addEntry", e:e});
+      op({t:"update", id:e.id, field:"pos", val:maxPos});
+    }
+    closeModal(); rebuild(); renderAll();
+    toast(kind.charAt(0)+kind.slice(1).toLowerCase()+" balance set to "+fmt(target,a.currency));
+  };
+}
+
+/* ------------------------------------------- leave entries out of the totals */
+function toggleHide(ids, force){
+  var first=DB.entries[ids[0]];
+  var on = (force==null) ? !(first&&isHidden(first)) : !!force;
+  var n=0;
+  ids.forEach(function(id){
+    var e=DB.entries[id]; if(!e) return;
+    var val=withHide(e,on);
+    if(val===e.tag) return;
+    e.tag=val; n++;
+    op({t:"update", id:id, field:"tag", val:val});
+  });
+  clearPick(); rebuild(); renderAll();
+  if(n) toast(n>1 ? n+(on?" entries left out of the totals":" entries counted again")
+                  : (on?"Left out of the totals":"Counted again"));
+}
+
 /* --------------------------------------------- split 50/50 across two accounts */
 function splitPair(){
   var out=[];
@@ -1614,13 +2117,874 @@ function insertBlank(refId, where){
   toast("Blank row added — tap it to fill it in");
 }
 
+
+/* ==========================================================================
+   SARIM CARS — one vehicle record, shown three ways
+
+   UNITS ORDER   -> "Vehicles":        what it is and what you paid for it
+   CAR COSTING   -> "Car costing":     every job done to it, and the landed cost
+   CARS & SHIPPING -> "Cars & shipping": which shipment it left in, and the freight
+
+   All three read the same record. Nothing is typed twice and nothing can disagree.
+   ========================================================================== */
+function carOp(o){ op(o); }
+function findCar(id){ for(var i=0;i<S.cars.length;i++) if(S.cars[i].id===id) return S.cars[i]; return null; }
+function normChassis(v){ return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,""); }
+function composedName(c){
+  return [c.make,c.model,c.year,c.body,c.colour].map(function(x){return String(x||"").trim();})
+    .filter(Boolean).join(" ");
+}
+function carBatches(){
+  var seen={},out=[];
+  S.cars.forEach(function(c){ var b=c.batch||NOSHIP; if(!seen[b]){seen[b]=1;out.push(b);} });
+  return out;
+}
+function carModels(){
+  var seen={},out=[];
+  S.cars.forEach(function(c){ if(c.kind==="charge") return; var m=carModel(c); if(!seen[m]){seen[m]=1;out.push(m);} });
+  return out.sort();
+}
+function statusPill(st){
+  var s=String(st||"").toUpperCase();
+  var cls = s==="PAID"?"paid":(s==="UNPAID"?"unpaid":(s?"credit":""));
+  return s?'<span class="stat '+cls+'">'+esc(s)+'</span>':'<span class="stat">—</span>';
+}
+function docBtn(c){
+  return '<button class="doclink '+(c.driveUrl?"has":"")+'" data-doc="'+c.id+'" title="'+
+    (c.driveUrl?"Open the documents folder for this vehicle":"No folder link yet — click to add one")+'">'+
+    (c.driveUrl?"FOLDER":"add")+'</button>';
+}
+function showPur(){ return !!lsGet("cshowpur",false); }
+
+function renderCars(){
+  $("#tablewrap").style.display="none";
+  $("#allview").style.display="none";
+  $("#toolbar").style.display="none";
+  $("#addrow").style.display="none";
+  $("#carswrap").style.display="flex";
+  $$("#car-subtabs .subtab").forEach(function(b){ b.classList.toggle("on", b.dataset.cv===S.carsView); });
+  $("#btn-car-import").style.display = isAdmin()?"":"none";
+  $("#c-showpur-wrap").style.display = S.carsView==="shipping"?"":"none";
+  $("#c-showpur").checked = showPur();
+
+  var msel=$("#c-model");
+  msel.innerHTML='<option value="all">Any model</option>'+carModels().map(function(m){
+    return '<option value="'+esc(m)+'">'+esc(m)+'</option>'; }).join("");
+  msel.value = carModels().indexOf(ui.cmodel)>-1 ? ui.cmodel : (ui.cmodel="all");
+  var bsel=$("#c-batch");
+  bsel.innerHTML='<option value="all">Any shipment</option>'+carBatches().map(function(b){
+    return '<option value="'+esc(b)+'">'+esc(b)+'</option>'; }).join("");
+  bsel.value = carBatches().indexOf(ui.cbatch)>-1 ? ui.cbatch : (ui.cbatch="all");
+
+  if(!S.cars.length){
+    $("#carsbody").innerHTML='<div class="cempty"><h3>No vehicles yet</h3><div>Add one with <b>+ Vehicle</b>'+
+      (isAdmin()?', or bring your whole SARIM CARS workbook across with <b>⊕ Import</b>':'')+'.</div></div>';
+    $("#footnote").innerHTML="";
+    return;
+  }
+  var list=carsFiltered();
+  var shown = S.carsView==="register" ? list.filter(function(c){return c.kind!=="charge";}) : list;
+  if(!shown.length){
+    $("#carsbody").innerHTML='<div class="cempty"><h3>Nothing matches</h3><div>Clear the search or the filters above.</div></div>';
+  }
+  else if(S.carsView==="register") renderCarRegister(shown);
+  else if(S.carsView==="shipping") renderCarShipping(list);
+  else renderCarCosting(list);
+
+  var T=carTotals(list);
+  $("#footnote").innerHTML='<b>'+T.units+'</b> vehicles'+(T.yard?' ('+T.yard+' still in the yard)':'')+
+    ' · purchases <b class="num">'+fmtAed(T.aed)+'</b> · work done <b class="num">'+fmtAed(T.costs)+
+    '</b> · landed <b class="num">'+fmtAed(T.landed)+'</b> · '+T.charges+' shipping charges <b class="num">'+
+    fmtAed(T.ship)+'</b> · all in <b class="num">'+fmtAed(T.grand)+'</b>';
+}
+
+/* ------------------------------------------------------------- 1. Vehicles */
+function renderCarRegister(list){
+  $("#carsbody").innerHTML =
+    '<table class="ctable creg"><thead><tr><th>#</th><th>Chassis</th><th>Vehicle</th><th>Supplier</th>'+
+    '<th>Date</th><th class="r">Purchase</th><th class="r">Work</th><th class="r">Landed</th>'+
+    '<th>Status</th><th>Docs</th><th>Shipment</th><th></th></tr></thead><tbody>'+
+    list.map(function(c,i){
+      var isCh=c.kind==="charge";
+      return '<tr data-cid="'+c.id+'" class="'+(isCh?"charge":"")+(c.kind!=="charge"&&!c.batch?" yard":"")+'">'+
+        '<td class="c-n">'+(i+1)+'</td>'+
+        '<td class="chs" data-cf="chassis" data-l="Chassis">'+(isCh?'<span style="color:var(--ink-3)">shipping</span>':esc(c.chassis||"—"))+'</td>'+
+        '<td class="det" data-l="Vehicle"><span data-cf="detail">'+esc(carName(c))+'</span>'+
+          (isCh?'':'<span class="sub">'+esc([c.transmission,c.engineNo].filter(Boolean).join(" · "))+'</span>')+'</td>'+
+        '<td data-cf="supplier" data-l="Supplier">'+esc(c.supplier||"")+'</td>'+
+        '<td data-cf="date" data-l="Date" style="white-space:nowrap">'+esc(c.date?fmtDateShort(c.date):"")+'</td>'+
+        '<td class="r num" data-cf="aed" data-l="Purchase">'+fmtAed(c.aed)+'</td>'+
+        '<td class="r num" data-l="Work" style="color:var(--ink-3)">'+(c.costTotal?fmtAed(c.costTotal):"—")+'</td>'+
+        '<td class="r num" data-l="Landed" style="font-weight:700">'+fmtAed(c.landed)+'</td>'+
+        '<td data-cf="status" data-l="Status">'+statusPill(c.status)+'</td>'+
+        '<td class="c-docs" data-l="Documents">'+(isCh?"":docBtn(c))+'</td>'+
+        '<td data-cf="batch" data-l="Shipment">'+(c.batch?esc(c.batch):'<span class="yardtag">in the yard</span>')+'</td>'+
+        '<td class="c-menu"><button class="rowmenu" data-carmenu="'+c.id+'">⋯</button></td></tr>';
+    }).join("")+'</tbody></table>';
+}
+
+/* ------------------------------------------------------- 2. Cars & shipping */
+function renderCarShipping(list){
+  var pur=showPur(), groups=[], byB={};
+  list.forEach(function(c){
+    var b=c.batch||NOSHIP;
+    if(!byB[b]){ byB[b]={name:b, rows:[]}; groups.push(byB[b]); }
+    byB[b].rows.push(c);
+  });
+  var span = pur?7:6, n=0, gt={aed:0,usd:0,pur:0};
+  var html='<table class="ctable cship"><thead><tr><th>#</th><th>Date</th><th>Detail</th>'+
+    (pur?'<th class="r">Purchase AED</th>':'')+
+    '<th class="r">Total in $</th><th class="r">Total in AED</th><th>Status</th></tr></thead><tbody>';
+  groups.forEach(function(g){
+    var t={aed:0,usd:0,pur:0};
+    html+='<tr class="grp"><td colspan="'+span+'">'+esc(g.name)+
+      (g.name===NOSHIP?' <span style="font-weight:600;text-transform:none;letter-spacing:0">— bought, not shipped yet</span>':'')+'</td></tr>';
+    g.rows.forEach(function(c){
+      var val=c.kind==="charge"?c.aed:c.landed, usd=carUsd(val);
+      t.aed+=val; t.usd+=usd; t.pur+=c.aed; gt.aed+=val; gt.usd+=usd; gt.pur+=c.aed;
+      html+='<tr data-cid="'+c.id+'" class="'+(c.kind==="charge"?"charge":"")+'">'+
+        '<td class="c-n">'+(c.kind==="charge"?"":++n)+'</td>'+
+        '<td data-cf="date" data-l="Date" style="white-space:nowrap">'+esc(c.date?fmtDateShort(c.date):"")+'</td>'+
+        '<td class="det" data-l="Detail"><span data-cf="detail">'+esc(carName(c))+'</span>'+
+          (c.chassis?' <span class="chs" style="color:var(--ink-3)">('+esc(c.chassis)+')</span>':'')+
+          (c.kind!=="charge"&&c.costTotal?'<span class="sub">'+fmtAed(c.aed)+' + '+fmtAed(c.costTotal)+' of work</span>':'')+'</td>'+
+        (pur?'<td class="r num" data-cf="aed" data-l="Purchase">'+(c.kind==="charge"?"—":fmtAed(c.aed))+'</td>':'')+
+        '<td class="r num" data-l="Total $">'+fmtUsd(usd)+'</td>'+
+        '<td class="r num" data-l="Total AED" style="font-weight:600">'+fmtAed(val)+'</td>'+
+        '<td data-cf="status" data-l="Status">'+statusPill(c.status)+'</td></tr>';
+    });
+    html+='<tr class="tot"><td colspan="'+(pur?4:3)+'" style="text-align:right">TOTAL</td>'+
+      '<td class="r num">'+fmtUsd(t.usd)+'</td><td class="r num">'+fmtAed(t.aed)+'</td><td></td></tr>';
+  });
+  html+='<tr class="tot gtot"><td colspan="'+(pur?4:3)+'" style="text-align:right">GRAND TOTAL</td>'+
+    '<td class="r num">'+fmtUsd(gt.usd)+'</td><td class="r num">'+fmtAed(gt.aed)+'</td><td></td></tr>';
+  $("#carsbody").innerHTML=html+'</tbody></table>';
+}
+
+/* ----------------------------------------------------------- 3. Car costing */
+function renderCarCosting(list){
+  var units=list.filter(function(c){return c.kind!=="charge";});
+  $("#carsbody").innerHTML =
+    '<table class="ctable ccost"><thead><tr><th>Chassis</th><th>Vehicle</th><th class="r">Purchase</th>'+
+    '<th class="r">Lines</th><th class="r">Work done</th><th class="r">Landed AED</th><th class="r">Landed $</th>'+
+    '<th></th></tr></thead><tbody>'+
+    (units.length?units.map(function(c){
+      return '<tr data-cid="'+c.id+'" style="cursor:pointer" data-open="'+c.id+'">'+
+        '<td class="chs" data-l="Chassis">'+esc(c.chassis||"—")+'</td><td class="det" data-l="Vehicle">'+esc(carName(c))+'</td>'+
+        '<td class="r num" data-l="Purchase">'+fmtAed(c.aed)+'</td>'+
+        '<td class="r num" data-l="Lines" style="color:var(--ink-3)">'+c.costs.length+'</td>'+
+        '<td class="r num" data-l="Work done">'+fmtAed(c.costTotal)+'</td>'+
+        '<td class="r num" data-l="Landed AED" style="font-weight:700">'+fmtAed(c.landed)+'</td>'+
+        '<td class="r num" data-l="Landed $" style="color:var(--ink-3)">'+fmtUsd(carUsd(c.landed))+'</td>'+
+        '<td class="c-menu"><span class="tbtn ghost" style="height:24px;padding:0 8px">open</span></td></tr>';
+    }).join(""):'<tr><td colspan="8" class="cempty">No vehicles to cost yet.</td></tr>')+'</tbody></table>';
+}
+
+/* ==================================================== the vehicle it opens = */
+var CARFIELDS=[
+  {k:"make",         l:"Make"},
+  {k:"model",        l:"Model"},
+  {k:"year",         l:"Year"},
+  {k:"body",         l:"Body"},
+  {k:"transmission", l:"Transmission", opts:["","Automatic","Manual"]},
+  {k:"colour",       l:"Colour"},
+  {k:"chassis",      l:"Chassis", mono:true, wide:true},
+  {k:"engineNo",     l:"Engine no.", mono:true},
+  {k:"supplier",     l:"Bought from"},
+  {k:"date",         l:"Date", type:"date"},
+  {k:"aed",          l:"Purchase AED", num:true},
+  {k:"status",       l:"Status", opts:["","PAID","UNPAID","CREDIT"]},
+  {k:"batch",        l:"Shipment", list:"shiplist"},
+  {k:"destination",  l:"Destination"},
+  {k:"customer",     l:"Customer"},
+  {k:"driveUrl",     l:"Documents folder", wide:true, ph:"Paste the Google Drive folder link"}
+];
+function openVehicle(id){
+  var c=findCar(id); if(!c) return;
+  var isCh=c.kind==="charge";
+  function draw(){
+    c=findCar(id); if(!c) return closeModal();
+    var fields=isCh?[{k:"detail",l:"Detail",wide:true},{k:"date",l:"Date",type:"date"},
+                     {k:"aed",l:"Amount AED",num:true},{k:"status",l:"Status",opts:["","PAID","UNPAID","CREDIT"]},
+                     {k:"batch",l:"Shipment",list:"shiplist"},{k:"destination",l:"Destination"}]
+                  :CARFIELDS;
+    $("#veh-body").innerHTML =
+      '<div class="vsum">'+
+        '<div><span>Purchase</span><b class="num">'+fmtAed(c.aed)+'</b></div>'+
+        '<div><span>Work done</span><b class="num">'+fmtAed(c.costTotal)+'</b></div>'+
+        '<div class="big"><span>Landed</span><b class="num">'+fmtAed(c.landed)+'</b>'+
+          '<i class="num">'+fmtUsd(carUsd(c.landed))+' at '+USD_RATE+'</i></div>'+
+      '</div>'+
+      '<div class="fields vfields">'+fields.map(function(f){
+        var v=c[f.k]==null?"":c[f.k];
+        var inp;
+        if(f.opts) inp='<select data-vf="'+f.k+'">'+f.opts.map(function(o){
+              return '<option value="'+esc(o)+'"'+(String(v).toUpperCase()===o.toUpperCase()?" selected":"")+'>'+esc(o||"—")+'</option>'; }).join("")+'</select>';
+        else inp='<input data-vf="'+f.k+'"'+(f.type?' type="'+f.type+'"':'')+(f.num?' inputmode="decimal" style="text-align:right"':'')+
+              (f.list?' list="'+f.list+'"':'')+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+
+              (f.mono?' style="font-family:ui-monospace,monospace"':'')+' value="'+esc(f.num?String(Number(v)||0):v)+'">';
+        return '<div class="field'+(f.wide?" wide":"")+'"><label>'+f.l+'</label>'+inp+'</div>';
+      }).join("")+
+      '<datalist id="shiplist">'+carBatches().filter(function(b){return b!==NOSHIP;})
+        .map(function(b){return '<option value="'+esc(b)+'">';}).join("")+'</datalist></div>'+
+      (c.driveUrl?'<p class="hint"><a href="'+esc(c.driveUrl)+'" target="_blank" rel="noopener">Open the documents folder ↗</a></p>':'')+
+      (isCh?'':
+      '<h5 class="vh">Costs — everything spent on this vehicle after buying it</h5>'+
+      '<div class="costbox">'+
+        (c.costs.length?c.costs.map(function(k){
+          return '<div class="costrow"><span class="d" data-kf="description" data-kid="'+k.id+'">'+esc(k.description||"")+'</span>'+
+            '<span class="a num'+(k.amount<0?" neg":"")+'" data-kf="amount" data-kid="'+k.id+'">'+fmtAed(k.amount)+'</span>'+
+            '<button class="x" data-kdel="'+k.id+'" title="Remove">✕</button></div>';
+        }).join(""):'<div class="costrow" style="color:var(--ink-3)">No cost lines yet</div>')+
+        '<div class="costadd"><input class="d" id="k-desc" placeholder="Recovery, denting, bedliner, inspection…">'+
+        '<input class="a" id="k-amt" inputmode="decimal" placeholder="0.00"><button id="k-add">Add</button></div>'+
+      '</div>');
+    if(!isCh){
+      $("#k-add").onclick=addLine;
+      $("#k-amt").addEventListener("keydown",function(e){ if(e.key==="Enter") addLine(); });
+      $("#k-desc").addEventListener("keydown",function(e){ if(e.key==="Enter") $("#k-amt").focus(); });
+      $$("#veh-body [data-kdel]").forEach(function(b){
+        b.onclick=function(){
+          delete DB.costs[b.dataset.kdel];
+          carOp({t:"cost", op:"del", id:b.dataset.kdel});
+          rebuild(); draw(); renderCars(); renderStats();
+        };
+      });
+      $$("#veh-body [data-kf]").forEach(function(el){
+        el.style.cursor="text";
+        el.onclick=function(){ editCostCell(el, draw); };
+      });
+    }
+    $$("#veh-body [data-vf]").forEach(function(el){
+      el.addEventListener("change",function(){ saveField(el.dataset.vf, el.value); });
+    });
+  }
+  function saveField(f,val){
+    var car=findCar(id); if(!car) return;
+    var v=val;
+    if(f==="aed"){ v=parseAmount(val); if(isNaN(v)) return draw(); }
+    if(f==="chassis") v=String(val).toUpperCase().trim();
+    if(f==="status") v=String(val).toUpperCase();
+    if(v===car[f]) return;
+    var wasAuto = !car.detail || car.detail===composedName(car);
+    DB.cars[id][f]=v;
+    carOp({t:"car", op:"edit", id:id, field:f, val:v});
+    if(f==="aed"){ DB.cars[id].usd=carUsd(v); carOp({t:"car", op:"edit", id:id, field:"usd", val:carUsd(v)}); }
+    if(["make","model","year","body","colour"].indexOf(f)>-1 && wasAuto){
+      rebuild();
+      var nd=composedName(findCar(id));
+      if(nd && nd!==DB.cars[id].detail){
+        DB.cars[id].detail=nd;
+        carOp({t:"car", op:"edit", id:id, field:"detail", val:nd});
+      }
+    }
+    rebuild(); draw(); renderCars(); renderStats(); renderTabs();
+  }
+  function addLine(){
+    var car=findCar(id);
+    var d=$("#k-desc").value.trim(), a=parseAmount($("#k-amt").value);
+    if(!d||isNaN(a)) return toast("Description and amount, please");
+    var k={id:uid(), carId:id, date:todayISO(), description:d, amount:a,
+           pos:(car.costs.length?Math.max.apply(null,car.costs.map(function(x){return x.pos;}))+1:0)};
+    DB.costs[k.id]=Object.assign({deleted:""},k);
+    carOp({t:"cost", op:"add", k:k});
+    rebuild(); draw(); renderCars(); renderStats();
+    $("#k-desc").focus();
+  }
+  openModal('<header><div><h3>'+esc(carName(c))+'</h3><p class="chs">'+esc(c.chassis||(isCh?"shipping charge":""))+'</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header><div class="body" id="veh-body"></div>'+
+    '<footer><button class="tbtn ghost" id="veh-del">Delete</button><div class="spacer"></div>'+
+    '<button class="tbtn primary" data-close>Done</button></footer>');
+  draw();
+  $("#veh-del").onclick=function(){
+    var car=findCar(id); if(!car) return;
+    if(!confirm("Delete "+carName(car)+"?\n\nIt can be brought back from History.")) return;
+    delete DB.cars[id]; carOp({t:"car", op:"del", id:id});
+    closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
+    toast("Deleted");
+  };
+}
+function editCostCell(el, after){
+  if(el.querySelector("input")) return;
+  var id=el.dataset.kid, f=el.dataset.kf, k=DB.costs[id]; if(!k) return;
+  var inp=document.createElement("input");
+  inp.className="edit"+(f==="amount"?" amt":"");
+  inp.value = f==="amount" ? String(Number(k.amount)||0) : (k[f]||"");
+  if(f==="amount") inp.inputMode="decimal";
+  var done=false;
+  function commit(){
+    if(done) return; done=true;
+    var v = f==="amount" ? parseAmount(inp.value) : inp.value;
+    if(f==="amount" && isNaN(v)) return after();
+    if(v!==k[f]){ DB.costs[id][f]=v; carOp({t:"cost", op:"edit", id:id, field:f, val:v}); }
+    rebuild(); after(); renderCars(); renderStats();
+  }
+  inp.addEventListener("blur",commit);
+  inp.addEventListener("keydown",function(e){ if(e.key==="Enter"){e.preventDefault();inp.blur();} if(e.key==="Escape"){done=true;after();} });
+  el.textContent=""; el.appendChild(inp); inp.focus(); inp.select();
+}
+
+/* ------------------------------------------------------------- cell editing */
+function startCarEdit(td){
+  if(!td || td.querySelector("input,select")) return;
+  var tr=td.closest("tr[data-cid]"); if(!tr) return;
+  var c=findCar(tr.dataset.cid); if(!c) return;
+  var f=td.dataset.cf, el;
+  if(f==="status"){
+    el=document.createElement("select");
+    ["","PAID","UNPAID","CREDIT"].forEach(function(o){ var o2=document.createElement("option"); o2.textContent=o||"—"; o2.value=o; el.appendChild(o2); });
+    el.value=c.status||"";
+  } else if(f==="date"){ el=document.createElement("input"); el.type="date"; el.value=c.date||""; }
+  else if(f==="aed"){ el=document.createElement("input"); el.type="text"; el.inputMode="decimal"; el.value=String(c.aed||0); }
+  else if(f==="batch"){
+    el=document.createElement("input"); el.type="text"; el.setAttribute("list","shiplist2"); el.value=c.batch||"";
+    if(!$("#shiplist2")){
+      var dl=document.createElement("datalist"); dl.id="shiplist2";
+      dl.innerHTML=carBatches().filter(function(b){return b!==NOSHIP;}).map(function(b){return '<option value="'+esc(b)+'">';}).join("");
+      document.body.appendChild(dl);
+    }
+  }
+  else { el=document.createElement("input"); el.type="text"; el.value=c[f]||""; }
+  el.className="edit "+(f==="aed"?"amt":"");
+  var done=false;
+  function commit(){
+    if(done) return; done=true;
+    var v=el.value;
+    if(f==="aed"){ var n=parseAmount(v); if(isNaN(n)){ renderCars(); return; } v=n; }
+    if(f==="chassis") v=String(v).toUpperCase().trim();
+    if(v!==c[f]){
+      DB.cars[c.id][f]=v;
+      carOp({t:"car", op:"edit", id:c.id, field:f, val:v});
+      if(f==="aed"){ DB.cars[c.id].usd=carUsd(v); carOp({t:"car", op:"edit", id:c.id, field:"usd", val:carUsd(v)}); }
+    }
+    rebuild(); renderCars(); renderStats(); renderTabs();
+  }
+  el.addEventListener("blur",commit);
+  el.addEventListener("keydown",function(e){ if(e.key==="Enter"){e.preventDefault();el.blur();} if(e.key==="Escape"){done=true;renderCars();} });
+  td.textContent=""; td.appendChild(el); el.focus(); if(el.select) el.select();
+}
+
+/* ------------------------------------------------------------ add / menus */
+function openCarAdd(kind){
+  var isCh = kind==="charge";
+  openModal('<header><div><h3>'+(isCh?"New shipping charge":"New vehicle")+'</h3><p>Sarim cars</p></div><button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body"><div class="fields" style="margin-top:0">'+
+      (isCh?'<div class="field" style="flex:1 1 100%"><label>Detail</label><input id="nc-detail" data-autofocus style="width:100%" placeholder="Toyota Hilux 3 Units to Guyana Shipping Charges"></div>'
+           :'<div class="field"><label>Make</label><input id="nc-make" data-autofocus placeholder="TOYOTA"></div>'+
+            '<div class="field"><label>Model</label><input id="nc-model" placeholder="HILUX REVO"></div>'+
+            '<div class="field"><label>Year</label><input id="nc-year" inputmode="numeric" style="max-width:90px"></div>'+
+            '<div class="field"><label>Body</label><input id="nc-body" placeholder="Double Cab"></div>'+
+            '<div class="field"><label>Transmission</label><select id="nc-transmission"><option>Automatic</option><option>Manual</option></select></div>'+
+            '<div class="field"><label>Colour</label><input id="nc-colour"></div>'+
+            '<div class="field" style="flex:1 1 260px"><label>Chassis</label><input id="nc-chassis" style="width:100%;font-family:ui-monospace,monospace"></div>'+
+            '<div class="field"><label>Bought from</label><input id="nc-supplier"></div>')+
+      '<div class="field"><label>Date</label><input id="nc-date" type="date" value="'+todayISO()+'"></div>'+
+      '<div class="field"><label>'+(isCh?"Amount AED":"Purchase AED")+'</label><input id="nc-aed" inputmode="decimal" style="text-align:right"></div>'+
+      '<div class="field"><label>Status</label><select id="nc-status"><option>PAID</option><option>UNPAID</option><option>CREDIT</option></select></div>'+
+      '<div class="field"><label>Shipment</label><input id="nc-batch" list="shiplist3" placeholder="'+(isCh?"which shipment":"leave empty if still in the yard")+'">'+
+        '<datalist id="shiplist3">'+carBatches().filter(function(b){return b!==NOSHIP;}).map(function(b){return '<option value="'+esc(b)+'">';}).join("")+'</datalist></div>'+
+      '<div class="field"><label>Destination</label><input id="nc-destination"></div>'+
+      (isCh?'':'<div class="field" style="flex:1 1 100%"><label>Documents folder</label><input id="nc-driveUrl" style="width:100%" placeholder="Google Drive folder link (optional)"></div>')+
+    '</div><p class="hint" id="nc-hint"></p></div>'+
+    '<footer><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="nc-go">Add</button></footer>');
+  var g=function(id){ var el=$("#nc-"+id); return el?String(el.value).trim():""; };
+  $("#nc-aed").addEventListener("input",function(){
+    var n=parseAmount(this.value);
+    $("#nc-hint").textContent = isNaN(n)?"":("= "+fmtUsd(carUsd(n))+" at "+USD_RATE);
+  });
+  $("#nc-go").onclick=function(){
+    var aed=parseAmount(g("aed")); if(isNaN(aed)) aed=0;
+    var c={id:uid(), kind:isCh?"charge":"unit", chassis:g("chassis").toUpperCase(),
+      make:g("make"), model:g("model"), year:g("year"), body:g("body"),
+      transmission:g("transmission"), colour:g("colour"), engineNo:"", supplier:g("supplier"),
+      date:$("#nc-date").value||todayISO(), aed:aed, usd:carUsd(aed), status:g("status"),
+      customer:"", destination:g("destination"), batch:g("batch"), driveUrl:g("driveUrl"), notes:""};
+    c.detail = isCh ? g("detail") : composedName(c);
+    if(!c.detail && !c.chassis) return toast(isCh?"Give the charge a detail line":"Give it a chassis or a make and model");
+    var maxPos=S.cars.reduce(function(m,x){return Math.max(m,x.pos);},0)+1;
+    DB.cars[c.id]=Object.assign({pos:maxPos, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+      updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
+    carOp({t:"car", op:"add", c:Object.assign({pos:maxPos},c)});
+    closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
+    toast(isCh?"Charge added":"Vehicle added — open it to add its costs");
+  };
+}
+function openCarMenu(x,y,id){
+  var c=findCar(id); if(!c) return;
+  var m=$("#ctx");
+  m.innerHTML='<div class="lab">'+esc(c.chassis||carName(c))+'</div>'+
+    '<button class="ci" data-ca="open">📋 Open '+(c.kind==="charge"?"charge":"vehicle & costs")+'</button>'+
+    (c.kind==="charge"?'':'<button class="ci" data-ca="docs">🔗 '+(c.driveUrl?"Open documents folder":"Add documents folder")+'</button>')+
+    '<button class="ci" data-ca="dup">⧉ Duplicate</button>'+
+    '<div class="sep"></div><button class="ci danger" data-ca="del">🗑 Delete</button>';
+  m.classList.add("show");
+  if(!isTouch()){
+    m.style.left=Math.min(x, innerWidth-m.offsetWidth-10)+"px";
+    m.style.top =Math.min(y, innerHeight-m.offsetHeight-10)+"px";
+  }
+  $$(".ci",m).forEach(function(b){
+    b.onclick=function(){
+      var a=b.dataset.ca; closeCtx();
+      if(a==="open") return openVehicle(id);
+      if(a==="docs") return openCarDocs(id);
+      if(a==="dup"){
+        var copy={}; ["kind","chassis","detail","make","model","year","body","colour","transmission",
+          "engineNo","supplier","date","aed","usd","status","customer","destination","batch","driveUrl","notes"]
+          .forEach(function(k){ copy[k]=c[k]; });
+        copy.id=uid();
+        copy.pos=S.cars.reduce(function(m2,x){return Math.max(m2,x.pos);},0)+1;
+        DB.cars[copy.id]=Object.assign({deleted:"",createdBy:AUTH.user,createdAt:new Date().toISOString(),
+          updatedBy:AUTH.user,updatedAt:new Date().toISOString()},copy);
+        carOp({t:"car", op:"add", c:copy});
+      }
+      if(a==="del"){
+        if(!confirm("Delete "+carName(c)+"?\n\nIts cost lines stay in the Sheet and it can be brought back from History.")) return;
+        delete DB.cars[id];
+        carOp({t:"car", op:"del", id:id});
+      }
+      rebuild(); renderCars(); renderStats(); renderTabs();
+    };
+  });
+}
+function openCarDocs(id){
+  var c=findCar(id); if(!c) return;
+  if(c.driveUrl) return window.open(c.driveUrl,"_blank","noopener");
+  openModal('<header><div><h3>Documents folder</h3><p class="chs">'+esc(c.chassis||carName(c))+'</p></div><button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body"><div class="field" style="width:100%"><label>Google Drive folder link</label>'+
+      '<input id="dk-url" data-autofocus style="width:100%" placeholder="https://drive.google.com/drive/folders/…" value="'+esc(c.driveUrl||"")+'"></div>'+
+      '<p class="hint">This is the folder that holds the VCC, the bill of lading and the passing for this vehicle. '+
+      'In Drive: right-click the folder → Share → Copy link, then paste it here.</p></div>'+
+    '<footer><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="dk-go">Save</button></footer>');
+  $("#dk-go").onclick=function(){
+    var v=$("#dk-url").value.trim();
+    if(v!==(c.driveUrl||"")){ DB.cars[c.id].driveUrl=v; carOp({t:"car", op:"edit", id:c.id, field:"driveUrl", val:v}); }
+    closeModal(); rebuild(); renderCars(); toast(v?"Folder linked":"Link cleared");
+  };
+}
+
+/* ============================================================ CAR IMPORT == */
+/* like parseGrid but blank rows survive — the costing sheet uses them as tile walls */
+function parseGridRaw(text){
+  text=String(text||"").replace(/\r\n/g,"\n").replace(/\r/g,"\n").replace(/\n+$/,"");
+  if(!text) return [];
+  var useTab=text.indexOf("\t")>-1, sep=useTab?"\t":",", rows=[],row=[],cell="",q=false;
+  for(var i=0;i<text.length;i++){
+    var ch=text[i];
+    if(q){ if(ch==='"'){ if(text[i+1]==='"'){cell+='"';i++;} else q=false; } else cell+=ch; }
+    else if(ch==='"') q=true;
+    else if(ch===sep){ row.push(cell); cell=""; }
+    else if(ch==="\n"){ row.push(cell); rows.push(row); row=[]; cell=""; }
+    else cell+=ch;
+  }
+  row.push(cell); rows.push(row);
+  return rows;
+}
+var CARCOLS=[
+  {k:"chassis",     re:/chassis|\bvin\b|frame/},
+  {k:"engineNo",    re:/engine/},
+  {k:"make",        re:/^make$|manufacturer/},
+  {k:"model",       re:/^model$/},
+  {k:"year",        re:/^year$|^yr$/},
+  {k:"body",        re:/^body$|cabin|\bcab\b/},
+  {k:"colour",      re:/colou?r/},
+  {k:"transmission",re:/transmission|\bgear/},
+  {k:"supplier",    re:/supplier|vendor|seller|\bfrom\b/},
+  {k:"date",        re:/date/},
+  {k:"usd",         re:/\$|\busd\b|dollar/},
+  {k:"aed",         re:/\baed\b|dirham|\bdhs\b|price|amount/},
+  {k:"status",      re:/status|payment|paid/},
+  {k:"customer",    re:/customer|client|buyer|consignee/},
+  {k:"destination", re:/destination|country|\bport\b/},
+  {k:"batch",       re:/shipment|container|batch|\blot\b/},
+  {k:"driveUrl",    re:/vcc|passing|link|folder|document/},
+  {k:"notes",       re:/note|remark|comment/},
+  {k:"detail",      re:/detail|descrip|particular|vehicle|goods/}
+];
+function isTotalRow(r){
+  for(var i=0;i<r.length;i++){ var v=String(r[i]||"").trim(); if(v && /^(grand\s+)?total\b/i.test(v)) return true; }
+  return false;
+}
+function normStatus(v){
+  var s=String(v||"").trim().toUpperCase();
+  if(!s) return "";
+  if(/^NOT\s*PAID|^UN\s*PAID|^PENDING|^BALANCE|^DUE/.test(s)) return "UNPAID";
+  if(/^PAID|^SETTLED|^CLEAR/.test(s)) return "PAID";
+  if(/^CREDIT/.test(s)) return "CREDIT";
+  return s.slice(0,12);
+}
+function chassisFromDetail(d){
+  var m=String(d||"").match(/\(([A-Za-z0-9\- ]{6,})\)/);
+  return m?m[1].replace(/\s/g,"").toUpperCase():"";
+}
+var CHARGE_RE=/shipping charge|shipping charg|freight|clearance|customs|sold local/i;
+/* --- paste of UNITS ORDER / CARS & SHIPPING --- */
+function parseCarPaste(text, dmy){
+  var grid=parseGridRaw(text).filter(function(r){ return r.some(function(c){return String(c).trim()!=="";}); });
+  if(!grid.length) return {rows:[], map:{}, headerAt:-1};
+  var best=-1, bestN=0, bestMap={};
+  for(var h=0; h<Math.min(8,grid.length); h++){
+    var used={}, m={}, n=0;
+    grid[h].forEach(function(cell,ci){
+      var t=String(cell||"").toLowerCase().trim(); if(!t) return;
+      for(var j=0;j<CARCOLS.length;j++){
+        var C=CARCOLS[j];
+        if(used[C.k]) continue;
+        if(C.re.test(t)){ used[C.k]=1; m[C.k]=ci; n++; return; }
+      }
+    });
+    if(n>bestN){ bestN=n; best=h; bestMap=m; }
+  }
+  if(bestN<2){ best=-1; bestMap={}; }
+  var map=bestMap, anyTotal=grid.some(isTotalRow);
+  var rows=[], batchN=1, heading="";
+  for(var r=(best<0?0:best+1); r<grid.length; r++){
+    var g=grid[r], live=g.filter(function(c){return String(c).trim()!=="";});
+    if(!live.length) continue;
+    if(isTotalRow(g)){ batchN++; heading=""; continue; }
+    if(live.length===1 && !looksAmount(live[0])){ heading=String(live[0]).trim(); continue; }
+    var pick=function(k){ return map[k]==null?"":String(g[map[k]]==null?"":g[map[k]]).trim(); };
+    var detail=pick("detail");
+    if(!detail && map.detail==null){
+      var parts=["make","model","year","body","colour"].map(pick).filter(Boolean);
+      if(parts.length) detail=parts.join(" ");
+      else { var bc=""; live.forEach(function(x){ var t2=String(x).trim(); if(!looksAmount(t2)&&!parseDate(t2)&&t2.length>bc.length) bc=t2; }); detail=bc; }
+    }
+    var aed=map.aed==null?NaN:parseAmount(pick("aed"));
+    var usd=map.usd==null?NaN:parseAmount(pick("usd"));
+    if(isNaN(aed) && !isNaN(usd)) aed=Math.round(usd*USD_RATE*100)/100;
+    if(isNaN(aed)) aed=0;
+    if(isNaN(usd)) usd=carUsd(aed);
+    var chassis=pick("chassis").toUpperCase().replace(/\s/g,"") || chassisFromDetail(detail);
+    var batch=pick("batch") || heading || (anyTotal?("SHIPMENT "+batchN):"");
+    var isCharge = CHARGE_RE.test(detail);
+    if(!detail && !chassis && !aed) continue;
+    rows.push({id:uid(), kind:isCharge?"charge":"unit", chassis:isCharge?"":chassis, detail:detail,
+      make:pick("make"), model:pick("model"), year:pick("year"), body:pick("body"),
+      colour:pick("colour"), transmission:pick("transmission"), engineNo:pick("engineNo"),
+      supplier:pick("supplier"), date:parseDate(pick("date"), dmy)||"", aed:aed, usd:usd,
+      status:normStatus(pick("status")), customer:pick("customer"), destination:pick("destination"),
+      batch:batch, driveUrl:/^https?:/i.test(pick("driveUrl"))?pick("driveUrl"):"", notes:pick("notes")});
+  }
+  return {rows:rows, map:map, headerAt:best};
+}
+/* --- paste of CAR COSTING: tiles of heading / description+amount / TOTAL --- */
+function parseCostPaste(text){
+  var grid=parseGridRaw(text);
+  if(!grid.length) return [];
+  var cols=0; grid.forEach(function(r){ cols=Math.max(cols,r.length); });
+  var at=function(r,c){ return String((grid[r]&&grid[r][c])==null?"":grid[r][c]).trim(); };
+  /* the real sheet puts the amount several columns right of the description,
+     so pair each description column with the nearest column that holds its numbers */
+  var pairs=[];
+  for(var dc=0; dc<cols; dc++){
+    var bestAc=-1, bestScore=0;
+    for(var ac=dc+1; ac<Math.min(cols,dc+8); ac++){
+      var score=0, hasTotal=false;
+      for(var r=0;r<grid.length;r++){
+        var d=at(r,dc), a=at(r,ac);
+        if(!d || looksAmount(d)) continue;
+        if(a && looksAmount(a)) score++;
+        if(/^(grand\s+)?total\b/i.test(d) && looksAmount(a)) hasTotal=true;
+      }
+      if(hasTotal) score+=25;
+      if(score>bestScore){ bestScore=score; bestAc=ac; }
+    }
+    if(bestScore>=3) pairs.push({dc:dc, ac:bestAc, score:bestScore});
+  }
+  /* one description column per amount column — the highest scoring one.
+     Without this the DATE column pairs with the same amounts and every date
+     is read as a cost line.                                                  */
+  var bestFor={};
+  pairs.forEach(function(p){ if(!bestFor[p.ac] || p.score>bestFor[p.ac].score) bestFor[p.ac]=p; });
+  pairs=Object.keys(bestFor).map(function(k){ return bestFor[k]; })
+        .sort(function(a,b){ return a.dc-b.dc; });
+  var amountCols={}; pairs.forEach(function(p){ amountCols[p.ac]=1; });
+  pairs=pairs.filter(function(p){ return !amountCols[p.dc]; });
+  if(!pairs.length) pairs=[{dc:0, ac:1}];
+  var tiles=[];
+  pairs.forEach(function(P){
+    var dc=P.dc, ac=P.ac, cur=null;
+    var close=function(){ if(cur && (cur.lines.length||cur.title)) tiles.push(cur); cur=null; };
+    var start=function(){ return {title:"", chassis:"", lines:[], stated:NaN, order:tiles.length}; };
+    for(var r=0;r<grid.length;r++){
+      var d=at(r,dc), a=at(r,ac);
+      /* a heading can sit in the column to the left of the description column */
+      var left = dc>0 ? at(r,dc-1) : "";
+      /* blank rows are ignored: the real sheet has them between the heading
+         and the column headers, and again between the last line and TOTAL.
+         A tile ends at its TOTAL, or when the next heading appears.          */
+      if(!d && !a && !left) continue;
+      if(/^(grand\s+)?total\b/i.test(d)){ if(cur) cur.stated=parseAmount(a); close(); continue; }
+      if(/^(date|descrip\w*|amount)$/i.test(d)) continue;
+      var amt=looksAmount(a)?parseAmount(a):NaN;
+      /* a heading sits in the column left of the descriptions, with the
+         description cell empty. A bare date there is not a heading.          */
+      if(!d && left && isNaN(amt) && !(left.length<=12 && parseDate(left))){
+        if(cur && cur.lines.length) close();
+        if(!cur) cur=start();
+        if(!cur.title) cur.title=left;
+        else if(!cur.chassis && /^[A-Z0-9][A-Z0-9\- ]{7,}$/i.test(left) && !/[a-z]{3}/.test(left))
+          cur.chassis=left.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+        else cur.title+=" "+left;
+        continue;
+      }
+      /* text with no amount: it can start a tile, but it never splits one —
+         inside a tile that is just a line somebody left the amount off.      */
+      if(d && isNaN(amt)){
+        if(cur && cur.lines.length) continue;
+        if(!cur) cur=start();
+        if(!cur.title) cur.title=d;
+        else if(!cur.chassis && /^[A-Z0-9][A-Z0-9\- ]{7,}$/i.test(d) && !/[a-z]{3}/.test(d))
+          cur.chassis=d.replace(/[^A-Za-z0-9]/g,"").toUpperCase();
+        else cur.title+=" "+d;
+        continue;
+      }
+      if(d && !isNaN(amt)){
+        if(!cur) cur=start();
+        cur.lines.push({description:d, amount:amt, date:parseDate(left)||""});
+      }
+    }
+    close();
+  });
+  tiles.forEach(function(t){
+    if(!t.chassis) t.chassis=chassisFromDetail(t.title);
+    t.title=String(t.title).replace(/\s*\([^)]*\)\s*/g," ").replace(/\s+/g," ").trim();
+    t.purchase=NaN;
+    t.lines=t.lines.filter(function(l){
+      if(/^purchas/i.test(l.description)){ if(isNaN(t.purchase)) t.purchase=l.amount; return false; }
+      return true;
+    });
+    t.extras=t.lines.reduce(function(s,l){ return s+l.amount; },0);
+    var hit=matchCar(t.chassis, t.title);
+    t.carId=hit?hit.id:"";
+    t.carName=hit?carName(hit):"";
+  });
+  return tiles.filter(function(t){ return t.lines.length || !isNaN(t.purchase); });
+}
+function matchCar(chassis, title){
+  var i, c, ch=normChassis(chassis);
+  if(ch) for(i=0;i<S.cars.length;i++){ if(S.cars[i].chassis && normChassis(S.cars[i].chassis)===ch) return S.cars[i]; }
+  var t=String(title||"").trim().toLowerCase().replace(/\s+/g," ");
+  if(!t) return null;
+  for(i=0;i<S.cars.length;i++){ c=S.cars[i]; if(c.kind!=="charge" && carName(c).trim().toLowerCase().replace(/\s+/g," ")===t) return c; }
+  return null;
+}
+function openCarImport(){
+  if(!isAdmin()) return;
+  var mode="book", parsed={rows:[]}, tiles=[], seed=null, seedErr="";
+  openModal('<header><div><h3>Import into Sarim cars</h3><p>Bring the workbook across once, then paste new rows whenever you like.</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body">'+
+      '<div class="subtabs" id="ci-tabs" style="padding:0;background:none;border:0;margin:-4px 0 10px">'+
+        '<button class="subtab on" data-cm="book">My SARIM CARS workbook</button>'+
+        '<button class="subtab" data-cm="cars">Paste vehicles</button>'+
+        '<button class="subtab" data-cm="cost">Paste car costing</button></div>'+
+      '<p class="hint" id="ci-help"></p>'+
+      '<div id="ci-paste"><textarea id="ci-src" placeholder="Paste here"></textarea>'+
+      '<div class="fields" id="ci-opts">'+
+        '<div class="field"><label>Ambiguous dates</label><select id="ci-dmy"><option value="1">31/12/2026 (day first)</option><option value="0">12/31/2026 (month first)</option></select></div>'+
+        '<div class="field"><label>Unmatched vehicles</label><select id="ci-mk"><option value="1">Create them</option><option value="0">Skip them</option></select></div>'+
+      '</div></div>'+
+      '<div id="ci-status" class="hint"></div><div class="prev" id="ci-prev" style="display:none"></div>'+
+    '</div><footer><span class="hint" id="ci-count" style="margin-right:auto"></span>'+
+    '<button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="ci-go" disabled>Import</button></footer>');
+  var HELP={
+    book:"Reads <b>cars-seed.json</b> from the site — the whole workbook converted once: every vehicle, every cost line, every shipment and every Drive folder link. It goes into your Google Sheet exactly as if you had typed it, so the Sheet stays the database. Do this once, then delete that file from the repo.",
+    cars:"Paste UNITS ORDER or CARS &amp; SHIPPING rows, header row included, in any column order. TOTAL rows end a shipment, a line on its own becomes that shipment's name, and rows that mention shipping or clearance come in as charges.",
+    cost:"Paste the whole CAR COSTING sheet, tiles side by side and all. Each block becomes a vehicle's cost lines. A <b>Purchasing</b> line sets the purchase price instead of being counted as a cost, and the block's own TOTAL is checked against purchase + costs."
+  };
+  $$("#ci-tabs .subtab").forEach(function(b){
+    b.onclick=function(){
+      mode=b.dataset.cm;
+      $$("#ci-tabs .subtab").forEach(function(x){ x.classList.toggle("on",x===b); });
+      $("#ci-paste").style.display = mode==="book"?"none":"";
+      $("#ci-opts").style.display = mode==="cars"?"":"none";
+      reparse();
+    };
+  });
+  var t; $("#ci-src").addEventListener("input",function(){ clearTimeout(t); t=setTimeout(reparse,140); });
+  $("#ci-dmy").addEventListener("change",reparse);
+  $("#ci-mk").addEventListener("change",reparse);
+  $("#ci-go").onclick=function(){ mode==="book"?doSeed():(mode==="cars"?doCarImport():doCostImport()); };
+  $("#ci-paste").style.display="none";
+  reparse();
+  fetch("cars-seed.json",{cache:"no-store"}).then(function(r){
+    if(!r.ok) throw new Error("HTTP "+r.status);
+    return r.json();
+  }).then(function(j){ seed=j; if(mode==="book") reparse(); })
+    .catch(function(e){ seedErr=String(e.message||e); if(mode==="book") reparse(); });
+
+  function reparse(){
+    $("#ci-help").innerHTML=HELP[mode];
+    if(mode==="book") return drawSeed();
+    var src=$("#ci-src").value;
+    if(!src.trim()){ $("#ci-prev").style.display="none"; $("#ci-go").disabled=true; $("#ci-status").textContent=""; $("#ci-count").textContent=""; return; }
+    $("#ci-prev").style.display="";
+    if(mode==="cars"){
+      parsed=parseCarPaste(src, $("#ci-dmy").value==="1");
+      var rows=parsed.rows, units=rows.filter(function(r){return r.kind!=="charge";}).length;
+      var sum=rows.reduce(function(s,r){return s+r.aed;},0);
+      $("#ci-prev").innerHTML='<table><thead><tr><th>Chassis</th><th>Vehicle</th><th>Date</th><th style="text-align:right">$</th>'+
+        '<th style="text-align:right">AED</th><th>Status</th><th>Shipment</th></tr></thead><tbody>'+
+        rows.slice(0,250).map(function(r){
+          return '<tr class="'+(r.kind==="charge"?"bad":"")+'"><td>'+esc(r.chassis||(r.kind==="charge"?"shipping":"—"))+'</td><td>'+esc(r.detail)+
+            '</td><td>'+esc(r.date?fmtDateShort(r.date):"")+'</td><td class="num" style="text-align:right">'+esc(fmtUsd(r.usd))+
+            '</td><td class="num" style="text-align:right">'+esc(fmtAed(r.aed))+'</td><td>'+esc(r.status||"")+'</td><td>'+esc(r.batch)+'</td></tr>';
+        }).join("")+'</tbody></table>';
+      $("#ci-status").innerHTML= parsed.headerAt<0
+        ? "No header row recognised — columns were guessed. Check the preview before importing."
+        : units+" vehicles and "+(rows.length-units)+" shipping charges found"+(rows.length>250?" (first 250 shown)":"")+".";
+      $("#ci-count").textContent="Total "+fmtAed(sum);
+      $("#ci-go").disabled=!rows.length;
+      $("#ci-go").textContent="Import "+rows.length+" rows";
+    } else {
+      tiles=parseCostPaste(src);
+      var make=$("#ci-mk").value==="1";
+      var known=tiles.filter(function(x){return x.carId;}).length;
+      $("#ci-prev").innerHTML='<table><thead><tr><th>Vehicle</th><th>Chassis</th><th style="text-align:right">Purchase</th>'+
+        '<th style="text-align:right">Lines</th><th style="text-align:right">Work</th><th style="text-align:right">Landed</th><th>Matched</th></tr></thead><tbody>'+
+        tiles.map(function(x){
+          var p=isNaN(x.purchase)?0:x.purchase, land=p+x.extras;
+          var warn=!isNaN(x.stated) && Math.abs(x.stated-land)>1;
+          return '<tr class="'+(x.carId?"":"bad")+'"><td>'+esc(x.title||"—")+'</td><td>'+esc(x.chassis||"—")+
+            '</td><td class="num" style="text-align:right">'+esc(isNaN(x.purchase)?"—":fmtAed(x.purchase))+
+            '</td><td class="num" style="text-align:right">'+x.lines.length+
+            '</td><td class="num" style="text-align:right">'+esc(fmtAed(x.extras))+
+            '</td><td class="num" style="text-align:right">'+esc(fmtAed(land))+(warn?' <span class="warn" title="the sheet totalled this at '+esc(fmtAed(x.stated))+'">⚠</span>':'')+
+            '</td><td>'+(x.carId?esc(x.carName):"<b>new</b>")+'</td></tr>';
+        }).join("")+'</tbody></table>';
+      var lines=tiles.reduce(function(s,x){return s+x.lines.length;},0);
+      var warns=tiles.filter(function(x){ return !isNaN(x.stated) && Math.abs(x.stated-((isNaN(x.purchase)?0:x.purchase)+x.extras))>1; }).length;
+      $("#ci-status").innerHTML=tiles.length+" blocks · "+known+" matched to a vehicle you already have · "+
+        (tiles.length-known)+(make?" will be created":" will be skipped")+" · "+lines+" cost lines"+
+        (warns?' · <b>'+warns+" don't match the sheet's own TOTAL (⚠) — the app's figure is the one that adds up</b>":"")+".";
+      $("#ci-count").textContent="Work done "+fmtAed(tiles.reduce(function(s,x){return s+x.extras;},0));
+      $("#ci-go").disabled=!tiles.length;
+      $("#ci-go").textContent="Import "+lines+" cost lines";
+    }
+  }
+  function drawSeed(){
+    $("#ci-opts").style.display="none";
+    if(seedErr){
+      $("#ci-prev").style.display="none"; $("#ci-go").disabled=true; $("#ci-count").textContent="";
+      $("#ci-status").innerHTML='Could not read <b>cars-seed.json</b> ('+esc(seedErr)+'). Upload it to the repo next to index.html, then reopen this window.';
+      return;
+    }
+    if(!seed){ $("#ci-status").textContent="Reading cars-seed.json…"; $("#ci-go").disabled=true; return; }
+    var already=S.cars.length;
+    var tp=0,tc=0,tch=0;
+    seed.cars.forEach(function(c){ if(c.kind==="charge") tch+=c.aed; else tp+=c.aed; });
+    seed.costs.forEach(function(k){ tc+=k.amount; });
+    $("#ci-prev").style.display="";
+    $("#ci-prev").innerHTML='<table><thead><tr><th>Shipment</th><th style="text-align:right">Vehicles</th>'+
+      '<th style="text-align:right">Landed AED</th><th style="text-align:right">Shipping AED</th></tr></thead><tbody>'+
+      (function(){
+        var g={},order=[];
+        seed.cars.forEach(function(c){
+          var b=c.batch||NOSHIP; if(!g[b]){g[b]={n:0,land:0,ship:0};order.push(b);}
+          if(c.kind==="charge") g[b].ship+=c.aed;
+          else { g[b].n++; g[b].land+=c.aed; }
+        });
+        seed.costs.forEach(function(k){
+          var car=null; for(var i=0;i<seed.cars.length;i++) if(seed.cars[i].chassis===k.chassis){ car=seed.cars[i]; break; }
+          if(car) g[car.batch||NOSHIP].land+=k.amount;
+        });
+        return order.map(function(b){
+          return '<tr><td>'+esc(b)+'</td><td style="text-align:right">'+g[b].n+'</td>'+
+            '<td class="num" style="text-align:right">'+fmtAed(g[b].land)+'</td>'+
+            '<td class="num" style="text-align:right">'+fmtAed(g[b].ship)+'</td></tr>';
+        }).join("");
+      })()+'</tbody></table>';
+    $("#ci-status").innerHTML='<b>'+seed.vehicles+'</b> vehicles, <b>'+seed.costLines+'</b> cost lines, <b>'+
+      seed.charges+'</b> shipping charges across <b>'+seed.shipments+'</b> shipments, read from '+esc(seed.source)+'.'+
+      (already?' <b style="color:var(--warn)">You already have '+already+' rows in Sarim cars — importing again will duplicate them.</b>':'');
+    $("#ci-count").textContent="Purchases "+fmtAed(tp)+" · work "+fmtAed(tc)+" · shipping "+fmtAed(tch);
+    $("#ci-go").disabled=false;
+    $("#ci-go").textContent="Load "+(seed.cars.length+seed.costs.length)+" records";
+  }
+  function doSeed(){
+    if(!seed) return;
+    if(S.cars.length && !confirm("Sarim cars already has "+S.cars.length+" rows.\n\nLoading the workbook again will add a second copy of everything. Continue?")) return;
+    var base=S.cars.reduce(function(m,x){return Math.max(m,x.pos);},0)+1;
+    var byChassis={}, cars=[], costs=[];
+    seed.cars.forEach(function(x,i){
+      var c=Object.assign({}, x);
+      c.id=uid()+"-"+i; c.pos=base+i; c.usd=carUsd(c.aed);
+      if(c.kind!=="charge" && c.chassis) byChassis[normChassis(c.chassis)]=c.id;
+      cars.push(c);
+    });
+    seed.costs.forEach(function(k,i){
+      var carId=byChassis[normChassis(k.chassis)];
+      if(!carId) return;
+      costs.push({id:uid()+"-k"+i, carId:carId, date:k.date||"", description:k.description, amount:k.amount, pos:k.pos||i});
+    });
+    cars.forEach(function(c){
+      DB.cars[c.id]=Object.assign({deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
+    });
+    costs.forEach(function(k){ DB.costs[k.id]=Object.assign({deleted:""},k); });
+    for(var i=0;i<cars.length;i+=100) carOp({t:"carImport", rows:cars.slice(i,i+100)});
+    for(var j=0;j<costs.length;j+=150) carOp({t:"costImport", rows:costs.slice(j,j+150)});
+    closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
+    toast("Workbook loaded — "+cars.length+" rows and "+costs.length+" cost lines are on their way to the Sheet");
+  }
+  function doCarImport(){
+    var rows=parsed.rows; if(!rows.length) return;
+    var base=S.cars.reduce(function(m,x){return Math.max(m,x.pos);},0)+1;
+    rows.forEach(function(r,i){
+      DB.cars[r.id]=Object.assign({pos:base+i, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, r);
+    });
+    for(var i=0;i<rows.length;i+=100) carOp({t:"carImport", rows:rows.slice(i,i+100)});
+    closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
+    toast("Imported "+rows.length+" rows into Sarim cars");
+  }
+  function doCostImport(){
+    var make=$("#ci-mk").value==="1", newCars=[], lines=[], skipped=0;
+    var base=S.cars.reduce(function(m,x){return Math.max(m,x.pos);},0)+1;
+    tiles.forEach(function(x){
+      var carId=x.carId;
+      if(!carId){
+        if(!make){ skipped++; return; }
+        var c={id:uid(), kind:"unit", chassis:x.chassis, detail:x.title, make:"", model:"", year:"", body:"",
+          colour:"", transmission:"", engineNo:"", supplier:"", date:"",
+          aed:isNaN(x.purchase)?0:x.purchase, usd:carUsd(isNaN(x.purchase)?0:x.purchase), status:"",
+          customer:"", destination:"", batch:"", driveUrl:"", notes:""};
+        newCars.push(c); carId=c.id;
+      } else if(!isNaN(x.purchase)){
+        var have=findCar(carId);
+        if(have && !have.aed){
+          DB.cars[carId].aed=x.purchase; DB.cars[carId].usd=carUsd(x.purchase);
+          carOp({t:"car", op:"edit", id:carId, field:"aed", val:x.purchase});
+          carOp({t:"car", op:"edit", id:carId, field:"usd", val:carUsd(x.purchase)});
+        }
+      }
+      x.lines.forEach(function(l,i){
+        lines.push({id:uid()+"-"+i, carId:carId, date:l.date||"", description:l.description, amount:l.amount, pos:i});
+      });
+    });
+    newCars.forEach(function(c,i){
+      DB.cars[c.id]=Object.assign({pos:base+i, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
+    });
+    if(newCars.length) for(var i=0;i<newCars.length;i+=100) carOp({t:"carImport", rows:newCars.slice(i,i+100)});
+    lines.forEach(function(k){ DB.costs[k.id]=Object.assign({deleted:""},k); });
+    for(var j=0;j<lines.length;j+=150) carOp({t:"costImport", rows:lines.slice(j,j+150)});
+    closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
+    toast("Imported "+lines.length+" cost lines"+(newCars.length?" and created "+newCars.length+" vehicles":"")+
+      (skipped?" · "+skipped+" blocks skipped":""));
+  }
+}
+
 /* ====================================================== CONTEXT MENU ===== */
 function openCtx(x,y,id){
   var e=findEntry(id); if(!e) return;
   var c=$("#ctx"), others=S.accounts.filter(function(a){return a.id!==S.activeId;});
   c.innerHTML='<div class="lab">Colour tag</div><div class="swatches">'+
-    TAGS.map(function(t){ return '<button class="sw2 '+(e.tag===t.id?"on":"")+'" style="background:'+t.color+'" data-tag="'+t.id+'" title="'+esc(tagLabel(t.id))+'"></button>'; }).join("")+
-    '<button class="sw2 '+(!e.tag?"on":"")+'" style="background:var(--panel-2);color:var(--ink-3);border:1px dashed var(--line)" data-tag="" title="No tag">✕</button></div>'+
+    TAGS.map(function(t){ return '<button class="sw2 '+(colourOf(e)===t.id?"on":"")+'" style="background:'+t.color+'" data-tag="'+t.id+'" title="'+esc(tagLabel(t.id))+'"></button>'; }).join("")+
+    '<button class="sw2 '+(!colourOf(e)?"on":"")+'" style="background:var(--panel-2);color:var(--ink-3);border:1px dashed var(--line)" data-tag="" title="No tag">✕</button></div>'+
+    '<button class="ci" data-act="rem">'+(isRem(e)?"🔕 Remove from reminders":"🔔 Add to reminders")+'</button>'+
+    '<button class="ci" data-act="hide">'+EYE+(isHidden(e)?" Count this entry again":" Leave out of the totals")+'</button>'+
     (others.length?'<div class="lab">Move to account</div><div class="wrap"><select id="ctx-move"><option value="">Choose account…</option>'+
       others.map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption()+'</select></div>':'')+
     '<div class="sep"></div>'+
@@ -1642,9 +3006,9 @@ function openCtx(x,y,id){
   }
   $$(".sw2",c).forEach(function(b){
     b.onclick=function(){
-      e.tag=b.dataset.tag;
-      if(DB.entries[e.id]) DB.entries[e.id].tag=e.tag;
-      op({t:"update", id:e.id, field:"tag", val:e.tag}); closeCtx(); renderAll();
+      var val=withColour(e,b.dataset.tag);
+      e.tag=val; if(DB.entries[e.id]) DB.entries[e.id].tag=val;
+      op({t:"update", id:e.id, field:"tag", val:val}); closeCtx(); renderAll();
     };
   });
   var mv=$("#ctx-move",c);
@@ -1661,6 +3025,8 @@ function openCtx(x,y,id){
       if(act==="hist") return openHistory(e.id);
       if(act==="up") return moveRow(e.id,-1);
       if(act==="down") return moveRow(e.id,1);
+      if(act==="rem") return toggleRem([e.id]);
+      if(act==="hide") return toggleHide([e.id]);
       if(act==="above") return insertBlank(e.id,"above");
       if(act==="below") return insertBlank(e.id,"below");
       if(act==="dup"){
@@ -1960,7 +3326,9 @@ function exportCSV(accts){
   lines.push((multi?["ACCOUNT"]:[]).concat(["DATE","DETAILS OF PAYMENT","PAY BY","TOTAL","CURRENCY","TAG","ADDED BY","ADDED AT","LAST EDIT BY","LAST EDIT AT"]).map(csvCell).join(","));
   accts.forEach(function(a){
     a.entries.forEach(function(e){
-      lines.push((multi?[a.name]:[]).concat([fmtDate(e.date),e.details,e.payBy,e.amount,a.currency,e.tag?tagLabel(e.tag):"",e.createdBy||"",fmtWhen(e.createdAt),e.updatedBy||"",fmtWhen(e.updatedAt)]).map(csvCell).join(","));
+      lines.push((multi?[a.name]:[]).concat([fmtDate(e.date),e.details,e.payBy,e.amount,a.currency,
+        [colourOf(e)?tagLabel(colourOf(e)):"", isRem(e)?"REMINDER":"", isHidden(e)?"NOT COUNTED":"", isAnchor(e)?"OPENING BALANCE":""].filter(Boolean).join(" + "),
+        e.createdBy||"",fmtWhen(e.createdAt),e.updatedBy||"",fmtWhen(e.updatedAt)]).map(csvCell).join(","));
     });
     lines.push((multi?[a.name]:[]).concat(["","OPENING BALANCE","",a.opening,a.currency,"","","","",""]).map(csvCell).join(","));
   });
@@ -2139,6 +3507,48 @@ function bind(){
     if(v) bulkMove(v);
   };
 
+  /* ------------------------------------------------------------ SARIM CARS */
+  $$("#car-subtabs .subtab").forEach(function(b){
+    b.onclick=function(){ S.carsView=b.dataset.cv; cacheAll(); renderCars(); $("#carsbody").scrollTop=0; };
+  });
+  var cqT; $("#cq").addEventListener("input",function(){
+    var v=this.value; clearTimeout(cqT); cqT=setTimeout(function(){ ui.cq=v; renderCars(); },110);
+  });
+  $("#c-status").addEventListener("change",function(){ ui.cstatus=this.value; renderCars(); });
+  $("#c-batch").addEventListener("change",function(){ ui.cbatch=this.value; renderCars(); });
+  $("#c-model").addEventListener("change",function(){ ui.cmodel=this.value; renderCars(); });
+  $("#c-showpur").addEventListener("change",function(){ lsSet("cshowpur",this.checked); renderCars(); });
+  $("#btn-car-add").onclick=function(){ openCarAdd("unit"); };
+  $("#btn-car-charge").onclick=function(){ openCarAdd("charge"); };
+  $("#btn-car-import").onclick=openCarImport;
+
+  $("#carsbody").addEventListener("click",function(ev){
+    var dk=ev.target.closest("[data-doc]");
+    if(dk){ ev.stopPropagation(); return openCarDocs(dk.dataset.doc); }
+    var mb=ev.target.closest("[data-carmenu]");
+    if(mb){ var r=mb.getBoundingClientRect(); return openCarMenu(Math.max(8,r.left-210), r.bottom+4, mb.dataset.carmenu); }
+    var cf=ev.target.closest("[data-cf]");
+    if(cf) return startCarEdit(cf);
+    var co=ev.target.closest("[data-open]");
+    if(co) return openVehicle(co.dataset.open);
+  });
+  $("#carsbody").addEventListener("dblclick",function(ev){
+    var tr=ev.target.closest("tr[data-cid]"); if(tr) openVehicle(tr.dataset.cid);
+  });
+  $("#carsbody").addEventListener("contextmenu",function(ev){
+    var tr=ev.target.closest("tr[data-cid]"); if(!tr) return;
+    ev.preventDefault(); openCarMenu(ev.clientX,ev.clientY,tr.dataset.cid);
+  });
+  var cpress=null, cpressId=null;
+  $("#carsbody").addEventListener("touchstart",function(ev){
+    var tr=ev.target.closest("tr[data-cid]"); if(!tr) return;
+    cpressId=tr.dataset.cid;
+    cpress=setTimeout(function(){ if(navigator.vibrate) navigator.vibrate(12); openCarMenu(0,0,cpressId); cpress=null; },520);
+  },{passive:true});
+  ["touchend","touchmove","touchcancel","scroll"].forEach(function(evt){
+    $("#carsbody").addEventListener(evt,function(){ if(cpress){ clearTimeout(cpress); cpress=null; } },{passive:true});
+  });
+
   var press=null, pressId=null;
   $("#tbody").addEventListener("pointerdown",function(ev){
     var h=ev.target.closest("[data-drag]");
@@ -2148,6 +3558,8 @@ function bind(){
     if(ev.target.closest("[data-drag]")) return;
     var mb=ev.target.closest(".rowmenu");
     if(mb){ var r=mb.getBoundingClientRect(); return openCtx(Math.max(8,r.left-210), r.bottom+4, mb.dataset.id); }
+    var hb=ev.target.closest("[data-hide]");
+    if(hb){ ev.stopPropagation(); return toggleHide([hb.dataset.hide]); }
     var cb=ev.target.closest("[data-pick]");
     if(cb){ return togglePick(cb.dataset.pick, ev.shiftKey); }
     var sc=ev.target.closest("td.c-sel");
@@ -2169,8 +3581,12 @@ function bind(){
     $("#tbody").addEventListener(evt,function(){ if(press){ clearTimeout(press); press=null; } },{passive:true});
   });
   document.addEventListener("mousedown",function(ev){ if(!ev.target.closest("#ctx")) closeCtx(); });
-  document.addEventListener("touchstart",function(ev){ if(!ev.target.closest("#ctx") && !ev.target.closest("#tbody")) closeCtx(); },{passive:true});
+  document.addEventListener("touchstart",function(ev){ if(!ev.target.closest("#ctx") && !ev.target.closest("#tbody") && !ev.target.closest("#carsbody")) closeCtx(); },{passive:true});
   $("#scrim").addEventListener("mousedown",function(ev){ if(ev.target===$("#scrim")) closeModal(); });
+  $("#side").addEventListener("pointerdown",function(ev){
+    var g=ev.target.closest("[data-pdrag]");
+    if(g && ev.button!==2) startPanelDrag(ev, g.dataset.pdrag);
+  });
   $$(".padd button").forEach(function(b){ b.onclick=function(){ addSide(b.dataset.add); }; });
   ["recv","pay"].forEach(function(k){
     ["-n","-a"].forEach(function(s){ $("#"+k+s).addEventListener("keydown",function(e){ if(e.key==="Enter") addSide(k); }); });
@@ -2210,7 +3626,7 @@ function doLogin(){
       AUTH.token=res.token; AUTH.user=res.user; AUTH.people=res.people||[];
       lsSet("token",res.token); lsSet("user",res.user); lsSet("people",AUTH.people);
       $("#gate-pw").value="";
-      DB.accounts={}; DB.entries={}; DB.side={};
+      DB.accounts={}; DB.entries={}; DB.side={}; DB.cars={}; DB.costs={};
       ingest(res); showApp(); flush();
       toast("Welcome, "+res.user);
     } else {
@@ -2225,11 +3641,13 @@ function doLogin(){
 (function boot(){
   var cached=lsGet("db",null), cui=lsGet("ui",{});
   S.theme=cui.theme||"light"; S.activeId=cui.activeId||null; S.tagLabels=cui.tagLabels||{};
+  S.panelOrder=cui.panelOrder||null; S.carsView=cui.carsView||"register";
   document.documentElement.setAttribute("data-theme",S.theme);
-  if(cached){ DB.rev=cached.rev||0; DB.since=cached.since||""; DB.accounts=cached.accounts||{}; DB.entries=cached.entries||{}; DB.side=cached.side||{}; DB.audit=cached.audit||[]; }
+  if(cached){ DB.rev=cached.rev||0; DB.since=cached.since||""; DB.accounts=cached.accounts||{}; DB.entries=cached.entries||{};
+    DB.side=cached.side||{}; DB.cars=cached.cars||{}; DB.costs=cached.costs||{}; DB.audit=cached.audit||[]; }
   Q=lsGet("q",[])||[];
   AUTH.token=lsGet("token","")||""; AUTH.user=lsGet("user","")||""; AUTH.people=lsGet("people",[])||[];
-  bind();
+  bind(); applyPanelOrder();
 
   if("serviceWorker" in navigator && location.protocol==="https:"){
     window.addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
