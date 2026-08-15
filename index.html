@@ -278,6 +278,10 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .fi .tx b{color:var(--ink);font-weight:600}
 .fi .tm{color:var(--ink-3);font-size:10.5px;white-space:nowrap;margin-top:2px}
 .fi .old{color:var(--neg);text-decoration:line-through;opacity:.75}
+.fi .undo{flex:0 0 auto;align-self:center;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:3px 9px;opacity:0;transition:.15s}
+.fi:hover .undo{opacity:1}
+.fi .undo:hover{color:var(--neg);border-color:var(--neg);background:var(--neg-soft)}
 .fi .new{color:var(--pos);font-weight:600}
 
 /* ---------- context menu ---------- */
@@ -383,6 +387,8 @@ body.allview-on .fab{display:none!important}
   .who{width:27px;height:27px;font-size:9px}
   .sync span{display:none}
   .sync{padding:0 8px}
+  .fi .undo{opacity:1}          /* no hover on a phone — always show it */
+  .fi{padding:10px 11px}
   .toolbar{padding:8px 10px;gap:7px}
   .search{max-width:none;flex:1 1 140px}
   #tagchips,#f-payby,#f-month{display:none}
@@ -629,6 +635,7 @@ var API_URL = "https://script.google.com/macros/s/AKfycbwdE7x-eQCzLaGlB_P5gJMCvl
 var USD_RATE = 3.67;                 /* $ tick box multiplies by this        */
 var ADMINS   = ["BASIL"];            /* who sees Import / Export             */
 var EXCLUDE_FROM_ALL = /CASH/i;      /* accounts left out of the ALL total    */
+var SPLIT_ACCOUNTS = ["AUS/JPN","UK/USA"];   /* the pair for the 50/50 split option  */
 
 var LS = "hisaab.v2";
 var ALL_ID = "__ALL__";
@@ -1201,12 +1208,82 @@ function auditLine(r){
     default:        return esc(r.action)+what;
   }
 }
+function canUndo(r){
+  if(!r) return false;
+  switch(r.action){
+    case "ADD": case "DELETE": case "RESTORE": return !!r.entryId;
+    case "EDIT": case "TAG": return !!r.entryId && !!r.field;
+    case "MOVE": return !!r.entryId && !!r.oldValue;
+    case "OPENING": return !!r.account;
+    case "ACCOUNT_EDIT": return !!r.account && !!r.field;
+    default: return false;
+  }
+}
+function undoQuestion(r){
+  var who=(r.user===AUTH.user?"your":esc(r.user)+"'s")+" change";
+  switch(r.action){
+    case "ADD":     return "Undo "+who+"?\n\nThe entry \u201c"+(r.note||"")+"\u201d will be deleted (it stays in History).";
+    case "DELETE":  return "Undo "+who+"?\n\nThe deleted entry \u201c"+(r.note||"")+"\u201d comes back.";
+    case "RESTORE": return "Undo "+who+"?\n\nThe entry \u201c"+(r.note||"")+"\u201d will be deleted again.";
+    case "TAG":     return "Undo "+who+"?\n\nThe colour tag goes back to what it was.";
+    case "EDIT":    return r.field==="pos"
+        ? "Undo "+who+"?\n\nThe row goes back to where it was in the list."
+        : "Undo "+who+"?\n\n"+r.field+" goes back from "+r.newValue+" to "+r.oldValue+".";
+    case "MOVE":    return "Undo "+who+"?\n\nThe entry goes back to "+r.oldValue+".";
+    case "OPENING": return "Undo "+who+"?\n\nThe opening balance of "+r.account+" goes back to "+r.oldValue+".";
+    case "ACCOUNT_EDIT": return "Undo "+who+"?\n\n"+r.account+" "+r.field+" goes back to "+r.oldValue+".";
+  }
+  return "Undo this change?";
+}
+function undoAudit(r){
+  if(!canUndo(r)) return;
+  var id=r.entryId;
+  var needsEntry = ["EDIT","TAG","MOVE"].indexOf(r.action)>-1;
+  if(needsEntry && !DB.entries[id]) return toast("That entry no longer exists — it was deleted");
+  if(!confirm(undoQuestion(r))) return;
+
+  if(r.action==="ADD" || r.action==="RESTORE"){
+    delete DB.entries[id]; op({t:"delete", id:id});
+  }
+  else if(r.action==="DELETE"){
+    op({t:"restore", id:id});
+  }
+  else if(r.action==="EDIT" || r.action==="TAG"){
+    var f=r.field, v=r.oldValue;
+    if(f==="amount"||f==="pos") v=Number(v)||0;
+    else if(f==="date") v=parseDate(v)||"";
+    else v=(v==null?"":String(v));
+    DB.entries[id][f]=v;
+    op({t:"update", id:id, field:f, val:v, old:r.newValue});
+  }
+  else if(r.action==="MOVE"){
+    var target=S.accounts.filter(function(a){ return String(a.name)===String(r.oldValue); })[0];
+    if(!target) return toast("The account \u201c"+r.oldValue+"\u201d no longer exists");
+    DB.entries[id].accountId=target.id;
+    op({t:"move", id:id, toAccount:target.id});
+  }
+  else if(r.action==="OPENING" || r.action==="ACCOUNT_EDIT"){
+    var acc=S.accounts.filter(function(a){ return String(a.name)===String(r.account); })[0];
+    if(!acc) return toast("The account \u201c"+r.account+"\u201d no longer exists");
+    var af=(r.action==="OPENING")?"opening":r.field, av=r.oldValue;
+    if(af==="opening"||af==="pos") av=Number(av)||0; else av=(av==null?"":String(av));
+    DB.accounts[acc.id][af]=av;
+    op({t:"account", op:"edit", id:acc.id, field:af, val:av, old:r.newValue});
+  }
+  rebuild(); renderAll();
+  toast("Undone — the undo is recorded in History too");
+}
 function renderFeed(){
   var rows=(DB.audit||[]).slice(0,25);
-  $("#feed").innerHTML = rows.length ? rows.map(function(r){
+  $("#feed").innerHTML = rows.length ? rows.map(function(r,i){
     return '<div class="fi"><div class="av" style="background:'+personColor(r.user)+'">'+esc(initials(r.user))+'</div>'+
-      '<div class="tx"><b>'+esc(r.user)+'</b> '+auditLine(r)+'<div class="tm" title="'+esc(fmtWhen(r.ts))+'">'+esc(ago(r.ts))+'</div></div></div>';
+      '<div class="tx"><b>'+esc(r.user)+'</b> '+auditLine(r)+
+      '<div class="tm" title="'+esc(fmtWhen(r.ts))+'">'+esc(ago(r.ts))+'</div></div>'+
+      (canUndo(r)?'<button class="undo" data-undo="'+i+'" title="Undo this change">undo</button>':'')+'</div>';
   }).join("") : '<div class="fi" style="color:var(--ink-3)">Nothing yet — changes appear here as they happen.</div>';
+  $$("#feed [data-undo]").forEach(function(b){
+    b.onclick=function(){ undoAudit((DB.audit||[])[+b.dataset.undo]); };
+  });
 }
 
 /* ======================================================= SELECT / BULK === */
@@ -1256,7 +1333,7 @@ function renderBulk(){
   $$("#bulk-tags .sw2").forEach(function(b){ b.onclick=function(){ bulkTag(b.dataset.tag); }; });
   var mv=$("#bulk-move");
   mv.innerHTML='<option value="">Move to…</option>'+S.accounts.filter(function(a){return a.id!==S.activeId;})
-    .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("");
+    .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption();
 }
 function bulkTag(tag){
   var ids=Object.keys(PICK);
@@ -1442,6 +1519,67 @@ function commitDrag(id){
   if(tr){ tr.classList.add("flash"); setTimeout(function(){tr.classList.remove("flash");},900); }
 }
 
+/* --------------------------------------------- split 50/50 across two accounts */
+function splitPair(){
+  var out=[];
+  SPLIT_ACCOUNTS.forEach(function(n){
+    var a=S.accounts.filter(function(x){ return String(x.name||"").trim().toUpperCase()===n.toUpperCase(); })[0];
+    if(a) out.push(a);
+  });
+  return out.length===SPLIT_ACCOUNTS.length ? out : null;
+}
+function halves(v){
+  v=Number(v)||0;
+  var a=Math.round(v*50)/100;                 // half, to the fils
+  return [a, Math.round((v-a)*100)/100];      // remainder, so the two always add back up
+}
+function splitOption(){
+  return splitPair() ? '<option value="__SPLIT__">'+esc(SPLIT_ACCOUNTS.join(" + "))+' — split 50/50</option>' : '';
+}
+function splitEntries(ids){
+  var pair=splitPair();
+  if(!pair) return toast("Both "+SPLIT_ACCOUNTS.join(" and ")+" accounts are needed for that");
+  var from=acct(), cur=from.currency;
+  var list=ids.map(function(id){ return findEntry(id); }).filter(Boolean);
+  if(!list.length) return;
+  var msg;
+  if(list.length===1){
+    var h=halves(list[0].amount);
+    msg="Split "+fmt(list[0].amount,cur)+" between two accounts?\n\n"+
+        pair[0].name+"   "+fmt(h[0],cur)+"\n"+pair[1].name+"   "+fmt(h[1],cur)+
+        "\n\nThe entry is removed from "+from.name+".";
+  } else {
+    var tot=list.reduce(function(s2,e){ return s2+(Number(e.amount)||0); },0);
+    msg="Split "+list.length+" entries ("+fmt(tot,cur)+") 50/50 between "+pair[0].name+" and "+pair[1].name+
+        "?\n\nThey are removed from "+from.name+".";
+  }
+  if(!confirm(msg)) return;
+
+  var base=[pair[0].entries.reduce(function(m,x){return Math.min(m,x.pos);},0),
+            pair[1].entries.reduce(function(m,x){return Math.min(m,x.pos);},0)];
+  var made=[], originals=list.slice();
+  list.forEach(function(e){
+    var h=halves(e.amount);
+    pair.forEach(function(t,i){
+      base[i]-=1;
+      var c={id:uid(), accountId:t.id, date:e.date, details:e.details, payBy:e.payBy, amount:h[i], tag:e.tag};
+      DB.entries[c.id]=Object.assign({pos:base[i], deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
+      op({t:"addEntry", e:c});
+      made.push(c.id);
+    });
+    delete DB.entries[e.id];
+    op({t:"delete", id:e.id});
+  });
+  clearPick(); rebuild(); renderAll();
+  toast(list.length+(list.length===1?" entry":" entries")+" split between "+pair[0].name+" and "+pair[1].name,
+    function(){
+      made.forEach(function(id){ delete DB.entries[id]; op({t:"delete", id:id}); });
+      originals.forEach(function(e){ op({t:"restore", id:e.id}); });
+      rebuild(); renderAll(); toast("Split undone");
+    });
+}
+
 /* -------------------------------------------------- insert a blank row here */
 function insertBlank(refId, where){
   if(isAll()) return;
@@ -1484,7 +1622,7 @@ function openCtx(x,y,id){
     TAGS.map(function(t){ return '<button class="sw2 '+(e.tag===t.id?"on":"")+'" style="background:'+t.color+'" data-tag="'+t.id+'" title="'+esc(tagLabel(t.id))+'"></button>'; }).join("")+
     '<button class="sw2 '+(!e.tag?"on":"")+'" style="background:var(--panel-2);color:var(--ink-3);border:1px dashed var(--line)" data-tag="" title="No tag">✕</button></div>'+
     (others.length?'<div class="lab">Move to account</div><div class="wrap"><select id="ctx-move"><option value="">Choose account…</option>'+
-      others.map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+'</select></div>':'')+
+      others.map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption()+'</select></div>':'')+
     '<div class="sep"></div>'+
     '<button class="ci" data-act="above">⤒ Add row above</button>'+
     '<button class="ci" data-act="below">⤓ Add row below</button>'+
@@ -1511,6 +1649,7 @@ function openCtx(x,y,id){
   });
   var mv=$("#ctx-move",c);
   if(mv) mv.onchange=function(){
+    if(mv.value==="__SPLIT__"){ closeCtx(); return splitEntries([e.id]); }
     var target=S.accounts.filter(function(a){return a.id===mv.value;})[0]; if(!target) return;
     if(DB.entries[e.id]) DB.entries[e.id].accountId=target.id;
     op({t:"move", id:e.id, toAccount:target.id});
@@ -1640,15 +1779,14 @@ function openHistory(entryId){
     });
     var sub=$("#h-sub"); if(sub) sub.textContent=list.length+" change"+(list.length===1?"":"s")+" · newest first";
     $("#h-body").innerHTML = list.length ? '<table class="htable"><thead><tr><th>When</th><th>Who</th><th>What changed</th><th></th></tr></thead><tbody>'+
-      list.map(function(r){
-        var canRestore = r.action==="DELETE" && r.entryId;
+      list.map(function(r,i){
         return '<tr><td class="w" title="'+esc(r.ts)+'">'+esc(fmtWhen(r.ts))+'</td>'+
           '<td class="w"><span class="who" style="width:22px;height:22px;font-size:8px;display:inline-grid;background:'+personColor(r.user)+'">'+esc(initials(r.user))+'</span> '+esc(r.user)+'</td>'+
           '<td>'+auditLine(r)+'</td>'+
-          '<td class="w">'+(canRestore?'<button class="tbtn ghost" data-restore="'+esc(r.entryId)+'">Restore</button>':'')+'</td></tr>';
+          '<td class="w">'+(canUndo(r)?'<button class="tbtn ghost" data-hundo="'+i+'">'+(r.action==="DELETE"?"Restore":"Undo")+'</button>':'')+'</td></tr>';
       }).join("")+'</tbody></table>' : '<div class="hint">Nothing recorded yet.</div>';
-    $$("#h-body [data-restore]").forEach(function(b){
-      b.onclick=function(){ op({t:"restore", id:b.dataset.restore}); toast("Restoring…"); closeModal(); };
+    $$("#h-body [data-hundo]").forEach(function(b){
+      b.onclick=function(){ var r=list[+b.dataset.hundo]; closeModal(); undoAudit(r); };
     });
   }
 }
@@ -1995,7 +2133,11 @@ function bind(){
 
   $("#bulk-clear").onclick=function(){ clearPick(); renderTable(); };
   $("#bulk-del").onclick=bulkDelete;
-  $("#bulk-move").onchange=function(){ if(this.value) bulkMove(this.value); this.value=""; };
+  $("#bulk-move").onchange=function(){
+    var v=this.value; this.value="";
+    if(v==="__SPLIT__") return splitEntries(Object.keys(PICK));
+    if(v) bulkMove(v);
+  };
 
   var press=null, pressId=null;
   $("#tbody").addEventListener("pointerdown",function(ev){
