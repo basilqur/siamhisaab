@@ -168,6 +168,14 @@ select.mini{height:30px;border-radius:8px;border:1px solid var(--line);backgroun
 .seg button.on[data-sign="1"]{background:var(--pos-soft);color:var(--pos)}
 .usd{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 11px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-weight:800;font-size:13px;color:var(--ink-3);cursor:pointer;user-select:none}
 .usd input{width:16px;height:16px;accent-color:var(--accent);margin:0}
+.chk{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 11px;border:1px solid var(--line);
+  border-radius:8px;background:var(--panel-2);font-size:12.5px;font-weight:600;color:var(--ink-2);cursor:pointer;user-select:none;white-space:nowrap}
+.chk input{width:17px!important;height:17px!important;min-width:0!important;accent-color:var(--accent);margin:0;flex:0 0 auto}
+.field .chk{text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600}
+.chk.on{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.amt.zero{color:var(--ink-3);font-weight:500}
+tbody tr.blank td{background:var(--panel-2)}
+tbody tr.blank .c-det{min-height:19px}
 .usd.on{background:var(--pos-soft);border-color:var(--pos);color:var(--pos)}
 #usd-hint{font-size:11.5px;color:var(--ink-3);font-weight:600;white-space:nowrap}
 
@@ -1036,16 +1044,18 @@ function renderTable(){
   for(var i=a.entries.length-1;i>=0;i--){ run+=Number(a.entries[i].amount)||0; bal[a.entries[i].id]=run; }
   var html=rows.map(function(e,idx){
     var t=tagOf(e.tag), v=Number(e.amount)||0;
+    var isBlank = !String(e.details||"").trim() && !e.date && v===0;
     var tip="Added by "+(e.createdBy||"?")+" · "+fmtWhen(e.createdAt)+
       (e.updatedAt&&e.updatedAt!==e.createdAt?"\nLast edit by "+(e.updatedBy||"?")+" · "+fmtWhen(e.updatedAt):"");
     var cls=[]; if(t) cls.push(t.cls); if(PICK[e.id]) cls.push("picked");
+    if(isBlank) cls.push("blank");
     return '<tr data-id="'+e.id+'" title="'+esc(tip)+'" '+(t?'data-tag="'+e.tag+'" ':'')+(cls.length?'class="'+cls.join(" ")+'"':'')+'>'+
       '<td class="c-sel"><input type="checkbox" data-pick="'+e.id+'" '+(PICK[e.id]?"checked":"")+'></td>'+
-      '<td class="c-date" data-field="date">'+esc(isTouch()?fmtDateShort(e.date):fmtDate(e.date))+'</td>'+
+      '<td class="c-date" data-field="date">'+(isBlank?"":esc(isTouch()?fmtDateShort(e.date):fmtDate(e.date)))+'</td>'+
       '<td class="c-det" data-field="details">'+esc(e.details||"")+'</td>'+
-      '<td class="c-pay" data-field="payBy"><span class="pill '+(String(e.payBy).toUpperCase()==="BANK"?"bank":"")+'">'+esc(e.payBy||"CASH")+'</span></td>'+
-      '<td class="c-amt num amt '+(v<0?"neg":"pos")+'" data-field="amount">'+fmt(v,a.currency,{plus:true})+'</td>'+
-      '<td class="c-bal num">'+(off?"·":esc(fmt(bal[e.id],a.currency)))+'</td>'+
+      '<td class="c-pay" data-field="payBy">'+(isBlank?"":'<span class="pill '+(String(e.payBy).toUpperCase()==="BANK"?"bank":"")+'">'+esc(e.payBy||"CASH")+'</span>')+'</td>'+
+      '<td class="c-amt num amt '+(v===0?"zero":(v<0?"neg":"pos"))+'" data-field="amount">'+(isBlank?"":fmt(v,a.currency,{plus:true}))+'</td>'+
+      '<td class="c-bal num">'+(isBlank?"":(off?"·":esc(fmt(bal[e.id],a.currency))))+'</td>'+
       '<td class="c-act">'+
         (off?'':'<button class="drag" data-drag="'+e.id+'" title="Hold and drag to move this row">'+GRIP+'</button>')+
         '<button class="rowmenu" data-id="'+e.id+'" title="Row actions">⋯</button>'+
@@ -1432,6 +1442,40 @@ function commitDrag(id){
   if(tr){ tr.classList.add("flash"); setTimeout(function(){tr.classList.remove("flash");},900); }
 }
 
+/* -------------------------------------------------- insert a blank row here */
+function insertBlank(refId, where){
+  if(isAll()) return;
+  if(filtersOn()) return toast("Clear the filters first, then add a row");
+  var a=acct(), list=a.entries;
+  var i=-1; for(var k=0;k<list.length;k++) if(list[k].id===refId) i=k;
+  if(i<0) return;
+  var ref=DB.entries[refId]; if(!ref) return;
+  var rp=Number(ref.pos)||0, nb, p;
+  if(where==="above"){
+    nb = i>0 ? DB.entries[list[i-1].id] : null;
+    p = nb ? (rp + (Number(nb.pos)||0))/2 : rp-1;
+    if(nb && (p===rp || p===Number(nb.pos))) p = rp-0.0001;
+  } else {
+    nb = i<list.length-1 ? DB.entries[list[i+1].id] : null;
+    p = nb ? (rp + (Number(nb.pos)||0))/2 : rp+1;
+    if(nb && (p===rp || p===Number(nb.pos))) p = rp+0.0001;
+  }
+  var e={id:uid(), accountId:a.id, date:"", details:"", payBy:"CASH", amount:0, tag:""};
+  DB.entries[e.id]=Object.assign({pos:p, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
+    updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, e);
+  /* the server always drops a new entry on top, so follow it with the real position */
+  op({t:"addEntry", e:e});
+  op({t:"update", id:e.id, field:"pos", val:p});
+  rebuild(); renderTable(); renderStats(); renderTabs();
+  var tr=$('#tbody tr[data-id="'+e.id+'"]');
+  if(tr){
+    tr.scrollIntoView({block:"nearest"});
+    var td=tr.querySelector('td[data-field="details"]');
+    if(td && !isTouch()) startEdit(td);
+  }
+  toast("Blank row added — tap it to fill it in");
+}
+
 /* ====================================================== CONTEXT MENU ===== */
 function openCtx(x,y,id){
   var e=findEntry(id); if(!e) return;
@@ -1441,6 +1485,9 @@ function openCtx(x,y,id){
     '<button class="sw2 '+(!e.tag?"on":"")+'" style="background:var(--panel-2);color:var(--ink-3);border:1px dashed var(--line)" data-tag="" title="No tag">✕</button></div>'+
     (others.length?'<div class="lab">Move to account</div><div class="wrap"><select id="ctx-move"><option value="">Choose account…</option>'+
       others.map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+'</select></div>':'')+
+    '<div class="sep"></div>'+
+    '<button class="ci" data-act="above">⤒ Add row above</button>'+
+    '<button class="ci" data-act="below">⤓ Add row below</button>'+
     '<div class="sep"></div>'+
     '<button class="ci" data-act="up">▲ Move up</button>'+
     '<button class="ci" data-act="down">▼ Move down</button>'+
@@ -1475,10 +1522,14 @@ function openCtx(x,y,id){
       if(act==="hist") return openHistory(e.id);
       if(act==="up") return moveRow(e.id,-1);
       if(act==="down") return moveRow(e.id,1);
+      if(act==="above") return insertBlank(e.id,"above");
+      if(act==="below") return insertBlank(e.id,"below");
       if(act==="dup"){
+        var dp=e.pos-0.5;
         var copy={id:uid(), accountId:acct().id, date:e.date, details:e.details, payBy:e.payBy, amount:e.amount, tag:e.tag};
-        DB.entries[copy.id]=Object.assign({},copy,{pos:e.pos-0.5,createdBy:AUTH.user,createdAt:new Date().toISOString(),updatedBy:AUTH.user,updatedAt:new Date().toISOString()});
+        DB.entries[copy.id]=Object.assign({},copy,{pos:dp,createdBy:AUTH.user,createdAt:new Date().toISOString(),updatedBy:AUTH.user,updatedAt:new Date().toISOString()});
         op({t:"addEntry", e:copy});
+        op({t:"update", id:copy.id, field:"pos", val:dp});   // keep it next to the original
       }
       if(act==="flip"){
         var v=-(Number(e.amount)||0);
@@ -1615,12 +1666,18 @@ function openImport(){
       '<div class="field"><label>Amount column</label><select id="im-c3"></select></div>'+
       '<div class="field"><label>Ambiguous dates</label><select id="im-dmy"><option value="1">31/12/2026 (day first)</option><option value="0">12/31/2026 (month first)</option></select></div>'+
       '<div class="field"><label>Place</label><select id="im-where"><option value="top">At the top</option><option value="bottom">At the bottom</option></select></div>'+
+      '<div class="field"><label>Block</label><label class="chk" id="im-keeptop-wrap"><input type="checkbox" id="im-keeptop"> Keep together at top + 2 blank rows</label></div>'+
       '<div class="field"><label>Import into</label><select id="im-acct">'+S.accounts.map(function(a){return '<option value="'+a.id+'" '+(a.id===S.activeId?"selected":"")+'>'+esc(a.name)+'</option>';}).join("")+'</select></div>'+
     '</div><div id="im-status" class="hint"></div><div class="prev" id="im-prev" style="display:none"></div>'+
   '</div><footer><span class="hint" id="im-count" style="margin-right:auto"></span><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="im-go" disabled>Import</button></footer>');
   var parsed=[], src=$("#im-src");
   src.addEventListener("input",reparse);
   ["im-c0","im-c1","im-c2","im-c3","im-dmy"].forEach(function(id){ $("#"+id).addEventListener("change",reparse); });
+  $("#im-keeptop").addEventListener("change",function(){
+    var on=this.checked;
+    $("#im-keeptop-wrap").classList.toggle("on",on);
+    $("#im-where").value="top"; $("#im-where").disabled=on;
+  });
   $("#im-go").onclick=doImport;
   function reparse(){
     var grid=parseGrid(src.value);
@@ -1654,21 +1711,40 @@ function openImport(){
     $("#im-go").disabled=!good.length;
   }
   function doImport(){
-    var accountId=$("#im-acct").value, where=$("#im-where").value;
+    var accountId=$("#im-acct").value;
+    var keepTop=$("#im-keeptop").checked;
+    var where=keepTop?"top":$("#im-where").value;
     var rows=parsed.filter(function(p){return p.ok;}).map(function(p){
       return {id:uid(), date:p.date, details:p.details, payBy:p.payBy, amount:p.amount, tag:""};
     });
+    var imported=rows.length;
+    if(keepTop){                       // two spacer rows travel with the block
+      rows.push({id:uid(), date:"", details:"", payBy:"CASH", amount:0, tag:""});
+      rows.push({id:uid(), date:"", details:"", payBy:"CASH", amount:0, tag:""});
+    }
     var a=S.accounts.filter(function(x){return x.id===accountId;})[0];
     var base=a?a.entries.reduce(function(m,x){return Math.min(m,x.pos);},0):0;
     rows.forEach(function(r,i){
       DB.entries[r.id]=Object.assign({accountId:accountId, pos: where==="bottom"?(1000+i):(base-rows.length+i),
         createdBy:AUTH.user, createdAt:new Date().toISOString(), updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, r);
     });
-    for(var i=0;i<rows.length;i+=120) op({t:"import", accountId:accountId, where:where, rows:rows.slice(i,i+120)});
+    /* chunked so a huge paste never trips the request size — sent last chunk first,
+       because the server drops each block above the previous one */
+    var chunks=[];
+    for(var i=0;i<rows.length;i+=120) chunks.push(rows.slice(i,i+120));
+    for(var c=chunks.length-1;c>=0;c--) op({t:"import", accountId:accountId, where:where, rows:chunks[c]});
     S.activeId=accountId; closeModal(); rebuild(); renderAll();
-    toast("Imported "+rows.length+" entries");
+    toast("Imported "+imported+" entries"+(keepTop?" at the top, with 2 blank rows under them":""));
   }
 }
+function looksAmount(v){
+  var t=String(v==null?"":v).trim();
+  if(!t) return false;
+  t=t.replace(/(AED|USD|GBP|EUR|AUD|JPY|THB|INR|SGD|CNY|PKR|SAR|DHS|RS|DH)/gi,"").replace(/[$£€¥]/g,"").trim();
+  return /^[-+(]?\d[\d,.\s]*\)?-?$/.test(t);
+}
+var PAYWORDS=/^(cash|bank|cheque|check|card|transfer|online|tt|wire)$/i;
+function looksPayBy(v){ return PAYWORDS.test(String(v==null?"":v).trim()); }
 function guessCols(grid,cols){
   var head=grid[0].map(function(c){return String(c||"").toLowerCase();}), g=[-1,-1,-1,-1];
   head.forEach(function(h,i){
@@ -1678,16 +1754,26 @@ function guessCols(grid,cols){
     else if(/total|amount|debit|credit|value/.test(h)) g[3]=i;
   });
   if(g.join()==="-1,-1,-1,-1"){
-    var sd=[],sa=[];
+    var sample=grid.slice(0,40), sd=[],sa=[],sp=[],st=[];
     for(var c=0;c<cols;c++){
-      var d=0,a=0;
-      grid.slice(0,25).forEach(function(r){ if(parseDate(r[c])) d++; if(!isNaN(parseAmount(r[c]))&&/\d/.test(String(r[c]||""))) a++; });
-      sd.push(d); sa.push(a);
+      var d=0,a=0,p=0,t=0;
+      sample.forEach(function(r){
+        if(parseDate(r[c])) d++;
+        if(looksAmount(r[c])) a++;
+        if(looksPayBy(r[c])) p++;
+        if(String(r[c]||"").trim().length>3 && !looksAmount(r[c]) && !parseDate(r[c])) t++;
+      });
+      sd.push(d); sa.push(a); sp.push(p); st.push(t);
     }
-    g[0]=sd.indexOf(Math.max.apply(null,sd));
-    var ac=sa.slice(); ac[g[0]]=-1; g[3]=ac.indexOf(Math.max.apply(null,ac));
-    for(var c2=0;c2<cols;c2++){ if(c2!==g[0]&&c2!==g[3]){ if(g[1]<0) g[1]=c2; else if(g[2]<0) g[2]=c2; } }
-    if(cols>=4){ if(g[1]<0)g[1]=1; if(g[2]<0)g[2]=2; }
+    var used={};
+    g[0]=sd.indexOf(Math.max.apply(null,sd)); used[g[0]]=1;
+    var ac=sa.map(function(v,i){return used[i]?-1:v;});
+    g[3]=ac.indexOf(Math.max.apply(null,ac)); used[g[3]]=1;
+    var pc=sp.map(function(v,i){return used[i]?-1:v;});
+    if(Math.max.apply(null,pc)>0){ g[2]=pc.indexOf(Math.max.apply(null,pc)); used[g[2]]=1; }
+    var tc=st.map(function(v,i){return used[i]?-1:v;});
+    if(Math.max.apply(null,tc)>0){ g[1]=tc.indexOf(Math.max.apply(null,tc)); used[g[1]]=1; }
+    for(var c2=0;c2<cols;c2++){ if(!used[c2]){ if(g[1]<0){g[1]=c2;used[c2]=1;} else if(g[2]<0){g[2]=c2;used[c2]=1;} } }
   } else { if(g[0]<0)g[0]=0; if(g[1]<0)g[1]=1; if(g[2]<0&&cols>2)g[2]=2; if(g[3]<0)g[3]=cols-1; }
   return g;
 }
