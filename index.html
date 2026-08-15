@@ -315,6 +315,7 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .costadd button{height:32px;padding:0 12px;border-radius:7px;background:var(--accent);color:#fff;font-weight:700}
 .cempty{padding:44px 20px;text-align:center;color:var(--ink-3)}
 .ctable .det .sub{display:block;font-size:10.5px;color:var(--ink-3);margin-top:2px}
+.narrow-only{display:none}
 .ctable tr.yard td{background:var(--warn-soft)}
 .ctable tr.yard:hover td{background:var(--warn-soft);filter:brightness(.98)}
 .yardtag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--warn)}
@@ -331,8 +332,14 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .vfields .field{flex:1 1 150px}
 .vfields .field.wide{flex:1 1 100%}
 .vfields .field.wide input{width:100%}
+.bigpick{display:flex;flex-direction:column;gap:8px}
+.bigpick button{display:block;text-align:left;border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--panel-2)}
+.bigpick button:active{background:var(--accent-soft)}
+.bigpick b{display:block;font-size:15px;font-weight:700}
+.bigpick span{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
 h5.vh{margin:16px 0 0;font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
 #c-showpur-wrap{white-space:nowrap;font-size:12px;color:var(--ink-2);text-transform:none;letter-spacing:0}
+#btn-cfilters{display:none}
 #ci-tabs .subtab{border-bottom-width:2px}
 
 .cempty h3{color:var(--ink-2);margin:0 0 6px;font-size:15px}
@@ -361,7 +368,6 @@ body.pdrag-on{user-select:none;-webkit-user-select:none}
 .rem-item .x:hover{color:var(--neg);background:var(--neg-soft)}
 body.cars-on #panel-recv,body.cars-on #panel-pay,body.cars-on #panel-position,
 body.cars-on #panel-reminders,body.cars-on #panel-tags{display:none}
-body.cars-on .fab{display:none!important}
 .panel h4 .lnk{font-size:11px;letter-spacing:0;text-transform:none;color:var(--accent);font-weight:600;cursor:pointer}
 .plist{max-height:210px;overflow:auto}
 .pitem{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line-2);font-size:12.5px}
@@ -499,6 +505,8 @@ body.allview-on .fab{display:none!important}
   .sync span{display:none}
   .sync{padding:0 8px}
   .fi .undo,.pgrip{opacity:1}   /* no hover on a phone — always show them */
+  .fi .undo{padding:7px 12px;font-size:11px}
+  .pgrip{width:30px;height:30px;margin-left:-6px}
   .fi{padding:10px 11px}
   .toolbar{padding:8px 10px;gap:7px}
   .search{max-width:none;flex:1 1 140px}
@@ -529,8 +537,10 @@ body.allview-on .fab{display:none!important}
   .tablewrap tbody td.c-bal{grid-column:3;grid-row:2;width:auto;font-size:11.5px;margin-top:3px;justify-self:end}
   .tablewrap tbody td.c-act{grid-column:4;grid-row:1/span 2;width:28px;display:flex;flex-direction:column;
     align-items:center;justify-content:center;gap:6px;padding:0!important}
-  .mv{opacity:1;width:28px;height:24px}
-  .rowmenu{width:28px;height:26px;font-size:15px}
+  .mv{opacity:1;width:32px;height:30px}
+  .rowmenu,.drag{width:32px;height:30px;font-size:15px}
+  .c-sel input{width:21px;height:21px}
+  .chk input{width:21px!important;height:21px!important}
   .tablewrap tbody tr[data-tag]{border-left:4px solid var(--tagc)}
   .tablewrap tbody tr[data-tag] td:first-child::before{display:none}
   tr.t-blue{background:var(--t-blue-s)} tr.t-red{background:var(--t-red-s)}
@@ -579,16 +589,45 @@ body.allview-on .fab{display:none!important}
   .creg td.chs::before,.ccost td.chs::before{content:none}
   .creg td.c-docs{justify-content:flex-end;gap:6px}
   .creg td.c-menu,.ccost td.c-menu{position:absolute;top:8px;right:8px;padding:0}
-  .ctable.cship{min-width:600px}
-  .carsbody>table.cship{display:block;overflow-x:auto}
-  .vsum>div{flex:1 1 100%}
-  .subtabs{padding:8px 8px 0}
-  #carswrap .toolbar{flex-wrap:wrap;gap:6px;padding:8px}
-  #carswrap .toolbar .search{flex:1 1 100%}
-  #carswrap .toolbar .mini{flex:1 1 40%;min-width:0}
-  #carswrap .toolbar #c-showpur-wrap{flex:1 1 100%;justify-content:center}
-  #carswrap .toolbar .tbtn{flex:1 1 auto;justify-content:center}
-  #carswrap .toolbar .only-wide{display:none}
+  /* the shipment view keeps its table shape — trimmed to name and money, with
+     the date and status folded into the line underneath                       */
+  .cship .c-n,.cship .c-usd,.cship .c-dt,.cship .c-st{display:none}
+  .cship .det{min-width:0}
+  .narrow-only{display:block}
+  .cship td,.cship th{padding:8px 7px;font-size:12.5px}
+  .ctable.cship{min-width:0}
+  /* the vehicle sheet: three figures across the top, then two fields per row */
+  .vsum{gap:7px}
+  .vsum>div{flex:1 1 30%;padding:8px 9px;min-width:0}
+  .vsum b{font-size:14.5px}
+  .vsum span{font-size:9px;letter-spacing:.05em}
+  .vsum i{font-size:10px}
+  .vfields .field:not(.wide){flex:1 1 44%;min-width:0}
+  .vfields .field input,.vfields .field select{min-width:0;width:100%}
+  .vfields .field label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .subtabs{padding:7px 8px 0}
+  .subtab{padding:8px 11px;font-size:12px}
+  /* the phone toolbar is one line: search + Filters. Everything else folds away,
+     and adding things happens from the blue + button.                          */
+  #carswrap .toolbar{flex-wrap:wrap;gap:6px;padding:7px 8px}
+  #carswrap .toolbar .search{flex:1 1 auto;min-width:0}
+  #carswrap .toolbar #btn-cfilters{display:inline-flex;flex:0 0 auto}
+  #carswrap .toolbar .mini,#carswrap .toolbar #c-showpur-wrap,
+  #carswrap .toolbar #btn-car-add,#carswrap .toolbar #btn-car-charge,
+  #carswrap .toolbar #btn-car-import,#carswrap .toolbar .only-wide{display:none}
+  body.cfiltersopen #carswrap .toolbar .mini{display:inline-flex;flex:1 1 44%;min-width:0}
+  body.cfiltersopen #carswrap .toolbar #c-showpur-wrap{display:flex;flex:1 1 100%;justify-content:center}
+  /* fingers, not mouse pointers */
+  .creg td.c-menu .rowmenu,.ccost td.c-menu .rowmenu{width:34px;height:32px;font-size:17px}
+  .doclink{min-width:44px;height:30px;font-size:10px}
+  .costrow{padding:9px 10px}
+  .costrow .x{padding:6px 9px;font-size:15px}
+  .costadd{gap:6px;flex-wrap:wrap}
+  .costadd input.d{flex:1 1 100%}
+  .costadd input.a{flex:1 1 auto}
+  .costadd button{flex:0 0 78px;height:36px}
+  .costadd input{height:36px}
+  #c-showpur-wrap input{width:20px!important;height:20px!important}
 
   /* history rows stack */
   .htable,.htable tbody,.htable tr,.htable td{display:block}
@@ -737,6 +776,7 @@ body.allview-on .fab{display:none!important}
           <select class="mini" id="c-status"><option value="all">Any status</option><option>PAID</option><option>UNPAID</option><option>CREDIT</option></select>
           <select class="mini" id="c-batch"><option value="all">Any shipment</option></select>
           <label class="chk" id="c-showpur-wrap" title="Show what each vehicle cost to buy, before any work"><input type="checkbox" id="c-showpur"> Purchase column</label>
+          <button class="tbtn" id="btn-cfilters">Filters</button>
           <div class="spacer only-wide"></div>
           <button class="tbtn ghost" id="btn-car-add">+ Vehicle</button>
           <button class="tbtn ghost" id="btn-car-charge">+ Shipping charge</button>
@@ -2232,9 +2272,9 @@ function renderCarShipping(list){
     byB[b].rows.push(c);
   });
   var span = pur?7:6, n=0, gt={aed:0,usd:0,pur:0};
-  var html='<table class="ctable cship"><thead><tr><th>#</th><th>Date</th><th>Detail</th>'+
-    (pur?'<th class="r">Purchase AED</th>':'')+
-    '<th class="r">Total in $</th><th class="r">Total in AED</th><th>Status</th></tr></thead><tbody>';
+  var html='<table class="ctable cship"><thead><tr><th class="c-n">#</th><th class="c-dt">Date</th><th>Detail</th>'+
+    (pur?'<th class="r c-pur">Purchase AED</th>':'')+
+    '<th class="r c-usd">Total in $</th><th class="r">Total in AED</th><th class="c-st">Status</th></tr></thead><tbody>';
   groups.forEach(function(g){
     var t={aed:0,usd:0,pur:0};
     html+='<tr class="grp"><td colspan="'+span+'">'+esc(g.name)+
@@ -2244,20 +2284,23 @@ function renderCarShipping(list){
       t.aed+=val; t.usd+=usd; t.pur+=c.aed; gt.aed+=val; gt.usd+=usd; gt.pur+=c.aed;
       html+='<tr data-cid="'+c.id+'" class="'+(c.kind==="charge"?"charge":"")+'">'+
         '<td class="c-n">'+(c.kind==="charge"?"":++n)+'</td>'+
-        '<td data-cf="date" data-l="Date" style="white-space:nowrap">'+esc(c.date?fmtDateShort(c.date):"")+'</td>'+
+        '<td class="c-dt" data-cf="date" data-l="Date" style="white-space:nowrap">'+esc(c.date?fmtDateShort(c.date):"")+'</td>'+
         '<td class="det" data-l="Detail"><span data-cf="detail">'+esc(carName(c))+'</span>'+
           (c.chassis?' <span class="chs" style="color:var(--ink-3)">('+esc(c.chassis)+')</span>':'')+
-          (c.kind!=="charge"&&c.costTotal?'<span class="sub">'+fmtAed(c.aed)+' + '+fmtAed(c.costTotal)+' of work</span>':'')+'</td>'+
-        (pur?'<td class="r num" data-cf="aed" data-l="Purchase">'+(c.kind==="charge"?"—":fmtAed(c.aed))+'</td>':'')+
-        '<td class="r num" data-l="Total $">'+fmtUsd(usd)+'</td>'+
+          (c.kind!=="charge"&&c.costTotal?'<span class="sub">'+fmtAed(c.aed)+' + '+fmtAed(c.costTotal)+' of work</span>':'')+
+          '<span class="sub narrow-only">'+esc(c.date?fmtDateShort(c.date):"")+(c.status?" · "+esc(c.status):"")+'</span></td>'+
+        (pur?'<td class="r num c-pur" data-cf="aed" data-l="Purchase">'+(c.kind==="charge"?"—":fmtAed(c.aed))+'</td>':'')+
+        '<td class="r num c-usd" data-l="Total $">'+fmtUsd(usd)+'</td>'+
         '<td class="r num" data-l="Total AED" style="font-weight:600">'+fmtAed(val)+'</td>'+
-        '<td data-cf="status" data-l="Status">'+statusPill(c.status)+'</td></tr>';
+        '<td class="c-st" data-cf="status" data-l="Status">'+statusPill(c.status)+'</td></tr>';
     });
-    html+='<tr class="tot"><td colspan="'+(pur?4:3)+'" style="text-align:right">TOTAL</td>'+
-      '<td class="r num">'+fmtUsd(t.usd)+'</td><td class="r num">'+fmtAed(t.aed)+'</td><td></td></tr>';
+    html+='<tr class="tot"><td class="c-n"></td><td class="c-dt"></td>'+
+      '<td style="text-align:right">TOTAL</td>'+(pur?'<td class="r num c-pur">'+fmtAed(t.pur)+'</td>':'')+
+      '<td class="r num c-usd">'+fmtUsd(t.usd)+'</td><td class="r num">'+fmtAed(t.aed)+'</td><td class="c-st"></td></tr>';
   });
-  html+='<tr class="tot gtot"><td colspan="'+(pur?4:3)+'" style="text-align:right">GRAND TOTAL</td>'+
-    '<td class="r num">'+fmtUsd(gt.usd)+'</td><td class="r num">'+fmtAed(gt.aed)+'</td><td></td></tr>';
+  html+='<tr class="tot gtot"><td class="c-n"></td><td class="c-dt"></td>'+
+    '<td style="text-align:right">GRAND TOTAL</td>'+(pur?'<td class="r num c-pur">'+fmtAed(gt.pur)+'</td>':'')+
+    '<td class="r num c-usd">'+fmtUsd(gt.usd)+'</td><td class="r num">'+fmtAed(gt.aed)+'</td><td class="c-st"></td></tr>';
   $("#carsbody").innerHTML=html+'</tbody></table>';
 }
 
@@ -2508,6 +2551,22 @@ function openCarAdd(kind){
     closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
     toast(isCh?"Charge added":"Vehicle added — open it to add its costs");
   };
+}
+function openCarSheet(){
+  openModal('<header><div><h3>Add to Sarim cars</h3><p>'+
+      (S.cars.length?carTotals(S.cars).units+" vehicles so far":"nothing here yet")+'</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header><div class="body">'+
+    '<div class="bigpick">'+
+      '<button data-cs="unit"><b>+ Vehicle</b><span>a car you have bought</span></button>'+
+      '<button data-cs="charge"><b>+ Shipping charge</b><span>freight or clearance for a shipment</span></button>'+
+      (isAdmin()?'<button data-cs="import"><b>⊕ Import</b><span>bring the workbook across, or paste rows</span></button>':'')+
+    '</div></div>');
+  $$("#modal [data-cs]").forEach(function(b){
+    b.onclick=function(){
+      var a=b.dataset.cs; closeModal();
+      setTimeout(function(){ a==="import"?openCarImport():openCarAdd(a); },120);
+    };
+  });
 }
 function openCarMenu(x,y,id){
   var c=findCar(id); if(!c) return;
@@ -3471,7 +3530,7 @@ function bind(){
   $("#f-usd").addEventListener("change",usdHint);
   $("#f-det").addEventListener("keydown",function(e){ if(e.key==="Enter") $("#f-amt").focus(); });
   $$("#seg button").forEach(function(b){ b.onclick=function(){ sign=+b.dataset.sign; $$("#seg button").forEach(function(x){x.classList.toggle("on",x===b);}); }; });
-  $("#fab").onclick=openAddSheet;
+  $("#fab").onclick=function(){ isCars()?openCarSheet():openAddSheet(); };
 
   var qT; $("#q").addEventListener("input",function(){ var v=this.value; clearTimeout(qT); qT=setTimeout(function(){ ui.q=v; renderChips(); renderTable(); },110); });
   $("#f-payby").addEventListener("change",function(){ ui.payBy=this.value; renderChips(); renderTable(); });
@@ -3521,6 +3580,10 @@ function bind(){
   $("#btn-car-add").onclick=function(){ openCarAdd("unit"); };
   $("#btn-car-charge").onclick=function(){ openCarAdd("charge"); };
   $("#btn-car-import").onclick=openCarImport;
+  $("#btn-cfilters").onclick=function(){
+    document.body.classList.toggle("cfiltersopen");
+    this.classList.toggle("on", document.body.classList.contains("cfiltersopen"));
+  };
 
   $("#carsbody").addEventListener("click",function(ev){
     var dk=ev.target.closest("[data-doc]");
