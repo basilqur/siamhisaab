@@ -714,7 +714,7 @@ body.allview-on .fab{display:none!important}
 <!-- ============================== LOGIN ============================== -->
 <div id="gate" class="show">
   <div class="gatecard">
-    <h1><span id="gate-name">SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C</span> HISAAB</h1>
+    <h1>SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C HISAAB</h1>
     <p id="gate-sub">Enter your password to continue</p>
     <input id="gate-pw" type="password" autocomplete="current-password" inputmode="text" placeholder="••••" autofocus>
     <button class="go" id="gate-go">Sign in</button>
@@ -1132,7 +1132,13 @@ function ingest(res){
 function applyConfig(c){
   if(!c || typeof c!=="object") return;
   var before=JSON.stringify(CFG);
-  CFG = Object.assign({}, CFG, c);
+  var next = Object.assign({}, CFG, c);
+  /* A people list is the one thing that must never come back empty or broken —
+     losing it is how somebody ends up locked out of their own books.          */
+  if(!next.users || !next.users.length || Object.prototype.toString.call(next.users)!=="[object Array]")
+    next.users = CFG.users;
+  if(!next.admins || !next.admins.length) next.admins = CFG.admins;
+  CFG = next;
   lsSet("cfg", CFG);
   if(JSON.stringify(CFG)!==before) applyBrand();
 }
@@ -3670,7 +3676,16 @@ function openAdmin(resume){
   if(!isAdmin()) return nope("Only an administrator can open settings");
   var draft = resume && resume.draft ? resume.draft : JSON.parse(JSON.stringify(CFG));
   if(!draft.perms) draft.perms={};
-  if(!draft.users) draft.users=[];
+  if(!draft.users || Object.prototype.toString.call(draft.users)!=="[object Array]") draft.users=[];
+  /* Belt and braces: if the list arrived empty, or without passwords, rebuild it
+     from the names the server says exist so this window is never blank.       */
+  var repaired=false;
+  var known={}; draft.users.forEach(function(u){ if(u && u.name) known[u.name]=u; });
+  (AUTH.people||[]).forEach(function(n){ if(!known[n]){ draft.users.push({name:n, password:""}); known[n]=1; repaired=true; } });
+  draft.users=draft.users.filter(function(u){ return u && String(u.name||"").trim(); });
+  if(!draft.users.length && AUTH.user){ draft.users=[{name:AUTH.user, password:""}]; repaired=true; }
+  if(!draft.admins || !draft.admins.length) draft.admins=[AUTH.user];
+  var stripped = !!CFG._stripped || draft.users.some(function(u){ return !u.password; });
   var tab=(resume && resume.tab) || "people", dirty=!!(resume && resume.dirty), showPw=false;
 
   openModal('<header><div><h3>Admin settings</h3><p>Shared with everyone · changes reach the others in a few seconds</p></div>'+
@@ -3693,7 +3708,8 @@ function openAdmin(resume){
     b.onclick=function(){ tab=b.dataset.at; $$("#ad-tabs .subtab").forEach(function(x){x.classList.toggle("on",x===b);}); draw(); };
   });
   $("#ad-save").onclick=save;
-  if(dirty){ $("#ad-save").disabled=false; $("#ad-note").textContent="Not saved yet"; }
+  if(repaired) dirty=true;
+  if(dirty){ $("#ad-save").disabled=false; $("#ad-note").textContent=repaired?"List rebuilt — press save to keep it":"Not saved yet"; }
   draw();
 
   function touch(note){
@@ -3715,7 +3731,13 @@ function openAdmin(resume){
 
   /* ------------------------------------------------------------- people */
   function drawPeople(){
-    return '<p class="hint">A password <b>is</b> the login — whoever types it is that person. '+
+    return (stripped||repaired
+      ? '<p class="hint" style="color:var(--warn);border:1px solid var(--warn);border-radius:9px;padding:9px 11px">'+
+        '<b>Some passwords are blank here.</b> That is normal — the app only sends the passwords to an '+
+        'administrator, and this copy arrived without them. <b>Leaving a box empty keeps the existing '+
+        'password.</b> Type in a box only if you actually want to change it.</p>'
+      : '')+
+      '<p class="hint">A password <b>is</b> the login — whoever types it is that person. '+
       'They are matched ignoring capitals and spaces.</p>'+
       '<table class="adtable"><thead><tr><th>Name</th><th>Password</th><th style="text-align:center">Administrator</th><th></th></tr></thead><tbody>'+
       draft.users.map(function(u,i){
@@ -3733,7 +3755,7 @@ function openAdmin(resume){
       'There must always be at least one. Removing a person signs them out the next time they load the page — '+
       'their entries stay exactly where they are.</p>'+
       '<p class="hint" style="color:var(--warn)"><b>Short passwords are guessable.</b> If the address ever leaks, '+
-      '1–4 characters is about a minute\\u2019s work for someone determined. Longer is free.</p>';
+      '1–4 characters is about a minute\u2019s work for someone determined. Longer is free.</p>';
   }
 
   /* -------------------------------------------------------------- perms */
@@ -3858,7 +3880,7 @@ function openAdmin(resume){
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+
         '<button class="tbtn primary" id="ad-backup">↧ Download a full backup</button>'+
         '<button class="tbtn" id="ad-restore">↥ Restore from a backup</button>'+
-        '<button class="tbtn" id="ad-cache">Clear this device\\u2019s cache</button>'+
+        '<button class="tbtn" id="ad-cache">Clear this device\u2019s cache</button>'+
       '</div>'+
       '<p class="hint">The backup is one JSON file with every account, entry, vehicle and cost line as they '+
       'stand right now. Keep one before anything big — an import, a mass delete, a change of hands.</p>'+
@@ -3900,7 +3922,7 @@ function openAdmin(resume){
       el.onclick=function(){
         var i=+el.dataset.ud, u=draft.users[i];
         if(draft.users.length<2) return toast("There has to be at least one person");
-        if(!confirm("Remove "+u.name+"?\\n\\nTheir entries stay. They just cannot sign in any more.")) return;
+        if(!confirm("Remove "+u.name+"?\n\nTheir entries stay. They just cannot sign in any more.")) return;
         draft.users.splice(i,1);
         var ai=(draft.admins||[]).indexOf(u.name); if(ai>-1) draft.admins.splice(ai,1);
         delete draft.perms[u.name];
@@ -3954,7 +3976,7 @@ function openAdmin(resume){
     if($("#ad-backup")) $("#ad-backup").onclick=downloadBackup;
     if($("#ad-restore")) $("#ad-restore").onclick=openRestore;
     if($("#ad-cache")) $("#ad-cache").onclick=function(){
-      if(!confirm("Clear this device\\u2019s copy?\\n\\nNothing is deleted from the Sheet — the app just downloads everything again.")) return;
+      if(!confirm("Clear this device\u2019s copy?\n\nNothing is deleted from the Sheet — the app just downloads everything again.")) return;
       ["db","q","ui","cfg"].forEach(function(k){ try{ localStorage.removeItem(LS+"."+k); }catch(e){} });
       location.reload();
     };
@@ -3967,17 +3989,24 @@ function openAdmin(resume){
       u.name=String(u.name||"").trim().toUpperCase();
       u.password=String(u.password==null?"":u.password).trim();
       if(!u.name) return toast("Row "+(i+1)+" has no name");
-      if(!u.password) return toast(u.name+" has no password");
       if(seen[u.name]) return toast("Two people are called "+u.name);
-      var lp=u.password.toLowerCase();
-      if(pws[lp]) return toast("Two people share the password \\u201c"+u.password+"\\u201d");
-      seen[u.name]=1; pws[lp]=1;
+      /* empty means "keep whatever they have now" — the Sheet fills it back in.
+         Only somebody brand new actually needs one typing in.                 */
+      if(!u.password && (AUTH.people||[]).indexOf(u.name)<0)
+        return toast(u.name+" is new, so they need a password");
+      if(u.password){
+        var lp=u.password.toLowerCase();
+        if(pws[lp]) return toast("Two people share the password \u201c"+u.password+"\u201d");
+        pws[lp]=1;
+      }
+      seen[u.name]=1;
     }
     if(!draft.admins || !draft.admins.length) return toast("Somebody has to be an administrator");
     for(var a=0;a<draft.admins.length;a++) if(!seen[draft.admins[a]]) return toast(draft.admins[a]+" is an administrator but not in the list");
     if(draft.admins.indexOf(AUTH.user)<0 &&
-       !confirm("You are taking away your own administrator rights.\\n\\nYou will not be able to open this window again. Continue?")) return;
+       !confirm("You are taking away your own administrator rights.\n\nYou will not be able to open this window again. Continue?")) return;
 
+    delete draft._stripped;        /* never store the "no passwords here" marker */
     op({t:"config", cfg:draft, what:"settings", note:"changed the settings"});
     applyConfig(draft);
     closeModal(); rebuild(); renderAll();
@@ -4011,7 +4040,7 @@ function openRestore(){
     '<input type="file" id="rs-file" accept="application/json,.json" style="font-size:14px">'+
     '<div id="rs-info" class="hint" style="margin-top:10px"></div>'+
     '<p class="hint">Anything in the file that is not in the Sheet is added back. Anything already there is '+
-    'left alone, so restoring twice is harmless and nobody\\u2019s newer work gets overwritten. '+
+    'left alone, so restoring twice is harmless and nobody\u2019s newer work gets overwritten. '+
     'It is recorded in the activity log like any other change.</p></div>'+
     '<footer><button class="tbtn ghost" data-close>Cancel</button>'+
     '<button class="tbtn primary" id="rs-go" disabled>Restore</button></footer>');
