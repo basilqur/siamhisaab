@@ -314,6 +314,13 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .costadd input.a{width:110px;text-align:right}
 .costadd button{height:32px;padding:0 12px;border-radius:7px;background:var(--accent);color:#fff;font-weight:700}
 .cempty{padding:44px 20px;text-align:center;color:var(--ink-3)}
+body.readonly #addrow,body.readonly .fab,body.readonly #btn-car-add,body.readonly #btn-car-charge,
+body.readonly .bulkbar,body.readonly #tab-add,body.readonly .padd,body.readonly .drag,
+body.readonly .c-sel,body.readonly #sel-all-box,body.readonly #btn-selall{display:none!important}
+body.readonly .rowmenu{opacity:.5}
+.robar{display:none;align-items:center;gap:8px;padding:7px 14px;background:var(--warn-soft);color:var(--warn);
+  font-size:11.5px;font-weight:700;letter-spacing:.04em;border-bottom:1px solid var(--line)}
+body.readonly .robar{display:flex}
 .ctable .det .sub{display:block;font-size:10.5px;color:var(--ink-3);margin-top:2px}
 .narrow-only{display:none}
 .ctable tr.yard td{background:var(--warn-soft)}
@@ -332,6 +339,22 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .vfields .field{flex:1 1 150px}
 .vfields .field.wide{flex:1 1 100%}
 .vfields .field.wide input{width:100%}
+.adtable{width:100%;border-collapse:collapse;font-size:13px}
+.adtable th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
+  font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.adtable td{padding:6px 8px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+.adtable input[type=text],.adtable input[type=password],.adtable input:not([type]){width:100%;height:34px;
+  border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:0 9px;outline:none;font-size:13px}
+.adtable input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent)}
+.adtable .sub{display:block;font-size:11px;color:var(--ink-3);font-weight:500;margin-top:1px}
+.adtable.perms td:first-child{min-width:190px}
+.adtable .adm{display:block;font-size:9px;color:var(--accent);font-weight:700;letter-spacing:.05em}
+.picklist{display:flex;flex-direction:column;gap:2px}
+.picklist .chk{padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:var(--panel-2);font-size:13.5px}
+.kvbox{display:flex;flex-wrap:wrap;gap:8px}
+.kvbox>div{flex:1 1 130px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;background:var(--panel-2)}
+.kvbox span{display:block;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.kvbox b{font-size:18px;font-weight:800}
 .bigpick{display:flex;flex-direction:column;gap:8px}
 .bigpick button{display:block;text-align:left;border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:var(--panel-2)}
 .bigpick button:active{background:var(--accent-soft)}
@@ -629,6 +652,15 @@ body.allview-on .fab{display:none!important}
   .costadd input{height:36px}
   #c-showpur-wrap input{width:20px!important;height:20px!important}
 
+  /* admin settings on a phone */
+  .adtable td,.adtable th{padding:5px 4px}
+  .adtable input[type=text],.adtable input[type=password],.adtable input:not([type]){padding:0 7px;min-width:0}
+  .adtable td:first-child{width:44%}
+  .adtable .tbtn{padding:0 9px;min-width:0}
+  .adtable.perms td:first-child{min-width:150px;max-width:170px}
+  #ad-tabs .subtab{padding:8px 9px;font-size:12px}
+  .kvbox>div{flex:1 1 44%}
+
   /* history rows stack */
   .htable,.htable tbody,.htable tr,.htable td{display:block}
   .htable thead{display:none}
@@ -682,7 +714,7 @@ body.allview-on .fab{display:none!important}
 <!-- ============================== LOGIN ============================== -->
 <div id="gate" class="show">
   <div class="gatecard">
-    <h1>SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C HISAAB</h1>
+    <h1><span id="gate-name">SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C</span> HISAAB</h1>
     <p id="gate-sub">Enter your password to continue</p>
     <input id="gate-pw" type="password" autocomplete="current-password" inputmode="text" placeholder="••••" autofocus>
     <button class="go" id="gate-go">Sign in</button>
@@ -702,12 +734,14 @@ body.allview-on .fab{display:none!important}
       <button class="tbtn only-wide" id="btn-history">History</button>
       <button class="tbtn only-wide" id="btn-export">↧ Export</button>
       <button class="tbtn only-wide" id="btn-accounts">⚙ Accounts</button>
+      <button class="tbtn only-wide" id="btn-admin">🛡 Admin</button>
       <button class="tbtn only-wide" id="btn-theme">Dark</button>
       <button class="tbtn ghost only-wide" id="btn-out">Sign out</button>
     </div>
     <button class="tbtn ghost only-narrow" id="btn-menu" style="font-size:16px;padding:0 12px">⋯</button>
   </div>
 
+  <div class="robar">👁 View only — you can look at everything here but not change it. Ask BASIL if you need to edit.</div>
   <div class="tabbar" id="tabbar"></div>
 
   <div class="banner" id="banner">
@@ -843,10 +877,22 @@ body.allview-on .fab{display:none!important}
 /*  ▼▼▼  YOUR APPS SCRIPT WEB APP URL  ▼▼▼  */
 var API_URL = "https://script.google.com/macros/s/AKfycbwdE7x-eQCzLaGlB_P5gJMCvlt_e83QQADldacZMd9krwlHCkJ03ZkmeRRu0Hiynlsb/exec";
 
-var USD_RATE = 3.67;                 /* $ tick box multiplies by this        */
-var ADMINS   = ["BASIL"];            /* who sees Import / Export             */
-var EXCLUDE_FROM_ALL = /CASH/i;      /* accounts left out of the ALL total    */
-var SPLIT_ACCOUNTS = ["AUS/JPN","UK/USA"];   /* the pair for the 50/50 split option  */
+/* These are only the fall-backs used before the Sheet answers. Everything here
+   is editable from Admin settings (BASIL) and shared with everyone.          */
+var CFG = {
+  v:1,
+  users:[{name:"BASIL",password:"s"},{name:"SARIM",password:"si"},
+         {name:"RAMISH",password:"sia"},{name:"RAYYAN",password:"siam"}],
+  admins:["BASIL"], perms:{}, enforce:false,
+  usdRate:3.67, splitAccounts:["AUS/JPN","UK/USA"], excludeFromAll:"CASH",
+  company:"SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C", shortName:"SIAM B K K",
+  defaultTheme:"light", auditKeep:4000, confirmDelete:true, lockedAccounts:[]
+};
+Object.defineProperty(window,"USD_RATE",{get:function(){ return Number(CFG.usdRate)||3.67; }});
+Object.defineProperty(window,"SPLIT_ACCOUNTS",{get:function(){ return CFG.splitAccounts||[]; }});
+Object.defineProperty(window,"EXCLUDE_FROM_ALL",{get:function(){
+  try{ return new RegExp(CFG.excludeFromAll||"CASH","i"); }catch(e){ return /CASH/i; }
+}});
 
 var LS = "hisaab.v2";
 var ALL_ID = "__ALL__";
@@ -976,7 +1022,39 @@ function personColor(name){
   return PERSON_COLORS[h%PERSON_COLORS.length];
 }
 function initials(n){ n=String(n||"?").trim(); return n.slice(0,3).toUpperCase(); }
-function isAdmin(){ return DEMO || ADMINS.indexOf(AUTH.user)>-1; }
+function isAdmin(){ return DEMO || (CFG.admins||[]).indexOf(AUTH.user)>-1; }
+function myPerms(){
+  var p=(CFG.perms||{})[AUTH.user]||{}, a=isAdmin();
+  return {
+    admin:a,
+    cars: a || p.cars!==false,
+    edit: a || p.edit!==false,
+    del:  a || (p.edit!==false && p.del!==false),
+    importExport: a ? true : p.importExport===true,
+    undo: a || (p.edit!==false && p.undo!==false),
+    accounts: (!a && p.accounts && p.accounts!=="all") ? p.accounts : "all"
+  };
+}
+function can(k){ return !!myPerms()[k]; }
+function canSeeAccount(id){ var m=myPerms(); return m.accounts==="all" || m.accounts.indexOf(id)>-1; }
+function visibleAccounts(){ return S.accounts.filter(function(a){ return canSeeAccount(a.id); }); }
+function readOnly(){ return !can("edit"); }
+function nope(what){ toast(what||"You do not have permission for that"); }
+function askDelete(msg){ return CFG.confirmDelete===false ? true : confirm(msg); }
+function acctLocked(id){ return (CFG.lockedAccounts||[]).indexOf(id||S.activeId)>-1; }
+/* one gate for every write. cars=true when the write is a vehicle, not a ledger row */
+function canWrite(cars){
+  if(readOnly()) return nope("You have view-only access — ask BASIL if you need to edit"), false;
+  if(cars) return can("cars") ? true : (nope("Sarim cars is not switched on for you"), false);
+  if(!isAll() && !isCars() && !canSeeAccount(S.activeId)) return nope("You cannot open that account"), false;
+  if(acctLocked(S.activeId)) return nope("That account is locked — ask BASIL to unlock it"), false;
+  return true;
+}
+function canDel(){
+  if(!canWrite()) return false;
+  if(!can("del")) return nope("You are not allowed to delete"), false;
+  return true;
+}
 function toast(msg,undoFn){
   var t=$("#toast");
   t.innerHTML=esc(msg)+(undoFn?' <span class="u" id="toast-undo">Undo</span>':"");
@@ -1026,6 +1104,7 @@ function setNet(state,msg){
 /* ------------------------------------------------------------ merge state */
 function ingest(res){
   if(!res) return;
+  if(res.config) applyConfig(res.config);
   if(res.rev!=null) DB.rev=res.rev;
   if(res.since) DB.since=res.since;
   if(res.online) DB.online=res.online;
@@ -1050,6 +1129,19 @@ function ingest(res){
     if(tr){ tr.classList.add("flash"); setTimeout(function(){ tr.classList.remove("flash"); },1800); }
   });
 }
+function applyConfig(c){
+  if(!c || typeof c!=="object") return;
+  var before=JSON.stringify(CFG);
+  CFG = Object.assign({}, CFG, c);
+  lsSet("cfg", CFG);
+  if(JSON.stringify(CFG)!==before) applyBrand();
+}
+function applyBrand(){
+  var full=CFG.company||"", shrt=CFG.shortName||full;
+  var b=$(".brand b"); if(b){ b.textContent=full; b.dataset.short=shrt; }
+  var g=$("#gate-name"); if(g) g.textContent=full;
+  document.title=full;
+}
 function rebuild(){
   var accs = Object.keys(DB.accounts).map(function(k){return DB.accounts[k];})
     .filter(function(a){ return !isTrue(a.deleted); })
@@ -1068,8 +1160,10 @@ function rebuild(){
   });
   accs.forEach(function(a){ byAcct[a.id].entries.sort(function(x,y){ return x.pos-y.pos; }); });
   S.accounts = accs.map(function(a){ return byAcct[a.id]; });
-  if(S.activeId!==ALL_ID && S.activeId!==CARS_ID && (!S.activeId || !S.accounts.filter(function(a){return a.id===S.activeId;}).length))
-    S.activeId = S.accounts[0] ? S.accounts[0].id : ALL_ID;
+  if(S.activeId===CARS_ID && !can("cars")) S.activeId=ALL_ID;
+  if(S.activeId!==ALL_ID && S.activeId!==CARS_ID &&
+     (!S.activeId || !S.accounts.filter(function(a){return a.id===S.activeId && canSeeAccount(a.id);}).length))
+    S.activeId = visibleAccounts()[0] ? visibleAccounts()[0].id : ALL_ID;
   rebuildCars();
 }
 function rebuildCars(){
@@ -1143,8 +1237,8 @@ function isAll(){ return S.activeId===ALL_ID; }
 function acct(){
   if(isCars()) return {id:CARS_ID, name:"SARIM CARS", currency:"AED", opening:0, entries:[], recv:[], pay:[]};
   if(isAll()) return {id:ALL_ID, name:"ALL ACCOUNTS", currency:mainCurrency(), opening:0, entries:[], recv:[], pay:[]};
-  var a=S.accounts.filter(function(x){return x.id===S.activeId;})[0];
-  if(!a) a=S.accounts[0];
+  var a=S.accounts.filter(function(x){return x.id===S.activeId && canSeeAccount(x.id);})[0];
+  if(!a) a=visibleAccounts()[0];
   return a || {id:null,name:"—",currency:"AED",opening:0,entries:[],recv:[],pay:[]};
 }
 function mainCurrency(){
@@ -1258,7 +1352,7 @@ function remList(){
   return out;
 }
 function tagLabel(id){ return (S.tagLabels&&S.tagLabels[id])||(TAGS.filter(function(t){return t.id===id;})[0]||{}).label||id; }
-function includedInAll(a){ return !EXCLUDE_FROM_ALL.test(a.name); }
+function includedInAll(a){ return canSeeAccount(a.id) && !EXCLUDE_FROM_ALL.test(a.name); }
 
 /* ============================================================ RENDER ===== */
 function renderAll(){
@@ -1272,9 +1366,12 @@ function renderAll(){
   renderSide(); renderFeed(); renderBulk();
 }
 function applyRole(){
-  var show = isAdmin() ? "" : "none";
-  $("#btn-import").style.display = show;
-  $("#btn-export").style.display = show;
+  var ie = can("importExport") ? "" : "none";
+  $("#btn-import").style.display = ie;
+  $("#btn-export").style.display = ie;
+  $("#btn-admin").style.display = isAdmin() ? "" : "none";
+  document.body.classList.toggle("readonly", readOnly());
+  document.body.classList.toggle("nodelete", !can("del"));
 }
 function renderPeople(){
   var on={}; (DB.online||[]).forEach(function(o){ on[o.user]=o.since; });
@@ -1286,17 +1383,18 @@ function renderPeople(){
   }).join("");
 }
 function renderTabs(){
-  var el=$("#tabbar");
+  var el=$("#tabbar"), vis=visibleAccounts();
   var html='<button class="tab all '+(isAll()?"active":"")+'" data-id="'+ALL_ID+'">ALL <span class="bal num">'+
     fmtShort(allTotals().bal, mainCurrency())+'</span></button>';
-  html+=S.accounts.map(function(a){
+  html+=vis.map(function(a){
     var t=totals(a);
     return '<button class="tab '+(a.id===S.activeId?"active":"")+'" data-id="'+a.id+'">'+esc(a.name)+
       ' <span class="bal num '+(t.bal<0?"neg":"")+'">'+fmtShort(t.bal,a.currency)+'</span></button>';
   }).join("");
-  html+='<button class="tab cars '+(isCars()?"active":"")+'" data-id="'+CARS_ID+'">SARIM CARS <span class="bal num">'+
-    (S.cars.length?S.cars.filter(function(c){return c.kind!=="charge";}).length+" units":"")+'</span></button>';
-  html+='<button class="tab" id="tab-add" style="color:var(--ink-3)">+</button>';
+  if(can("cars"))
+    html+='<button class="tab cars '+(isCars()?"active":"")+'" data-id="'+CARS_ID+'">SARIM CARS <span class="bal num">'+
+      (S.cars.length?S.cars.filter(function(c){return c.kind!=="charge";}).length+" units":"")+'</span></button>';
+  if(!readOnly()) html+='<button class="tab" id="tab-add" style="color:var(--ink-3)">+</button>';
   el.innerHTML=html;
   $$(".tab[data-id]",el).forEach(function(b){
     b.onclick=function(){
@@ -1306,7 +1404,7 @@ function renderTabs(){
       var t=$("#tablewrap"); if(t) t.scrollTop=0;
     };
   });
-  $("#tab-add").onclick=addAccount;
+  if($("#tab-add")) $("#tab-add").onclick=addAccount;
 }
 function allTotals(){
   var t={bal:0,in:0,out:0,cash:0,bank:0,recv:0,pay:0,n:0,byCur:{}};
@@ -1633,6 +1731,7 @@ function undoQuestion(r){
   return "Undo this change?";
 }
 function undoAudit(r){
+  if(!can("undo")) return nope("You are not allowed to undo other people\u2019s work");
   if(!canUndo(r)) return;
   var id=r.entryId;
   var needsEntry = ["EDIT","TAG","MOVE"].indexOf(r.action)>-1;
@@ -1739,6 +1838,7 @@ function renderBulk(){
     .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption();
 }
 function bulkTag(tag){
+  if(!canWrite()) return;
   var ids=Object.keys(PICK);
   ids.forEach(function(id){
     var e=DB.entries[id]; if(!e) return;
@@ -1750,6 +1850,7 @@ function bulkTag(tag){
   toast(ids.length+" entries "+(tag?"tagged "+tagLabel(tag):"untagged"));
 }
 function bulkMove(toId){
+  if(!canWrite()) return;
   var ids=Object.keys(PICK), target=S.accounts.filter(function(a){return a.id===toId;})[0];
   if(!target) return;
   ids.forEach(function(id){
@@ -1761,6 +1862,7 @@ function bulkMove(toId){
   toast(ids.length+" entries moved to "+target.name);
 }
 function bulkDelete(){
+  if(!canDel()) return;
   var ids=Object.keys(PICK);
   if(!confirm("Delete "+ids.length+" entr"+(ids.length===1?"y":"ies")+"?\n\nThey stay in History and can be restored.")) return;
   ids.forEach(function(id){ delete DB.entries[id]; op({t:"delete", id:id}); });
@@ -1775,6 +1877,7 @@ function findEntry(id){
   return null;
 }
 function startEdit(td){
+  if(!canWrite()) return;
   if(drag) return;
   if(td.querySelector(".edit")) return;
   var tr=td.closest("tr"); if(!tr||tr.classList.contains("opening")) return;
@@ -1853,6 +1956,7 @@ function moveRow(id, dir){
 /* --------------------------------------------------------- drag to reorder */
 var drag=null, dragRaf=null, dragY=0;
 function startDrag(ev,id){
+  if(!canWrite()) return;
   if(filtersOn()){ toast("Clear the filters first, then drag"); return; }
   var tr=$('#tbody tr[data-id="'+id+'"]'); if(!tr) return;
   ev.preventDefault();
@@ -2000,6 +2104,7 @@ function toggleRem(ids, force){
 
 /* ------------------------------- set the real cash / bank balance of an account */
 function setPayBalance(kind){
+  if(!canWrite()) return;
   var a=acct(); if(isAll()||!a.id) return;
   var t=totals(a), now=(kind==="CASH"?t.cash:t.bank), anchor=anchorOf(a,kind);
   openModal('<header><div><h3>Set the '+kind.toLowerCase()+' balance</h3><p>'+esc(a.name)+'</p></div><button class="tbtn" data-close>✕</button></header>'+
@@ -2047,6 +2152,7 @@ function setPayBalance(kind){
 
 /* ------------------------------------------- leave entries out of the totals */
 function toggleHide(ids, force){
+  if(!canWrite()) return;
   var first=DB.entries[ids[0]];
   var on = (force==null) ? !(first&&isHidden(first)) : !!force;
   var n=0;
@@ -2080,6 +2186,7 @@ function splitOption(){
   return splitPair() ? '<option value="__SPLIT__">'+esc(SPLIT_ACCOUNTS.join(" + "))+' — split 50/50</option>' : '';
 }
 function splitEntries(ids){
+  if(!canWrite()) return;
   var pair=splitPair();
   if(!pair) return toast("Both "+SPLIT_ACCOUNTS.join(" and ")+" accounts are needed for that");
   var from=acct(), cur=from.currency;
@@ -2125,6 +2232,7 @@ function splitEntries(ids){
 
 /* -------------------------------------------------- insert a blank row here */
 function insertBlank(refId, where){
+  if(!canWrite()) return;
   if(isAll()) return;
   if(filtersOn()) return toast("Clear the filters first, then add a row");
   var a=acct(), list=a.entries;
@@ -2343,6 +2451,7 @@ var CARFIELDS=[
   {k:"driveUrl",     l:"Documents folder", wide:true, ph:"Paste the Google Drive folder link"}
 ];
 function openVehicle(id){
+  var VIEWONLY=readOnly();
   var c=findCar(id); if(!c) return;
   var isCh=c.kind==="charge";
   function draw(){
@@ -2399,8 +2508,13 @@ function openVehicle(id){
       });
     }
     $$("#veh-body [data-vf]").forEach(function(el){
+      if(VIEWONLY){ el.disabled=true; return; }
       el.addEventListener("change",function(){ saveField(el.dataset.vf, el.value); });
     });
+    if(VIEWONLY){
+      var add=$("#veh-body .costadd"); if(add) add.style.display="none";
+      $$("#veh-body .costrow .x").forEach(function(x){ x.style.display="none"; });
+    }
   }
   function saveField(f,val){
     var car=findCar(id); if(!car) return;
@@ -2436,18 +2550,19 @@ function openVehicle(id){
   }
   openModal('<header><div><h3>'+esc(carName(c))+'</h3><p class="chs">'+esc(c.chassis||(isCh?"shipping charge":""))+'</p></div>'+
     '<button class="tbtn" data-close>✕</button></header><div class="body" id="veh-body"></div>'+
-    '<footer><button class="tbtn ghost" id="veh-del">Delete</button><div class="spacer"></div>'+
+    '<footer>'+(can("del")&&!VIEWONLY?'<button class="tbtn ghost" id="veh-del">Delete</button>':'')+'<div class="spacer"></div>'+
     '<button class="tbtn primary" data-close>Done</button></footer>');
   draw();
-  $("#veh-del").onclick=function(){
+  if($("#veh-del")) $("#veh-del").onclick=function(){
     var car=findCar(id); if(!car) return;
-    if(!confirm("Delete "+carName(car)+"?\n\nIt can be brought back from History.")) return;
+    if(!askDelete("Delete "+carName(car)+"?\n\nIt can be brought back from History.")) return;
     delete DB.cars[id]; carOp({t:"car", op:"del", id:id});
     closeModal(); rebuild(); renderCars(); renderStats(); renderTabs();
     toast("Deleted");
   };
 }
 function editCostCell(el, after){
+  if(!canWrite(true)) return;
   if(el.querySelector("input")) return;
   var id=el.dataset.kid, f=el.dataset.kf, k=DB.costs[id]; if(!k) return;
   var inp=document.createElement("input");
@@ -2469,6 +2584,7 @@ function editCostCell(el, after){
 
 /* ------------------------------------------------------------- cell editing */
 function startCarEdit(td){
+  if(!canWrite(true)) return;
   if(!td || td.querySelector("input,select")) return;
   var tr=td.closest("tr[data-cid]"); if(!tr) return;
   var c=findCar(tr.dataset.cid); if(!c) return;
@@ -2509,6 +2625,7 @@ function startCarEdit(td){
 
 /* ------------------------------------------------------------ add / menus */
 function openCarAdd(kind){
+  if(!canWrite(true)) return;
   var isCh = kind==="charge";
   openModal('<header><div><h3>'+(isCh?"New shipping charge":"New vehicle")+'</h3><p>Sarim cars</p></div><button class="tbtn" data-close>✕</button></header>'+
     '<div class="body"><div class="fields" style="margin-top:0">'+
@@ -2575,7 +2692,7 @@ function openCarMenu(x,y,id){
     '<button class="ci" data-ca="open">📋 Open '+(c.kind==="charge"?"charge":"vehicle & costs")+'</button>'+
     (c.kind==="charge"?'':'<button class="ci" data-ca="docs">🔗 '+(c.driveUrl?"Open documents folder":"Add documents folder")+'</button>')+
     '<button class="ci" data-ca="dup">⧉ Duplicate</button>'+
-    '<div class="sep"></div><button class="ci danger" data-ca="del">🗑 Delete</button>';
+    (can("del")?'<div class="sep"></div><button class="ci danger" data-ca="del">🗑 Delete</button>':'');
   m.classList.add("show");
   if(!isTouch()){
     m.style.left=Math.min(x, innerWidth-m.offsetWidth-10)+"px";
@@ -2597,7 +2714,7 @@ function openCarMenu(x,y,id){
         carOp({t:"car", op:"add", c:copy});
       }
       if(a==="del"){
-        if(!confirm("Delete "+carName(c)+"?\n\nIts cost lines stay in the Sheet and it can be brought back from History.")) return;
+        if(!askDelete("Delete "+carName(c)+"?\n\nIts cost lines stay in the Sheet and it can be brought back from History.")) return;
         delete DB.cars[id];
         carOp({t:"car", op:"del", id:id});
       }
@@ -2829,6 +2946,7 @@ function matchCar(chassis, title){
   return null;
 }
 function openCarImport(){
+  if(!can("importExport")) return nope("Import is not switched on for you");
   if(!isAdmin()) return;
   var mode="book", parsed={rows:[]}, tiles=[], seed=null, seedErr="";
   openModal('<header><div><h3>Import into Sarim cars</h3><p>Bring the workbook across once, then paste new rows whenever you like.</p></div>'+
@@ -3057,7 +3175,7 @@ function openCtx(x,y,id){
     '<button class="ci" data-act="hist">🕘 History of this entry</button>'+
     '<button class="ci" data-act="dup">⧉ Duplicate entry</button>'+
     '<button class="ci" data-act="flip">± Flip sign (in ⇄ out)</button>'+
-    '<div class="sep"></div><button class="ci danger" data-act="del">🗑 Delete entry</button>';
+    (can("del")?'<div class="sep"></div><button class="ci danger" data-act="del">🗑 Delete entry</button>':'');
   c.classList.add("show");
   if(!isTouch()){
     c.style.left=Math.min(x, innerWidth-c.offsetWidth-10)+"px";
@@ -3150,9 +3268,10 @@ function openMenu(){
   var items=[
     ["History","Every change, who and when","history"],
     ["Accounts","Rename, currency, opening balance","accounts"],
-    isAdmin()?["Import","Paste rows from Google Sheets","import"]:null,
-    isAdmin()?["Export","CSV and snapshots","export"]:null,
-    ["Sort by date","Reorder this account, newest first","sort"],
+    can("importExport")?["Import","Paste rows from Google Sheets","import"]:null,
+    can("importExport")?["Export","CSV and snapshots","export"]:null,
+    isAdmin()?["Admin settings","People, permissions, money, backups","admin"]:null,
+    readOnly()?null:["Sort by date","Reorder this account, newest first","sort"],
     [S.theme==="dark"?"Light mode":"Dark mode","Switch the look","theme"],
     ["Sign out","You are "+(AUTH.user||"—"),"out"]
   ].filter(Boolean);
@@ -3167,6 +3286,7 @@ function openMenu(){
       if(d==="accounts") openAccounts();
       if(d==="import") openImport();
       if(d==="export") openExport();
+      if(d==="admin") return openAdmin();
       if(d==="sort") sortByDate();
       if(d==="theme"){ S.theme=S.theme==="dark"?"light":"dark"; cacheAll(); renderAll(); }
       if(d==="out") signOut();
@@ -3218,6 +3338,7 @@ function openHistory(entryId){
 
 /* ---- import ---- */
 function openImport(){
+  if(!can("importExport")) return nope("Import is not switched on for you");
   if(!isAdmin()) return;
   openModal('<header><div><h3>Import from Google Sheets</h3><p>Copy your rows in Sheets, paste below.</p></div><button class="tbtn" data-close>✕</button></header>'+
   '<div class="body">'+
@@ -3359,6 +3480,7 @@ function parseGrid(text){
 
 /* ---- export ---- */
 function openExport(){
+  if(!can("importExport")) return nope("Export is not switched on for you");
   if(!isAdmin()) return;
   var a=acct();
   openModal('<header><div><h3>Export</h3><p>The live data lives in your Google Sheet — these are copies.</p></div><button class="tbtn" data-close>✕</button></header>'+
@@ -3397,6 +3519,7 @@ function exportCSV(accts){
 
 /* ---- accounts ---- */
 function openAccounts(){
+  if(readOnly()) return nope("You have view-only access");
   openModal('<header><div><h3>Accounts</h3><p>Everyone sees these.</p></div><button class="tbtn" data-close>✕</button></header>'+
   '<div class="body"><div id="acct-rows"></div><div style="margin-top:12px"><button class="tbtn ghost" id="acct-new">+ New account</button></div>'+
   '<p class="hint" style="margin-top:12px">An account with “CASH” in its name is left out of the ALL total.</p></div>'+
@@ -3443,6 +3566,7 @@ function openAccounts(){
   }
 }
 function addAccount(){
+  if(!canWrite()) return;
   var n=prompt("Name of the new account:","NEW ACCOUNT");
   if(n==null||!n.trim()) return;
   var a={id:uid(), name:n.trim(), currency:mainCurrency(), opening:0};
@@ -3462,6 +3586,7 @@ function usdHint(){
   else h.textContent="";
 }
 function addEntry(){
+  if(!canWrite()) return;
   var a=acct(); if(!a.id||isAll()) return toast("Open an account first");
   var raw=$("#f-amt").value.trim(), n=parseAmount(raw);
   if(isNaN(n)){ $("#f-amt").focus(); return toast("Enter an amount"); }
@@ -3498,6 +3623,7 @@ function sideAction(kind,id,act){
   toast(act==="settle"?"Posted to the ledger":"Removed");
 }
 function addSide(kind){
+  if(!canWrite()) return;
   if(isAll()) return toast("Open an account first");
   var a=acct();
   var name=$("#"+kind+"-n").value.trim(), amt=parseAmount($("#"+kind+"-a").value);
@@ -3520,6 +3646,418 @@ function signOut(){
   if(Q.length && !confirm(Q.length+" change(s) have not reached the Sheet yet. Sign out anyway?")) return;
   api("bye",{}).catch(function(){});
   AUTH.token=""; lsSet("token",""); location.reload();
+}
+
+
+/* ========================================================= ADMIN SETTINGS ==
+   BASIL only. Everything here is stored in the SETTINGS tab of the Sheet, so
+   a change reaches the other three within a few seconds.
+   ========================================================================== */
+var PERMROWS = [
+  {k:"cars",         l:"Sarim cars",        h:"see the SARIM CARS tab at all"},
+  {k:"edit",         l:"Add and edit",      h:"add entries, change cells, move rows"},
+  {k:"del",          l:"Delete",            h:"delete entries, accounts and vehicles"},
+  {k:"undo",         l:"Undo others",       h:"reverse someone else's change from the activity feed"},
+  {k:"importExport", l:"Import / export",   h:"paste rows in, take data out"}
+];
+function permVal(cfg, name, k){
+  if((cfg.admins||[]).indexOf(name)>-1) return true;
+  var p=(cfg.perms||{})[name]||{};
+  if(k==="importExport") return p.importExport===true;
+  return p[k]!==false;
+}
+function openAdmin(resume){
+  if(!isAdmin()) return nope("Only an administrator can open settings");
+  var draft = resume && resume.draft ? resume.draft : JSON.parse(JSON.stringify(CFG));
+  if(!draft.perms) draft.perms={};
+  if(!draft.users) draft.users=[];
+  var tab=(resume && resume.tab) || "people", dirty=!!(resume && resume.dirty), showPw=false;
+
+  openModal('<header><div><h3>Admin settings</h3><p>Shared with everyone · changes reach the others in a few seconds</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body" style="padding-top:10px">'+
+      '<div class="subtabs" id="ad-tabs" style="padding:0;background:none;border:0;margin:-4px 0 12px;flex-wrap:wrap">'+
+        '<button class="subtab on" data-at="people">People</button>'+
+        '<button class="subtab" data-at="perms">Who can see what</button>'+
+        '<button class="subtab" data-at="accounts">Accounts</button>'+
+        '<button class="subtab" data-at="money">Money</button>'+
+        '<button class="subtab" data-at="look">Company</button>'+
+        '<button class="subtab" data-at="data">Data &amp; safety</button>'+
+      '</div><div id="ad-body"></div>'+
+    '</div>'+
+    '<footer><span class="hint" id="ad-note" style="margin-right:auto"></span>'+
+    '<button class="tbtn ghost" data-close>Close</button>'+
+    '<button class="tbtn primary" id="ad-save" disabled>Save changes</button></footer>');
+
+  $$("#ad-tabs .subtab").forEach(function(b){
+    b.onclick=function(){ tab=b.dataset.at; $$("#ad-tabs .subtab").forEach(function(x){x.classList.toggle("on",x===b);}); draw(); };
+  });
+  $("#ad-save").onclick=save;
+  if(dirty){ $("#ad-save").disabled=false; $("#ad-note").textContent="Not saved yet"; }
+  draw();
+
+  function touch(note){
+    dirty=true;
+    $("#ad-save").disabled=false;
+    $("#ad-note").textContent=note||"Not saved yet";
+  }
+  function draw(){
+    var h="";
+    if(tab==="people")   h=drawPeople();
+    if(tab==="perms")    h=drawPerms();
+    if(tab==="accounts") h=drawAccounts();
+    if(tab==="money")    h=drawMoney();
+    if(tab==="look")     h=drawLook();
+    if(tab==="data")     h=drawData();
+    $("#ad-body").innerHTML=h;
+    wire();
+  }
+
+  /* ------------------------------------------------------------- people */
+  function drawPeople(){
+    return '<p class="hint">A password <b>is</b> the login — whoever types it is that person. '+
+      'They are matched ignoring capitals and spaces.</p>'+
+      '<table class="adtable"><thead><tr><th>Name</th><th>Password</th><th style="text-align:center">Administrator</th><th></th></tr></thead><tbody>'+
+      draft.users.map(function(u,i){
+        var isAd=(draft.admins||[]).indexOf(u.name)>-1;
+        return '<tr><td><input data-un="'+i+'" value="'+esc(u.name)+'" style="text-transform:uppercase;font-weight:700"></td>'+
+          '<td><input data-up="'+i+'" type="'+(showPw?"text":"password")+'" value="'+esc(u.password||"")+'" autocomplete="new-password"></td>'+
+          '<td style="text-align:center"><input type="checkbox" data-ua="'+i+'" '+(isAd?"checked":"")+'></td>'+
+          '<td style="text-align:right"><button class="tbtn ghost" data-ud="'+i+'" title="Remove">✕</button></td></tr>';
+      }).join("")+'</tbody></table>'+
+      '<div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">'+
+        '<button class="tbtn" id="ad-adduser">+ Add a person</button>'+
+        '<label class="chk"><input type="checkbox" id="ad-showpw" '+(showPw?"checked":"")+'> Show passwords</label>'+
+      '</div>'+
+      '<p class="hint" style="margin-top:12px">An administrator can do everything, including opening this window. '+
+      'There must always be at least one. Removing a person signs them out the next time they load the page — '+
+      'their entries stay exactly where they are.</p>'+
+      '<p class="hint" style="color:var(--warn)"><b>Short passwords are guessable.</b> If the address ever leaks, '+
+      '1–4 characters is about a minute\\u2019s work for someone determined. Longer is free.</p>';
+  }
+
+  /* -------------------------------------------------------------- perms */
+  function drawPerms(){
+    var names=draft.users.map(function(u){return u.name;});
+    return '<p class="hint">Untick to take something away. Administrators always have everything, '+
+      'so their column is fixed.</p>'+
+      '<div style="overflow:auto"><table class="adtable perms"><thead><tr><th>Can they…</th>'+
+      names.map(function(n){ return '<th style="text-align:center">'+esc(n)+
+        ((draft.admins||[]).indexOf(n)>-1?'<span class="adm">admin</span>':'')+'</th>'; }).join("")+
+      '</tr></thead><tbody>'+
+      PERMROWS.map(function(r){
+        return '<tr><td><b>'+r.l+'</b><span class="sub">'+r.h+'</span></td>'+
+          names.map(function(n){
+            var ad=(draft.admins||[]).indexOf(n)>-1;
+            return '<td style="text-align:center"><input type="checkbox" data-pk="'+r.k+'" data-pn="'+esc(n)+'" '+
+              (permVal(draft,n,r.k)?"checked":"")+(ad?" disabled":"")+'></td>';
+          }).join("")+'</tr>';
+      }).join("")+
+      '<tr><td><b>Accounts</b><span class="sub">which ledger tabs they can open</span></td>'+
+      names.map(function(n){
+        var ad=(draft.admins||[]).indexOf(n)>-1;
+        var p=(draft.perms||{})[n]||{};
+        var all=ad||!p.accounts||p.accounts==="all";
+        return '<td style="text-align:center">'+(ad?'<span class="hint">all</span>':
+          '<button class="tbtn ghost" data-pacct="'+esc(n)+'">'+(all?"all":p.accounts.length+" of "+S.accounts.length)+'</button>')+'</td>';
+      }).join("")+'</tr></tbody></table></div>'+
+      '<p class="hint" style="margin-top:12px"><b>How strict is this?</b> '+
+      (draft.enforce
+        ? 'The Sheet itself refuses — hidden data is never sent and blocked writes are rejected.'
+        : 'Right now this hides things in the browser. Anyone technical enough to open the developer console could still reach the data. It is tidiness, not a lock.')+'</p>'+
+      '<label class="chk" style="margin-top:4px"><input type="checkbox" id="ad-enforce" '+(draft.enforce?"checked":"")+'> '+
+      'Enforce on the server as well (recommended if you are hiding something for real)</label>';
+  }
+  function pickAccounts(name){
+    var p=(draft.perms||{})[name]||{};
+    var cur = (!p.accounts||p.accounts==="all") ? S.accounts.map(function(a){return a.id;}) : p.accounts.slice();
+    openModal('<header><div><h3>Accounts for '+esc(name)+'</h3><p>Tick the ones they can open</p></div>'+
+      '<button class="tbtn" data-close>✕</button></header><div class="body"><div class="picklist">'+
+      S.accounts.map(function(a){
+        return '<label class="chk"><input type="checkbox" data-ac="'+a.id+'" '+(cur.indexOf(a.id)>-1?"checked":"")+'> '+esc(a.name)+'</label>';
+      }).join("")+'</div></div>'+
+      '<footer><button class="tbtn ghost" id="ac-all">Tick all</button><div class="spacer"></div>'+
+      '<button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="ac-go">Done</button></footer>');
+    $("#ac-all").onclick=function(){ $$("#modal [data-ac]").forEach(function(c){c.checked=true;}); };
+    $("#ac-go").onclick=function(){
+      var picked=$$("#modal [data-ac]").filter(function(c){return c.checked;}).map(function(c){return c.dataset.ac;});
+      if(!picked.length) return toast("Give them at least one account");
+      draft.perms[name]=draft.perms[name]||{};
+      draft.perms[name].accounts = picked.length===S.accounts.length ? "all" : picked;
+      closeModal();
+      setTimeout(function(){ openAdmin({draft:draft, tab:"perms", dirty:true}); }, 60);
+    };
+  }
+
+  /* ----------------------------------------------------------- accounts */
+  function drawAccounts(){
+    return '<p class="hint">Locking an account leaves it visible and readable but stops anyone '+
+      '(including you) adding or changing entries in it — useful for a closed year.</p>'+
+      '<table class="adtable"><thead><tr><th>Account</th><th style="text-align:right">Entries</th>'+
+      '<th style="text-align:right">Balance</th><th style="text-align:center">Locked</th></tr></thead><tbody>'+
+      S.accounts.map(function(a){
+        var t=totals(a);
+        return '<tr><td><b>'+esc(a.name)+'</b></td><td style="text-align:right">'+a.entries.length+'</td>'+
+          '<td class="num" style="text-align:right">'+esc(fmt(t.bal,a.currency))+'</td>'+
+          '<td style="text-align:center"><input type="checkbox" data-lock="'+a.id+'" '+
+          ((draft.lockedAccounts||[]).indexOf(a.id)>-1?"checked":"")+'></td></tr>';
+      }).join("")+'</tbody></table>'+
+      '<p class="hint" style="margin-top:12px">Renaming, adding and deleting accounts is still in '+
+      '<b>⚙ Accounts</b> on the top bar.</p>';
+  }
+
+  /* -------------------------------------------------------------- money */
+  function drawMoney(){
+    return '<div class="fields" style="margin-top:0">'+
+      '<div class="field"><label>Dollar rate</label><input id="ad-rate" inputmode="decimal" value="'+esc(String(draft.usdRate))+'" style="text-align:right"></div>'+
+      '<div class="field" style="flex:1 1 240px"><label>Accounts left out of the ALL total</label>'+
+        '<input id="ad-excl" value="'+esc(draft.excludeFromAll||"")+'" style="width:100%" placeholder="CASH"></div>'+
+      '<div class="field"><label>Split option — first account</label><select id="ad-sp0">'+
+        '<option value="">— none —</option>'+S.accounts.map(function(a){
+          return '<option value="'+esc(a.name)+'"'+((draft.splitAccounts||[])[0]===a.name?" selected":"")+'>'+esc(a.name)+'</option>';
+        }).join("")+'</select></div>'+
+      '<div class="field"><label>Split option — second account</label><select id="ad-sp1">'+
+        '<option value="">— none —</option>'+S.accounts.map(function(a){
+          return '<option value="'+esc(a.name)+'"'+((draft.splitAccounts||[])[1]===a.name?" selected":"")+'>'+esc(a.name)+'</option>';
+        }).join("")+'</select></div>'+
+      '</div>'+
+      '<p class="hint">The rate is used by the <b>$</b> tick box when you add an entry, and everywhere '+
+      'Sarim cars shows a dollar figure. Changing it does not rewrite anything already saved — '+
+      'entries keep the dirhams they were stored with.</p>'+
+      '<p class="hint">The ALL rule is matched anywhere in the account name, ignoring capitals. '+
+      '"CASH" leaves out CASH TOTAL and PETTY CASH. Leave it empty to count everything.</p>'+
+      '<label class="chk" style="margin-top:6px"><input type="checkbox" id="ad-confirm" '+(draft.confirmDelete!==false?"checked":"")+'> '+
+      'Ask before deleting anything</label>';
+  }
+
+  /* ------------------------------------------------------------ company */
+  function drawLook(){
+    return '<div class="fields" style="margin-top:0">'+
+      '<div class="field" style="flex:1 1 100%"><label>Company name</label>'+
+        '<input id="ad-co" value="'+esc(draft.company||"")+'" style="width:100%"></div>'+
+      '<div class="field" style="flex:1 1 220px"><label>Short name (phones)</label>'+
+        '<input id="ad-short" value="'+esc(draft.shortName||"")+'" style="width:100%"></div>'+
+      '<div class="field"><label>Theme for a new device</label><select id="ad-theme">'+
+        '<option value="light"'+(draft.defaultTheme!=="dark"?" selected":"")+'>Light</option>'+
+        '<option value="dark"'+(draft.defaultTheme==="dark"?" selected":"")+'>Dark</option></select></div>'+
+      '</div><p class="hint">The full name is on the login screen, the top bar and the printout. '+
+      'The short name is what a phone shows so it does not crowd out the faces. '+
+      'Everyone keeps whatever light/dark they picked on their own device — this only sets the starting point.</p>';
+  }
+
+  /* ------------------------------------------------------ data & safety */
+  function drawData(){
+    var n=0; S.accounts.forEach(function(a){ n+=a.entries.length; });
+    return '<div class="kvbox">'+
+      '<div><span>Accounts</span><b>'+S.accounts.length+'</b></div>'+
+      '<div><span>Ledger entries</span><b>'+n+'</b></div>'+
+      '<div><span>Vehicles</span><b>'+S.cars.filter(function(c){return c.kind!=="charge";}).length+'</b></div>'+
+      '<div><span>Cost lines</span><b>'+S.cars.reduce(function(s,c){return s+c.costs.length;},0)+'</b></div>'+
+      '<div><span>Waiting to save</span><b>'+Q.length+'</b></div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">'+
+        '<button class="tbtn primary" id="ad-backup">↧ Download a full backup</button>'+
+        '<button class="tbtn" id="ad-restore">↥ Restore from a backup</button>'+
+        '<button class="tbtn" id="ad-cache">Clear this device\\u2019s cache</button>'+
+      '</div>'+
+      '<p class="hint">The backup is one JSON file with every account, entry, vehicle and cost line as they '+
+      'stand right now. Keep one before anything big — an import, a mass delete, a change of hands.</p>'+
+      '<div class="fields"><div class="field"><label>Activity kept in the log</label>'+
+        '<select id="ad-keep">'+[1000,4000,10000,50000].map(function(k){
+          return '<option value="'+k+'"'+((Number(draft.auditKeep)||4000)===k?" selected":"")+'>'+k.toLocaleString()+' entries</option>';
+        }).join("")+'</select></div></div>'+
+      '<p class="hint">Google gives a free account about 90 minutes of script time a day. A very long log '+
+      'makes every save a little slower; 4,000 is comfortable for the four of you.</p>';
+  }
+
+  /* --------------------------------------------------------------- wire */
+  function wire(){
+    $$("#ad-body [data-un]").forEach(function(el){
+      el.oninput=function(){
+        var i=+el.dataset.un, old=draft.users[i].name, v=el.value.trim().toUpperCase();
+        var ai=(draft.admins||[]).indexOf(old);
+        draft.users[i].name=v;
+        if(ai>-1) draft.admins[ai]=v;
+        if(draft.perms[old]){ draft.perms[v]=draft.perms[old]; delete draft.perms[old]; }
+        touch("Renaming "+old+" to "+v);
+      };
+    });
+    $$("#ad-body [data-up]").forEach(function(el){
+      el.oninput=function(){ draft.users[+el.dataset.up].password=el.value; touch("Password changed"); };
+    });
+    $$("#ad-body [data-ua]").forEach(function(el){
+      el.onchange=function(){
+        var n=draft.users[+el.dataset.ua].name;
+        draft.admins=draft.admins||[];
+        var i=draft.admins.indexOf(n);
+        if(el.checked && i<0) draft.admins.push(n);
+        if(!el.checked && i>-1) draft.admins.splice(i,1);
+        if(!draft.admins.length){ el.checked=true; draft.admins=[n]; return toast("Somebody has to be an administrator"); }
+        touch(n+(el.checked?" is now an administrator":" is no longer an administrator")); draw();
+      };
+    });
+    $$("#ad-body [data-ud]").forEach(function(el){
+      el.onclick=function(){
+        var i=+el.dataset.ud, u=draft.users[i];
+        if(draft.users.length<2) return toast("There has to be at least one person");
+        if(!confirm("Remove "+u.name+"?\\n\\nTheir entries stay. They just cannot sign in any more.")) return;
+        draft.users.splice(i,1);
+        var ai=(draft.admins||[]).indexOf(u.name); if(ai>-1) draft.admins.splice(ai,1);
+        delete draft.perms[u.name];
+        if(!draft.admins.length) return toast("That would leave nobody in charge — make someone an administrator first"), draw();
+        touch("Removed "+u.name); draw();
+      };
+    });
+    if($("#ad-adduser")) $("#ad-adduser").onclick=function(){
+      draft.users.push({name:"NEW PERSON", password:""});
+      touch("Added a person — give them a name and password"); draw();
+      var last=$$("#ad-body [data-un]").pop(); if(last){ last.focus(); last.select(); }
+    };
+    if($("#ad-showpw")) $("#ad-showpw").onchange=function(){ showPw=this.checked; draw(); };
+
+    $$("#ad-body [data-pk]").forEach(function(el){
+      el.onchange=function(){
+        var n=el.dataset.pn, k=el.dataset.pk;
+        draft.perms[n]=draft.perms[n]||{};
+        if(k==="importExport") draft.perms[n].importExport=el.checked;
+        else draft.perms[n][k]=el.checked;
+        touch(n+": "+k+(el.checked?" allowed":" blocked"));
+      };
+    });
+    $$("#ad-body [data-pacct]").forEach(function(el){
+      el.onclick=function(){ pickAccounts(el.dataset.pacct); };
+    });
+    if($("#ad-enforce")) $("#ad-enforce").onchange=function(){
+      draft.enforce=this.checked;
+      touch(this.checked?"The Sheet will enforce this too":"Browser-side hiding only"); draw();
+    };
+    $$("#ad-body [data-lock]").forEach(function(el){
+      el.onchange=function(){
+        draft.lockedAccounts=draft.lockedAccounts||[];
+        var i=draft.lockedAccounts.indexOf(el.dataset.lock);
+        if(el.checked && i<0) draft.lockedAccounts.push(el.dataset.lock);
+        if(!el.checked && i>-1) draft.lockedAccounts.splice(i,1);
+        touch("Account lock changed");
+      };
+    });
+
+    if($("#ad-rate")) $("#ad-rate").oninput=function(){ var n=parseFloat(this.value); if(!isNaN(n)&&n>0){ draft.usdRate=n; touch("Rate "+n); } };
+    if($("#ad-excl")) $("#ad-excl").oninput=function(){ draft.excludeFromAll=this.value.trim(); touch("ALL rule changed"); };
+    if($("#ad-sp0")) $("#ad-sp0").onchange=function(){ draft.splitAccounts=[this.value, ($("#ad-sp1")||{}).value||""].filter(Boolean); touch("Split pair changed"); };
+    if($("#ad-sp1")) $("#ad-sp1").onchange=function(){ draft.splitAccounts=[($("#ad-sp0")||{}).value||"", this.value].filter(Boolean); touch("Split pair changed"); };
+    if($("#ad-confirm")) $("#ad-confirm").onchange=function(){ draft.confirmDelete=this.checked; touch("Delete confirmation "+(this.checked?"on":"off")); };
+    if($("#ad-co")) $("#ad-co").oninput=function(){ draft.company=this.value; touch("Company name changed"); };
+    if($("#ad-short")) $("#ad-short").oninput=function(){ draft.shortName=this.value; touch("Short name changed"); };
+    if($("#ad-theme")) $("#ad-theme").onchange=function(){ draft.defaultTheme=this.value; touch("Default theme "+this.value); };
+    if($("#ad-keep")) $("#ad-keep").onchange=function(){ draft.auditKeep=+this.value; touch("Log length changed"); };
+
+    if($("#ad-backup")) $("#ad-backup").onclick=downloadBackup;
+    if($("#ad-restore")) $("#ad-restore").onclick=openRestore;
+    if($("#ad-cache")) $("#ad-cache").onclick=function(){
+      if(!confirm("Clear this device\\u2019s copy?\\n\\nNothing is deleted from the Sheet — the app just downloads everything again.")) return;
+      ["db","q","ui","cfg"].forEach(function(k){ try{ localStorage.removeItem(LS+"."+k); }catch(e){} });
+      location.reload();
+    };
+  }
+
+  function save(){
+    var seen={}, pws={};
+    for(var i=0;i<draft.users.length;i++){
+      var u=draft.users[i];
+      u.name=String(u.name||"").trim().toUpperCase();
+      u.password=String(u.password==null?"":u.password).trim();
+      if(!u.name) return toast("Row "+(i+1)+" has no name");
+      if(!u.password) return toast(u.name+" has no password");
+      if(seen[u.name]) return toast("Two people are called "+u.name);
+      var lp=u.password.toLowerCase();
+      if(pws[lp]) return toast("Two people share the password \\u201c"+u.password+"\\u201d");
+      seen[u.name]=1; pws[lp]=1;
+    }
+    if(!draft.admins || !draft.admins.length) return toast("Somebody has to be an administrator");
+    for(var a=0;a<draft.admins.length;a++) if(!seen[draft.admins[a]]) return toast(draft.admins[a]+" is an administrator but not in the list");
+    if(draft.admins.indexOf(AUTH.user)<0 &&
+       !confirm("You are taking away your own administrator rights.\\n\\nYou will not be able to open this window again. Continue?")) return;
+
+    op({t:"config", cfg:draft, what:"settings", note:"changed the settings"});
+    applyConfig(draft);
+    closeModal(); rebuild(); renderAll();
+    toast("Settings saved — the others will see them within a few seconds");
+  }
+}
+
+/* ----------------------------------------------------------- backup file */
+function backupBlob(){
+  return {
+    app:"SIAM HISAAB", version:2, takenAt:new Date().toISOString(), takenBy:AUTH.user,
+    config:CFG,
+    accounts:Object.keys(DB.accounts).map(function(k){return DB.accounts[k];}),
+    entries:Object.keys(DB.entries).map(function(k){return DB.entries[k];}),
+    side:Object.keys(DB.side).map(function(k){return DB.side[k];}),
+    cars:Object.keys(DB.cars).map(function(k){return DB.cars[k];}),
+    costs:Object.keys(DB.costs).map(function(k){return DB.costs[k];})
+  };
+}
+function downloadBackup(){
+  var b=backupBlob();
+  var name="siam-hisaab-backup-"+b.takenAt.slice(0,10)+".json";
+  var url=URL.createObjectURL(new Blob([JSON.stringify(b)],{type:"application/json"}));
+  var a=document.createElement("a"); a.href=url; a.download=name; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); },1500);
+  toast("Backup saved to your downloads — "+b.entries.length+" entries and "+b.cars.length+" vehicle rows");
+}
+function openRestore(){
+  openModal('<header><div><h3>Restore from a backup</h3><p>This puts back what is missing. It never deletes.</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header><div class="body">'+
+    '<input type="file" id="rs-file" accept="application/json,.json" style="font-size:14px">'+
+    '<div id="rs-info" class="hint" style="margin-top:10px"></div>'+
+    '<p class="hint">Anything in the file that is not in the Sheet is added back. Anything already there is '+
+    'left alone, so restoring twice is harmless and nobody\\u2019s newer work gets overwritten. '+
+    'It is recorded in the activity log like any other change.</p></div>'+
+    '<footer><button class="tbtn ghost" data-close>Cancel</button>'+
+    '<button class="tbtn primary" id="rs-go" disabled>Restore</button></footer>');
+  var data=null;
+  $("#rs-file").onchange=function(){
+    var f=this.files && this.files[0]; if(!f) return;
+    var fr=new FileReader();
+    fr.onload=function(){
+      try{ data=JSON.parse(fr.result); }catch(e){ data=null; }
+      if(!data || !data.entries){ $("#rs-info").textContent="That does not look like a backup from this app."; $("#rs-go").disabled=true; return; }
+      var miss=count(data);
+      $("#rs-info").innerHTML="Taken "+esc(String(data.takenAt||"").slice(0,16).replace("T"," "))+
+        " by <b>"+esc(data.takenBy||"?")+"</b>. It holds "+data.entries.length+" entries and "+
+        (data.cars||[]).length+" vehicle rows.<br><b>"+miss.e+"</b> entries, <b>"+miss.c+
+        "</b> vehicles and <b>"+miss.k+"</b> cost lines are missing here and would be put back.";
+      $("#rs-go").disabled = !(miss.e+miss.c+miss.k);
+    };
+    fr.readAsText(f);
+  };
+  function count(d){
+    var e=0,c=0,k=0;
+    (d.entries||[]).forEach(function(x){ if(!DB.entries[x.id]) e++; });
+    (d.cars||[]).forEach(function(x){ if(!DB.cars[x.id]) c++; });
+    (d.costs||[]).forEach(function(x){ if(!DB.costs[x.id]) k++; });
+    return {e:e,c:c,k:k};
+  }
+  $("#rs-go").onclick=function(){
+    if(!data) return;
+    var acctIds={}; S.accounts.forEach(function(a){ acctIds[a.id]=1; });
+    var rows=(data.entries||[]).filter(function(x){ return !DB.entries[x.id] && acctIds[x.accountId]; });
+    var cars=(data.cars||[]).filter(function(x){ return !DB.cars[x.id]; });
+    var costs=(data.costs||[]).filter(function(x){ return !DB.costs[x.id]; });
+    rows.forEach(function(x){ DB.entries[x.id]=x; });
+    cars.forEach(function(x){ DB.cars[x.id]=x; });
+    costs.forEach(function(x){ DB.costs[x.id]=x; });
+    var byA={};
+    rows.forEach(function(x){ (byA[x.accountId]=byA[x.accountId]||[]).push(x); });
+    Object.keys(byA).forEach(function(id){
+      var list=byA[id];
+      for(var i=0;i<list.length;i+=120) op({t:"import", accountId:id, where:"bottom", rows:list.slice(i,i+120)});
+    });
+    for(var i=0;i<cars.length;i+=100) op({t:"carImport", rows:cars.slice(i,i+100)});
+    for(var j=0;j<costs.length;j+=150) op({t:"costImport", rows:costs.slice(j,j+150)});
+    closeModal(); rebuild(); renderAll();
+    toast("Restored "+rows.length+" entries, "+cars.length+" vehicles and "+costs.length+" cost lines");
+  };
 }
 
 /* ============================================================ EVENTS ===== */
@@ -3550,6 +4088,7 @@ function bind(){
   $("#btn-import").onclick=openImport;
   $("#btn-export").onclick=openExport;
   $("#btn-accounts").onclick=openAccounts;
+  $("#btn-admin").onclick=openAdmin;
   $("#btn-history").onclick=function(){ openHistory(null); };
   $("#btn-menu").onclick=openMenu;
   $("#feed-all").onclick=function(){ openHistory(null); };
@@ -3703,14 +4242,15 @@ function doLogin(){
 }
 (function boot(){
   var cached=lsGet("db",null), cui=lsGet("ui",{});
-  S.theme=cui.theme||"light"; S.activeId=cui.activeId||null; S.tagLabels=cui.tagLabels||{};
+  var ccfg=lsGet("cfg",null); if(ccfg) CFG=Object.assign({},CFG,ccfg);
+  S.theme=cui.theme||CFG.defaultTheme||"light"; S.activeId=cui.activeId||null; S.tagLabels=cui.tagLabels||{};
   S.panelOrder=cui.panelOrder||null; S.carsView=cui.carsView||"register";
   document.documentElement.setAttribute("data-theme",S.theme);
   if(cached){ DB.rev=cached.rev||0; DB.since=cached.since||""; DB.accounts=cached.accounts||{}; DB.entries=cached.entries||{};
     DB.side=cached.side||{}; DB.cars=cached.cars||{}; DB.costs=cached.costs||{}; DB.audit=cached.audit||[]; }
   Q=lsGet("q",[])||[];
   AUTH.token=lsGet("token","")||""; AUTH.user=lsGet("user","")||""; AUTH.people=lsGet("people",[])||[];
-  bind(); applyPanelOrder();
+  bind(); applyPanelOrder(); applyBrand();
 
   if("serviceWorker" in navigator && location.protocol==="https:"){
     window.addEventListener("load",function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); });
