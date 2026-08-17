@@ -908,7 +908,7 @@ var CFG = {
   admins:["BASIL"], perms:{}, enforce:false,
   usdRate:3.67, splitAccounts:["AUS/JPN","UK/USA"], excludeFromAll:"CASH",
   company:"SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C", shortName:"SIAM B K K",
-  defaultTheme:"light", auditKeep:4000, confirmDelete:true, lockedAccounts:[]
+  defaultTheme:"light", auditKeep:4000, confirmDelete:true, lockedAccounts:[], signalUrl:""
 };
 Object.defineProperty(window,"USD_RATE",{get:function(){ return Number(CFG.usdRate)||3.67; }});
 Object.defineProperty(window,"SPLIT_ACCOUNTS",{get:function(){ return CFG.splitAccounts||[]; }});
@@ -953,7 +953,7 @@ var Q    = [];
 var S    = {accounts:[], cars:[], activeId:null, carsView:"register", theme:"light", tagLabels:{}};
 var ui   = {q:"", tag:"all", payBy:"all", month:"all", lastPick:null, cq:"", cstatus:"all", cbatch:"all", cmodel:"all"};
 var PICK = {};
-var net  = {state:"live", lastErr:"", sending:false, lastPull:0, bannerHidden:false};
+var net  = {state:"live", lastErr:"", sending:false, lastPull:0, bannerHidden:false, hot:0, signal:"off"};
 var lastActivity = Date.now();
 var DEMO = false;
 
@@ -1163,7 +1163,9 @@ function applyConfig(c){
   CFG = next;
   lsSet("cfg", CFG);
   if(JSON.stringify(CFG)!==before) applyBrand();
+  if(sigUrl()!==SIGWAS){ SIGWAS=sigUrl(); startSignal(); }
 }
+var SIGWAS="";
 function applyBrand(){
   var full=CFG.company||"", shrt=CFG.shortName||full;
   var b=$(".brand b"); if(b){ b.textContent=full; b.dataset.short=shrt; }
@@ -1278,6 +1280,7 @@ function mainCurrency(){
 
 /* ------------------------------------------------------------- op queue -- */
 function op(o){
+  goHot();
   o.opId = uid();
   Q.push(o); cacheAll();
   setNet(Q.length?"saving":"live");
@@ -1293,6 +1296,7 @@ function flush(){
     if(res && res.ok){
       Q = Q.filter(function(o){ return batch.indexOf(o)<0; });
       backoff=1000; cacheAll(); ingest(res);
+      goHot(); signalChange(res.rev);
       setNet(Q.length?"saving":"live");
       if(Q.length) flush();
     } else if(res && res.error==="AUTH"){ signedOut(); }
@@ -1307,19 +1311,83 @@ function retry(msg){
 }
 
 /* ---------------------------------------------------------------- polling */
-function pollTick(){
+/* How often to ask the Sheet "anything new?".
+   Changes come in bursts — when one of you is entering rows, the others want to
+   see them straight away; the rest of the time nobody minds waiting. So the app
+   goes "hot" for a minute after anything happens and checks four times as often,
+   then settles back down. That keeps it lively without burning Google's daily
+   script allowance on questions whose answer is always "no".                   */
+function goHot(ms){ net.hot = Date.now() + (ms||60000); }
+function othersOnline(){
+  var n=0;
+  (DB.online||[]).forEach(function(o){ if(o.user!==AUTH.user) n++; });
+  return n;
+}
+function pollWait(){
+  if(document.hidden)                       return 1e9;   /* a hidden tab asks nothing */
+  if(net.signal==="on")                     return 25000; /* being told, so barely ask */
+  if(net.hot > Date.now())                  return 1400;  /* something is happening */
+  if(Date.now()-lastActivity > 180000)      return 30000; /* you have wandered off */
+  return othersOnline() ? 3000 : 8000;                    /* nobody else on = nothing to miss */
+}
+function pollTick(force){
   if(DEMO || !AUTH.token || document.hidden || net.sending) return;
-  var wait = (Date.now()-lastActivity)>180000 ? 30000 : 6000;
-  if(Date.now()-net.lastPull < wait) return;
+  if(!force && Date.now()-net.lastPull < pollWait()) return;
   net.lastPull=Date.now();
   api("pull",{rev:DB.rev, since:DB.since}).then(function(res){
     if(res && res.ok){
       if(net.state==="off") setNet(Q.length?"saving":"live");
-      if(res.changed) ingest(res);
+      if(res.changed){ goHot(); ingest(res); }
       else { DB.online=res.online||DB.online; renderPeople(); }
       if(Q.length) flush();
     } else if(res && res.error==="AUTH") signedOut();
   }).catch(function(err){ setNet("off", err.message); });
+}
+
+/* ------------------------------------------------------- the instant channel
+   Optional. If BASIL fills in a signal address in Admin settings, whoever saves
+   something drops the new revision number there, and everyone else is listening
+   on an open connection — so the change lands in well under a second instead of
+   waiting for the next check. Nothing but a number ever goes through it: the
+   ledger itself always comes from your own Google Sheet.                       */
+var SIG=null, sigTries=0, sigTimer=null;
+function sigUrl(){
+  var u=String(CFG.signalUrl||"").trim();
+  if(!u) return "";
+  return u.replace(/\/+$/,"").replace(/\.json$/,"")+"/rev.json";
+}
+function startSignal(){
+  stopSignal();
+  var u=sigUrl(); if(!u || DEMO || !AUTH.token) return;
+  try{
+    SIG=new EventSource(u);
+    ["put","patch"].forEach(function(kind){
+      SIG.addEventListener(kind,function(ev){
+        sigTries=0;
+        var d; try{ d=JSON.parse(ev.data); }catch(e){ return; }
+        var v=d && d.data;
+        var rev=v && (v.r!=null?v.r:v), by=v && v.by;
+        if(by && by===AUTH.user) return;               /* our own echo */
+        if(rev==null || Number(rev)===Number(DB.rev)) return;
+        goHot(); pollTick(true);
+      });
+    });
+    SIG.onopen=function(){ sigTries=0; net.signal="on"; setNet(net.state,net.lastErr); };
+    SIG.onerror=function(){
+      net.signal="off"; stopSignal();
+      sigTries++;
+      clearTimeout(sigTimer);
+      sigTimer=setTimeout(startSignal, Math.min(2000*Math.pow(1.7,sigTries), 60000));
+    };
+  }catch(e){ net.signal="off"; }
+}
+function stopSignal(){ if(SIG){ try{ SIG.close(); }catch(e){} SIG=null; } }
+function signalChange(rev){
+  var u=sigUrl(); if(!u) return;
+  try{
+    fetch(u,{method:"PUT",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({r:rev, by:AUTH.user, t:Date.now()})}).catch(function(){});
+  }catch(e){}
 }
 function signedOut(){
   AUTH.token=""; lsSet("token","");
@@ -3845,6 +3913,7 @@ function openAdmin(resume){
         '<button class="subtab" data-at="accounts">Accounts</button>'+
         '<button class="subtab" data-at="money">Money</button>'+
         '<button class="subtab" data-at="look">Company</button>'+
+        '<button class="subtab" data-at="live">Live updates</button>'+
         '<button class="subtab" data-at="data">Data &amp; safety</button>'+
       '</div><div id="ad-body"></div>'+
     '</div>'+
@@ -3872,6 +3941,7 @@ function openAdmin(resume){
     if(tab==="accounts") h=drawAccounts();
     if(tab==="money")    h=drawMoney();
     if(tab==="look")     h=drawLook();
+    if(tab==="live")     h=drawLive();
     if(tab==="data")     h=drawData();
     $("#ad-body").innerHTML=h;
     wire();
@@ -4026,6 +4096,51 @@ function openAdmin(resume){
       'Everyone keeps whatever light/dark they picked on their own device — this only sets the starting point.</p>';
   }
 
+  /* -------------------------------------------------------- live updates */
+  function drawLive(){
+    var on=!!String(draft.signalUrl||"").trim();
+    var secs=function(ms){ return ms>=1e8?"never":(Math.round(ms/100)/10)+"s"; };
+    return '<div class="kvbox" style="margin-bottom:12px">'+
+        '<div><span>On this device now</span><b>'+(net.signal==="on"?"Instant":"Every "+secs(pollWait()))+'</b></div>'+
+        '<div><span>While someone is working</span><b>'+(net.signal==="on"?"Instant":"Every 1.4s")+'</b></div>'+
+        '<div><span>Others online</span><b>'+othersOnline()+'</b></div>'+
+        '<div><span>Nobody touching it</span><b>Every 30s</b></div>'+
+      '</div>'+
+      '<p class="hint">The app asks your Sheet "anything new?" on a sliding scale: about every '+
+      '<b>1.4 seconds</b> for a minute after anything happens, <b>3 seconds</b> when somebody else is '+
+      'online, <b>8 seconds</b> when you are the only one here, <b>30 seconds</b> once you have wandered '+
+      'off, and <b>not at all</b> while the tab is in the background. So while one of you is entering '+
+      'rows the others keep up, and a quiet afternoon costs Google almost nothing — which matters, '+
+      'because a free account only gets so much script time a day.</p>'+
+      '<h5 class="vh" style="margin-top:16px">Make it truly instant</h5>'+
+      '<p class="hint">Give the app a free Firebase address below and changes land in well under a second, '+
+      'and it will actually call your Sheet <b>less</b> than it does now — because it stops asking and '+
+      'starts being told. Only a revision number ever goes through it. Every figure, every entry and '+
+      'every vehicle still lives in your Google Sheet and comes from there.</p>'+
+      '<div class="fields"><div class="field" style="flex:1 1 100%"><label>Signal address</label>'+
+        '<input id="ad-sig" style="width:100%;font-family:ui-monospace,monospace" placeholder="https://your-project-default-rtdb.firebaseio.com" value="'+esc(draft.signalUrl||"")+'"></div></div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
+        '<button class="tbtn" id="ad-sigtest">Test it</button>'+
+        '<span class="hint" id="ad-sigmsg">'+(on?"":"Empty means off — the app just checks a bit more often.")+'</span>'+
+      '</div>'+
+      '<h5 class="vh" style="margin-top:18px">How to get one (about five minutes, free)</h5>'+
+      '<ol class="hint" style="padding-left:18px;line-height:1.7">'+
+        '<li>Go to <b>console.firebase.google.com</b> and sign in with the same Google account.</li>'+
+        '<li><b>Create a project</b> — any name. Turn Google Analytics off when it offers.</li>'+
+        '<li>In the left menu: <b>Build → Realtime Database → Create Database</b>. Pick any location. '+
+            'Choose <b>Start in test mode</b>.</li>'+
+        '<li>Copy the address at the top — it looks like '+
+            '<b>https://something-default-rtdb.firebaseio.com</b> — and paste it in the box above.</li>'+
+        '<li>Press <b>Test it</b>, then <b>Save changes</b>. That is it — everyone gets it automatically.</li>'+
+      '</ol>'+
+      '<p class="hint" style="color:var(--warn)">Test mode leaves that database open to anyone who has the '+
+      'address, and after 30 days Firebase locks it and the channel simply stops (the app keeps working, '+
+      'just back to checking every few seconds). To keep it open, go to the <b>Rules</b> tab of the '+
+      'database and set both <b>.read</b> and <b>.write</b> to <b>true</b>. Worth understanding: the only '+
+      'thing that address ever holds is a number saying "something changed" and who changed it. Nobody '+
+      'can read a single entry through it.</p>';
+  }
+
   /* ------------------------------------------------------ data & safety */
   function drawData(){
     var n=0; S.accounts.forEach(function(a){ n+=a.entries.length; });
@@ -4132,6 +4247,28 @@ function openAdmin(resume){
     if($("#ad-theme")) $("#ad-theme").onchange=function(){ draft.defaultTheme=this.value; touch("Default theme "+this.value); };
     if($("#ad-keep")) $("#ad-keep").onchange=function(){ draft.auditKeep=+this.value; touch("Log length changed"); };
 
+    if($("#ad-sig")) $("#ad-sig").oninput=function(){ draft.signalUrl=this.value.trim(); touch("Signal address changed"); };
+    if($("#ad-sigtest")) $("#ad-sigtest").onclick=function(){
+      var raw=String(draft.signalUrl||"").trim();
+      var msg=$("#ad-sigmsg");
+      if(!raw){ msg.innerHTML='<b style="color:var(--warn)">Nothing to test — the box is empty.</b>'; return; }
+      if(!/^https:\/\//i.test(raw) && !/^https?:\/\/localhost/i.test(raw)){
+        msg.innerHTML='<b style="color:var(--warn)">That is not an https:// address — your site is https, so the browser will block it.</b>'; return; }
+      var u=raw.replace(/\/+$/,"").replace(/\.json$/,"")+"/rev.json";
+      msg.textContent="Testing…";
+      var stamp=Date.now();
+      fetch(u,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({r:0,by:"TEST",t:stamp})})
+        .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return fetch(u+"?t="+stamp); })
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if(j && Number(j.t)===stamp) msg.innerHTML='<b style="color:var(--pos)">Working — wrote and read it back.</b> Press Save changes.';
+          else msg.innerHTML='<b style="color:var(--warn)">It answered, but not with what we wrote. Check the address.</b>';
+        })
+        .catch(function(e){
+          msg.innerHTML='<b style="color:var(--neg)">Could not reach it ('+esc(String(e.message))+').</b> '+
+            'Check the address, and that the database rules allow read and write.';
+        });
+    };
     if($("#ad-backup")) $("#ad-backup").onclick=downloadBackup;
     if($("#ad-restore")) $("#ad-restore").onclick=openRestore;
     if($("#ad-cache")) $("#ad-cache").onclick=function(){
@@ -4390,11 +4527,14 @@ function bind(){
     if(e.key.toLowerCase()==="n"){ e.preventDefault(); if(isTouch()) openAddSheet(); else $("#f-det").focus(); }
   });
   document.addEventListener("mousemove",function(){ lastActivity=Date.now(); });
-  document.addEventListener("visibilitychange",function(){ if(!document.hidden){ lastActivity=Date.now(); net.lastPull=0; pollTick(); } });
-  window.addEventListener("online",function(){ net.lastPull=0; flush(); pollTick(); });
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden){ stopSignal(); return; }
+    lastActivity=Date.now(); goHot(15000); pollTick(true); startSignal();
+  });
+  window.addEventListener("online",function(){ goHot(15000); flush(); pollTick(true); startSignal(); });
   window.addEventListener("beforeunload",function(e){ if(Q.length){ e.preventDefault(); e.returnValue=""; } });
   var rt; window.addEventListener("resize",function(){ clearTimeout(rt); rt=setTimeout(function(){ if(isAll()) renderAllView(); else renderTable(); },250); });
-  setInterval(pollTick,1500);
+  setInterval(function(){ pollTick(); },700);
   setInterval(function(){ if(Q.length && !net.sending) flush(); },5000);
   setInterval(renderFeed,60000);
 }
@@ -4405,6 +4545,7 @@ function showApp(){
   $("#app").classList.add("show");
   $("#f-date").value=todayISO();
   renderAll(); setNet(Q.length?"saving":"live");
+  startSignal();
 }
 function doLogin(){
   var pw=$("#gate-pw").value;
