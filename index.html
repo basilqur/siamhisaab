@@ -339,6 +339,24 @@ body.readonly .robar{display:flex}
 .vfields .field{flex:1 1 150px}
 .vfields .field.wide{flex:1 1 100%}
 .vfields .field.wide input{width:100%}
+/* The admin panel is laid out with plain divs, not tables. Tables inside this
+   window went missing in at least one browser, and nothing here needs one.   */
+.adgrid{display:grid;font-size:13px;width:100%}
+.adgrid .h{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);font-weight:700;
+  padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap;display:flex;align-items:flex-end}
+.adgrid .c{padding:7px 8px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:6px;min-width:0}
+.adgrid .mid{justify-content:center}
+.adgrid .end{justify-content:flex-end}
+.adgrid .lab{flex-direction:column;align-items:flex-start;gap:1px}
+.adgrid .lab b{font-weight:700}
+.adgrid .lab span{font-size:11px;color:var(--ink-3);font-weight:500;line-height:1.3}
+.adgrid input[type=text],.adgrid input[type=password],.adgrid input:not([type]){width:100%;min-width:0;height:34px;
+  border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:0 9px;outline:none;font-size:13px}
+.adgrid input[type=text]:focus,.adgrid input[type=password]:focus,.adgrid input:not([type]):focus{border-color:var(--accent)}
+.adgrid input[type=checkbox]{width:19px;height:19px;accent-color:var(--accent);flex:0 0 auto}
+.adgrid .adm{font-size:9px;color:var(--accent);font-weight:700;letter-spacing:.05em;display:block}
+.adgrid .num{font-variant-numeric:tabular-nums}
+.adcount{font-size:11.5px;color:var(--ink-3);margin-top:9px}
 .adtable{width:100%;border-collapse:collapse;font-size:13px}
 .adtable th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
   font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -653,11 +671,11 @@ body.allview-on .fab{display:none!important}
   #c-showpur-wrap input{width:20px!important;height:20px!important}
 
   /* admin settings on a phone */
-  .adtable td,.adtable th{padding:5px 4px}
-  .adtable input[type=text],.adtable input[type=password],.adtable input:not([type]){padding:0 7px;min-width:0}
-  .adtable td:first-child{width:44%}
-  .adtable .tbtn{padding:0 9px;min-width:0}
-  .adtable.perms td:first-child{min-width:150px;max-width:170px}
+  .adgrid{font-size:12.5px}
+  .adgrid .h,.adgrid .c{padding:6px 4px}
+  .adgrid input[type=text],.adgrid input[type=password],.adgrid input:not([type]){padding:0 7px}
+  .adgrid .tbtn{padding:0 9px;min-width:0}
+  .adgrid input[type=checkbox]{width:21px;height:21px}
   #ad-tabs .subtab{padding:8px 9px;font-size:12px}
   .kvbox>div{flex:1 1 44%}
 
@@ -714,7 +732,7 @@ body.allview-on .fab{display:none!important}
 <!-- ============================== LOGIN ============================== -->
 <div id="gate" class="show">
   <div class="gatecard">
-    <h1>SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C HISAAB</h1>
+    <h1><span id="gate-name">SIAM B K K INTERNATIONAL GENERAL TRADING L.L.C</span> HISAAB</h1>
     <p id="gate-sub">Enter your password to continue</p>
     <input id="gate-pw" type="password" autocomplete="current-password" inputmode="text" placeholder="••••" autofocus>
     <button class="go" id="gate-go">Sign in</button>
@@ -3731,6 +3749,7 @@ function openAdmin(resume){
 
   /* ------------------------------------------------------------- people */
   function drawPeople(){
+    var cols="minmax(0,1.1fr) minmax(0,1.1fr) 108px 52px";
     return (stripped||repaired
       ? '<p class="hint" style="color:var(--warn);border:1px solid var(--warn);border-radius:9px;padding:9px 11px">'+
         '<b>Some passwords are blank here.</b> That is normal — the app only sends the passwords to an '+
@@ -3739,14 +3758,18 @@ function openAdmin(resume){
       : '')+
       '<p class="hint">A password <b>is</b> the login — whoever types it is that person. '+
       'They are matched ignoring capitals and spaces.</p>'+
-      '<table class="adtable"><thead><tr><th>Name</th><th>Password</th><th style="text-align:center">Administrator</th><th></th></tr></thead><tbody>'+
-      draft.users.map(function(u,i){
-        var isAd=(draft.admins||[]).indexOf(u.name)>-1;
-        return '<tr><td><input data-un="'+i+'" value="'+esc(u.name)+'" style="text-transform:uppercase;font-weight:700"></td>'+
-          '<td><input data-up="'+i+'" type="'+(showPw?"text":"password")+'" value="'+esc(u.password||"")+'" autocomplete="new-password"></td>'+
-          '<td style="text-align:center"><input type="checkbox" data-ua="'+i+'" '+(isAd?"checked":"")+'></td>'+
-          '<td style="text-align:right"><button class="tbtn ghost" data-ud="'+i+'" title="Remove">✕</button></td></tr>';
-      }).join("")+'</tbody></table>'+
+      '<div class="adgrid" style="grid-template-columns:'+cols+'">'+
+        '<div class="h">Name</div><div class="h">Password</div>'+
+        '<div class="h mid">Administrator</div><div class="h"></div>'+
+        draft.users.map(function(u,i){
+          var isAd=(draft.admins||[]).indexOf(u.name)>-1;
+          return '<div class="c"><input data-un="'+i+'" value="'+esc(u.name)+'" style="text-transform:uppercase;font-weight:700"></div>'+
+            '<div class="c"><input data-up="'+i+'" type="'+(showPw?"text":"password")+'" value="'+esc(u.password||"")+'" autocomplete="new-password"></div>'+
+            '<div class="c mid"><input type="checkbox" data-ua="'+i+'" '+(isAd?"checked":"")+'></div>'+
+            '<div class="c end"><button class="tbtn ghost" data-ud="'+i+'" title="Remove">✕</button></div>';
+        }).join("")+
+      '</div>'+
+      '<div class="adcount">'+draft.users.length+' '+(draft.users.length===1?"person":"people")+' in the list</div>'+
       '<div style="display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap">'+
         '<button class="tbtn" id="ad-adduser">+ Add a person</button>'+
         '<label class="chk"><input type="checkbox" id="ad-showpw" '+(showPw?"checked":"")+'> Show passwords</label>'+
@@ -3761,28 +3784,30 @@ function openAdmin(resume){
   /* -------------------------------------------------------------- perms */
   function drawPerms(){
     var names=draft.users.map(function(u){return u.name;});
-    return '<p class="hint">Untick to take something away. Administrators always have everything, '+
-      'so their column is fixed.</p>'+
-      '<div style="overflow:auto"><table class="adtable perms"><thead><tr><th>Can they…</th>'+
-      names.map(function(n){ return '<th style="text-align:center">'+esc(n)+
-        ((draft.admins||[]).indexOf(n)>-1?'<span class="adm">admin</span>':'')+'</th>'; }).join("")+
-      '</tr></thead><tbody>'+
-      PERMROWS.map(function(r){
-        return '<tr><td><b>'+r.l+'</b><span class="sub">'+r.h+'</span></td>'+
-          names.map(function(n){
-            var ad=(draft.admins||[]).indexOf(n)>-1;
-            return '<td style="text-align:center"><input type="checkbox" data-pk="'+r.k+'" data-pn="'+esc(n)+'" '+
-              (permVal(draft,n,r.k)?"checked":"")+(ad?" disabled":"")+'></td>';
-          }).join("")+'</tr>';
-      }).join("")+
-      '<tr><td><b>Accounts</b><span class="sub">which ledger tabs they can open</span></td>'+
+    var cols="minmax(150px,1.6fr) repeat("+Math.max(names.length,1)+",minmax(64px,1fr))";
+    var head='<div class="h">Can they…</div>'+names.map(function(n){
+      return '<div class="h mid" style="flex-direction:column;align-items:center">'+esc(n)+
+        ((draft.admins||[]).indexOf(n)>-1?'<span class="adm">admin</span>':'')+'</div>'; }).join("");
+    var rows=PERMROWS.map(function(r){
+      return '<div class="c lab"><b>'+r.l+'</b><span>'+r.h+'</span></div>'+
+        names.map(function(n){
+          var ad=(draft.admins||[]).indexOf(n)>-1;
+          return '<div class="c mid"><input type="checkbox" data-pk="'+r.k+'" data-pn="'+esc(n)+'" '+
+            (permVal(draft,n,r.k)?"checked":"")+(ad?" disabled":"")+'></div>';
+        }).join("");
+    }).join("");
+    rows+='<div class="c lab"><b>Accounts</b><span>which ledger tabs they can open</span></div>'+
       names.map(function(n){
         var ad=(draft.admins||[]).indexOf(n)>-1;
         var p=(draft.perms||{})[n]||{};
         var all=ad||!p.accounts||p.accounts==="all";
-        return '<td style="text-align:center">'+(ad?'<span class="hint">all</span>':
-          '<button class="tbtn ghost" data-pacct="'+esc(n)+'">'+(all?"all":p.accounts.length+" of "+S.accounts.length)+'</button>')+'</td>';
-      }).join("")+'</tr></tbody></table></div>'+
+        return '<div class="c mid">'+(ad?'<span class="hint">all</span>':
+          '<button class="tbtn ghost" data-pacct="'+esc(n)+'">'+(all?"all":p.accounts.length+" of "+S.accounts.length)+'</button>')+'</div>';
+      }).join("");
+    return '<p class="hint">Untick to take something away. Administrators always have everything, '+
+      'so their column is fixed.</p>'+
+      '<div style="overflow-x:auto"><div class="adgrid" style="grid-template-columns:'+cols+'">'+head+rows+'</div></div>'+
+      '<div class="adcount">'+names.length+' '+(names.length===1?"person":"people")+' · '+PERMROWS.length+' things you can switch</div>'+
       '<p class="hint" style="margin-top:12px"><b>How strict is this?</b> '+
       (draft.enforce
         ? 'The Sheet itself refuses — hidden data is never sent and blocked writes are rejected.'
@@ -3815,15 +3840,19 @@ function openAdmin(resume){
   function drawAccounts(){
     return '<p class="hint">Locking an account leaves it visible and readable but stops anyone '+
       '(including you) adding or changing entries in it — useful for a closed year.</p>'+
-      '<table class="adtable"><thead><tr><th>Account</th><th style="text-align:right">Entries</th>'+
-      '<th style="text-align:right">Balance</th><th style="text-align:center">Locked</th></tr></thead><tbody>'+
-      S.accounts.map(function(a){
-        var t=totals(a);
-        return '<tr><td><b>'+esc(a.name)+'</b></td><td style="text-align:right">'+a.entries.length+'</td>'+
-          '<td class="num" style="text-align:right">'+esc(fmt(t.bal,a.currency))+'</td>'+
-          '<td style="text-align:center"><input type="checkbox" data-lock="'+a.id+'" '+
-          ((draft.lockedAccounts||[]).indexOf(a.id)>-1?"checked":"")+'></td></tr>';
-      }).join("")+'</tbody></table>'+
+      '<div class="adgrid" style="grid-template-columns:minmax(0,2fr) 78px minmax(90px,1fr) 72px">'+
+        '<div class="h">Account</div><div class="h end">Entries</div>'+
+        '<div class="h end">Balance</div><div class="h mid">Locked</div>'+
+        S.accounts.map(function(a){
+          var t=totals(a);
+          return '<div class="c"><b>'+esc(a.name)+'</b></div>'+
+            '<div class="c end num">'+a.entries.length+'</div>'+
+            '<div class="c end num">'+esc(fmt(t.bal,a.currency))+'</div>'+
+            '<div class="c mid"><input type="checkbox" data-lock="'+a.id+'" '+
+            ((draft.lockedAccounts||[]).indexOf(a.id)>-1?"checked":"")+'></div>';
+        }).join("")+
+      '</div>'+
+      '<div class="adcount">'+S.accounts.length+' accounts</div>'+
       '<p class="hint" style="margin-top:12px">Renaming, adding and deleting accounts is still in '+
       '<b>⚙ Accounts</b> on the top bar.</p>';
   }
