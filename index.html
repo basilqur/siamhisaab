@@ -357,6 +357,10 @@ body.readonly .robar{display:flex}
 .adgrid .adm{font-size:9px;color:var(--accent);font-weight:700;letter-spacing:.05em;display:block}
 .adgrid .num{font-variant-numeric:tabular-nums}
 .adcount{font-size:11.5px;color:var(--ink-3);margin-top:9px}
+.kbgrid .c.end input{max-width:150px}
+.kbgrid .c.lab{font-size:12.5px}
+.kbgrid .c.lab .sub{font-size:10.5px}
+#kb-wrap{margin-bottom:4px}
 .adtable{width:100%;border-collapse:collapse;font-size:13px}
 .adtable th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);
   font-weight:700;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -1482,7 +1486,7 @@ function renderStats(){
          (ca?"opening "+fmt(ca.amount,a.currency)+" · ":"")+"<span class='setbal' data-setbal='CASH'>set balance</span>")+
     card("","Bank balance",fmt(t.bank,a.currency),t.bank<0?"neg":"",
          (ba?"opening "+fmt(ba.amount,a.currency)+" · ":"")+"<span class='setbal' data-setbal='BANK'>set balance</span>");
-  $$("#stats [data-setbal]").forEach(function(b){ b.onclick=function(){ setPayBalance(b.dataset.setbal); }; });
+  $$("#stats [data-setbal]").forEach(function(b){ b.onclick=function(){ openBalances(S.activeId); }; });
   $("#brandsub").textContent=(AUTH.user?AUTH.user+" · ":"")+a.name;
   function card(c,k,v,vc,s){ return '<div class="card '+c+'"><div class="k">'+k+'</div><div class="v num '+vc+'">'+v+'</div><div class="s">'+s+'</div></div>'; }
 }
@@ -2127,51 +2131,175 @@ function toggleRem(ids, force){
 }
 
 /* ------------------------------- set the real cash / bank balance of an account */
-function setPayBalance(kind){
+/* ===================================================== CASH & BANK ========
+   One screen for every account. Cash and bank are the two halves of an
+   account's balance, so the important thing this screen does is show you what
+   your figures do to the balance BEFORE you save them, and default to leaving
+   the balance exactly where it is.
+   ========================================================================== */
+function rawSplit(a){
+  /* what the account's own entries say, ignoring any opening rows already set */
+  var cash=0, bank=0;
+  a.entries.forEach(function(e){
+    if(isHidden(e) || isAnchor(e)) return;
+    if(String(e.payBy||"").toUpperCase()==="BANK") bank+=Number(e.amount)||0;
+    else cash+=Number(e.amount)||0;
+  });
+  return {cash:cash, bank:bank};
+}
+function openBalances(focusId){
   if(!canWrite()) return;
-  var a=acct(); if(isAll()||!a.id) return;
-  var t=totals(a), now=(kind==="CASH"?t.cash:t.bank), anchor=anchorOf(a,kind);
-  openModal('<header><div><h3>Set the '+kind.toLowerCase()+' balance</h3><p>'+esc(a.name)+'</p></div><button class="tbtn" data-close>✕</button></header>'+
+  var rows=visibleAccounts().filter(function(a){ return a.id; });
+  if(!rows.length) return toast("No accounts to set");
+  var keep = true;   /* always starts safe — never remembers "off" from last time */
+  var st={};
+  rows.forEach(function(a){
+    var t=totals(a);
+    st[a.id]={cash:t.cash, bank:t.bank, bal:t.bal, raw:rawSplit(a), cur:a.currency,
+              name:a.name, touched:false};
+  });
+
+  openModal('<header><div><h3>Cash and bank balances</h3>'+
+      '<p>What you actually have right now, account by account</p></div>'+
+    '<button class="tbtn" data-close>✕</button></header>'+
     '<div class="body">'+
-      '<div class="fields" style="margin-top:0">'+
-        '<div class="field"><label>'+kind+' balance right now</label>'+
-          '<input id="sb-val" data-autofocus inputmode="decimal" value="'+esc(String(Math.round(now*100)/100))+'" style="min-width:200px;text-align:right;font-weight:700;height:40px;font-size:16px"></div>'+
-      '</div>'+
-      '<p class="hint">The app currently makes it <b class="num">'+fmt(now,a.currency)+'</b>. Type what it really is and it will '+
-      (anchor?'update the <b>OPENING '+kind+' BALANCE</b> row at the bottom of this account.'
-             :'add one <b>OPENING '+kind+' BALANCE</b> row at the bottom of this account to bridge the difference.')+
-      '<br><br>Nothing else is touched — every entry from now on moves the balance on from that figure, and the row stays visible so the gap is never hidden from anyone.</p>'+
+      '<label class="chk" id="kb-wrap"><input type="checkbox" id="kb-keep" '+(keep?"checked":"")+'> '+
+      '<b>Keep each account&rsquo;s balance the same</b> — typing one side moves the other</label>'+
+      '<p class="hint" id="kb-help"></p>'+
+      '<div id="kb-rows"></div>'+
+      '<p class="hint">Cash and bank always add up to the account balance — that is what the balance '+
+      '<i>is</i>. So if you only want to correct how the money is split, leave the box above ticked and '+
+      'the balance will not move. Untick it only when the account total itself is wrong.</p>'+
+      '<p class="hint">Each figure you set writes one visible <b>OPENING CASH BALANCE</b> or '+
+      '<b>OPENING BANK BALANCE</b> row at the bottom of that account, so the bridging amount is never '+
+      'hidden from anyone. Setting it again edits the same row rather than adding another.</p>'+
     '</div>'+
-    '<footer><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="sb-go">Set balance</button></footer>');
-  $("#sb-val").addEventListener("keydown",function(e){ if(e.key==="Enter") $("#sb-go").click(); });
-  $("#sb-go").onclick=function(){
-    var target=parseAmount($("#sb-val").value);
-    if(isNaN(target)) return toast("Enter a number");
-    var others=0;
-    a.entries.forEach(function(e){
-      if(isHidden(e)) return;
-      if(anchor && e.id===anchor.id) return;
-      if(String(e.payBy||"").toUpperCase()===kind) others+=Number(e.amount)||0;
+    '<footer><span class="hint" id="kb-note" style="margin-right:auto"></span>'+
+    '<button class="tbtn ghost" data-close>Cancel</button>'+
+    '<button class="tbtn primary" id="kb-go" disabled>Save balances</button></footer>');
+
+  $("#kb-keep").onchange=function(){ keep=this.checked; draw(); };
+  $("#kb-go").onclick=save;
+  draw();
+  if(focusId && st[focusId]) setTimeout(function(){
+    var el=$('#kb-rows [data-bf="cash"][data-ba="'+focusId+'"]');
+    if(el){ el.focus(); el.select(); el.scrollIntoView({block:"center"}); }
+  },80);
+
+  function draw(){
+    $("#kb-help").innerHTML = keep
+      ? "Type what the cash really is and the bank side moves to match, so the account total stays put."
+      : "<b style='color:var(--warn)'>Both sides are free.</b> Whatever you type becomes the account balance — check the right-hand column before saving.";
+    $("#kb-rows").innerHTML=
+      '<div class="adgrid kbgrid" style="grid-template-columns:minmax(0,1.4fr) minmax(96px,1fr) minmax(96px,1fr) minmax(0,1.3fr) 34px">'+
+        '<div class="h">Account</div><div class="h end">Cash now</div><div class="h end">Bank now</div>'+
+        '<div class="h">Balance</div><div class="h"></div>'+
+        rows.map(function(a){
+          var s=st[a.id], want=s.cash+s.bank, diff=Math.round((want-s.bal)*100)/100;
+          var eff = Math.abs(diff)<0.005
+            ? '<span style="color:var(--ink-3)">stays '+esc(fmt(s.bal,s.cur))+'</span>'
+            : '<b>'+esc(fmt(want,s.cur))+'</b><span class="sub" style="color:var(--warn)">was '+
+              esc(fmt(s.bal,s.cur))+' · '+(diff>0?"+":"")+esc(fmt(diff,s.cur))+'</span>';
+          return '<div class="c kbrow"><b>'+esc(a.name)+'</b></div>'+
+            '<div class="c end"><input data-bf="cash" data-ba="'+a.id+'" inputmode="decimal" value="'+
+              esc(String(Math.round(s.cash*100)/100))+'" style="text-align:right"></div>'+
+            '<div class="c end"><input data-bf="bank" data-ba="'+a.id+'" inputmode="decimal" value="'+
+              esc(String(Math.round(s.bank*100)/100))+'" style="text-align:right"></div>'+
+            '<div class="c lab">'+eff+'</div>'+
+            '<div class="c end"><button class="tbtn ghost" data-bclear="'+a.id+'" title="Forget the opening rows and go back to what the entries say">↺</button></div>';
+        }).join("")+
+      '</div>';
+    $$("#kb-rows [data-bf]").forEach(function(el){
+      el.oninput=function(){
+        var id=el.dataset.ba, f=el.dataset.bf, s=st[id];
+        var v=parseAmount(el.value);
+        if(isNaN(v)) return;
+        s.touched=true;
+        if(keep){
+          if(f==="cash"){ s.cash=v; s.bank=Math.round((s.bal-v)*100)/100; }
+          else          { s.bank=v; s.cash=Math.round((s.bal-v)*100)/100; }
+        } else {
+          s[f]=v;
+        }
+        refresh(id, f);
+      };
     });
-    var need=Math.round((target-others)*100)/100;
-    if(anchor){
-      if(need!==Number(anchor.amount)){
-        var old=anchor.amount;
-        DB.entries[anchor.id].amount=need;
-        op({t:"update", id:anchor.id, field:"amount", val:need, old:old});
-      }
-    } else {
-      var maxPos=a.entries.reduce(function(m,x){return Math.max(m,Number(x.pos)||0);},0)+1;
-      var e={id:uid(), accountId:a.id, date:todayISO(), details:"OPENING "+kind+" BALANCE",
-             payBy:kind, amount:need, tag:"anchor"};
-      DB.entries[e.id]=Object.assign({pos:maxPos, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
-        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, e);
-      op({t:"addEntry", e:e});
-      op({t:"update", id:e.id, field:"pos", val:maxPos});
-    }
+    $$("#kb-rows [data-bclear]").forEach(function(b){
+      b.onclick=function(){
+        var id=b.dataset.bclear, s=st[id];
+        s.cash=s.raw.cash; s.bank=s.raw.bank; s.touched=true;
+        draw(); mark();
+      };
+    });
+    mark();
+  }
+  function refresh(id, typing){
+    /* redraw just this row's other input and its effect, so the caret stays put */
+    var s=st[id];
+    var other=$('#kb-rows [data-bf="'+(typing==="cash"?"bank":"cash")+'"][data-ba="'+id+'"]');
+    if(other && keep) other.value=String(Math.round((typing==="cash"?s.bank:s.cash)*100)/100);
+    rows.forEach(function(a,ri){
+      if(a.id!==id) return;
+      var cell=$$('#kb-rows .c.lab')[ri];
+      if(!cell) return;
+      var want=s.cash+s.bank, diff=Math.round((want-s.bal)*100)/100;
+      cell.innerHTML = Math.abs(diff)<0.005
+        ? '<span style="color:var(--ink-3)">stays '+esc(fmt(s.bal,s.cur))+'</span>'
+        : '<b>'+esc(fmt(want,s.cur))+'</b><span class="sub" style="color:var(--warn)">was '+
+          esc(fmt(s.bal,s.cur))+' · '+(diff>0?"+":"")+esc(fmt(diff,s.cur))+'</span>';
+    });
+    mark();
+  }
+  function changed(){
+    return rows.filter(function(a){
+      var s=st[a.id], t=totals(a);
+      return Math.abs(s.cash-t.cash)>0.005 || Math.abs(s.bank-t.bank)>0.005;
+    });
+  }
+  function mark(){
+    var c=changed();
+    $("#kb-go").disabled=!c.length;
+    $("#kb-go").textContent = c.length ? "Save "+c.length+" account"+(c.length===1?"":"s") : "Save balances";
+    var moved=c.filter(function(a){ var s=st[a.id]; return Math.abs((s.cash+s.bank)-s.bal)>0.005; });
+    $("#kb-note").innerHTML = !c.length ? "" :
+      (moved.length ? '<b style="color:var(--warn)">'+moved.length+' account'+(moved.length===1?"'s":"s'")+
+        ' balance will change</b>' : "Balances stay where they are");
+  }
+  function save(){
+    var c=changed(), n=0;
+    c.forEach(function(a){
+      var s=st[a.id];
+      ["CASH","BANK"].forEach(function(kind){
+        var target = kind==="CASH" ? s.cash : s.bank;
+        var base   = kind==="CASH" ? s.raw.cash : s.raw.bank;
+        var need   = Math.round((target-base)*100)/100;
+        var anchor = anchorOf(a,kind);
+        if(anchor){
+          if(Math.abs(need)<0.005){                       /* no bridge needed any more */
+            delete DB.entries[anchor.id];
+            op({t:"delete", id:anchor.id});
+            n++;
+          } else if(Number(anchor.amount)!==need){
+            var old=anchor.amount;
+            DB.entries[anchor.id].amount=need;
+            op({t:"update", id:anchor.id, field:"amount", val:need, old:old});
+            n++;
+          }
+        } else if(Math.abs(need)>=0.005){
+          var maxPos=a.entries.reduce(function(m,x){return Math.max(m,Number(x.pos)||0);},0)+1;
+          var e={id:uid(), accountId:a.id, date:todayISO(), details:"OPENING "+kind+" BALANCE",
+                 payBy:kind, amount:need, tag:"anchor"};
+          DB.entries[e.id]=Object.assign({pos:maxPos, deleted:"", createdBy:AUTH.user,
+            createdAt:new Date().toISOString(), updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, e);
+          op({t:"addEntry", e:e});
+          op({t:"update", id:e.id, field:"pos", val:maxPos});
+          n++;
+        }
+      });
+    });
     closeModal(); rebuild(); renderAll();
-    toast(kind.charAt(0)+kind.slice(1).toLowerCase()+" balance set to "+fmt(target,a.currency));
-  };
+    toast("Set the cash and bank balance on "+c.length+" account"+(c.length===1?"":"s"));
+  }
 }
 
 /* ------------------------------------------- leave entries out of the totals */
@@ -3295,6 +3423,7 @@ function openMenu(){
     can("importExport")?["Import","Paste rows from Google Sheets","import"]:null,
     can("importExport")?["Export","CSV and snapshots","export"]:null,
     isAdmin()?["Admin settings","People, permissions, money, backups","admin"]:null,
+    readOnly()?null:["Cash and bank balances","Set what you actually have, per account","bal"],
     readOnly()?null:["Sort by date","Reorder this account, newest first","sort"],
     [S.theme==="dark"?"Light mode":"Dark mode","Switch the look","theme"],
     ["Sign out","You are "+(AUTH.user||"—"),"out"]
@@ -3311,6 +3440,7 @@ function openMenu(){
       if(d==="import") openImport();
       if(d==="export") openExport();
       if(d==="admin") return openAdmin();
+      if(d==="bal") return openBalances(S.activeId);
       if(d==="sort") sortByDate();
       if(d==="theme"){ S.theme=S.theme==="dark"?"light":"dark"; cacheAll(); renderAll(); }
       if(d==="out") signOut();
