@@ -4612,7 +4612,7 @@ function doLogin(){
       else setNet("off",(res&&res.message)||"");
     }).catch(function(err){
       if(Object.keys(DB.accounts).length) setNet("off",err.message);
-      else $("#gate-err").textContent="Could not reach the server. Check your connection.";
+      else $("#gate-err").textContent="Could not reach the server. Check your connection..";
     });
   }
   setTimeout(function(){ var p=$("#gate-pw"); if(p && $("#gate").classList.contains("show") && !isTouch()) p.focus(); },120);
