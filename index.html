@@ -2255,6 +2255,7 @@ function openBalances(focusId){
   },80);
 
   function draw(){
+    if(!$("#kb-rows") || !$("#kb-help")) return;
     $("#kb-help").innerHTML = keep
       ? "Type what the cash really is and the bank side moves to match, so the account total stays put."
       : "<b style='color:var(--warn)'>Both sides are free.</b> Whatever you type becomes the account balance — check the right-hand column before saving.";
@@ -2302,6 +2303,7 @@ function openBalances(focusId){
     mark();
   }
   function refresh(id, typing){
+    if(!$("#kb-rows")) return;
     /* redraw just this row's other input and its effect, so the caret stays put */
     var s=st[id];
     var other=$('#kb-rows [data-bf="'+(typing==="cash"?"bank":"cash")+'"][data-ba="'+id+'"]');
@@ -2325,6 +2327,7 @@ function openBalances(focusId){
     });
   }
   function mark(){
+    if(!$("#kb-go")) return;
     var c=changed();
     $("#kb-go").disabled=!c.length;
     $("#kb-go").textContent = c.length ? "Save "+c.length+" account"+(c.length===1?"":"s") : "Save balances";
@@ -2675,6 +2678,7 @@ function openVehicle(id){
   var c=findCar(id); if(!c) return;
   var isCh=c.kind==="charge";
   function draw(){
+    if(!$("#veh-body")) return;         /* the window was closed under us */
     c=findCar(id); if(!c) return closeModal();
     var fields=isCh?[{k:"detail",l:"Detail",wide:true},{k:"date",l:"Date",type:"date"},
                      {k:"aed",l:"Amount AED",num:true},{k:"status",l:"Status",opts:["","PAID","UNPAID","CREDIT"]},
@@ -3212,6 +3216,7 @@ function openCarImport(){
     .catch(function(e){ seedErr=String(e.message||e); if(mode==="book") reparse(); });
 
   function reparse(){
+    if(!$("#ci-help") || !$("#ci-src")) return;   /* import window already closed */
     $("#ci-help").innerHTML=HELP[mode];
     if(mode==="book") return drawSeed();
     var src=$("#ci-src").value;
@@ -3261,6 +3266,7 @@ function openCarImport(){
     }
   }
   function drawSeed(){
+    if(!$("#ci-status") || !$("#ci-go")) return;
     $("#ci-opts").style.display="none";
     if(seedErr){
       $("#ci-prev").style.display="none"; $("#ci-go").disabled=true; $("#ci-count").textContent="";
@@ -3935,6 +3941,7 @@ function openAdmin(resume){
     $("#ad-note").textContent=note||"Not saved yet";
   }
   function draw(){
+    if(!$("#ad-body")) return;          /* the window was closed under us */
     var h="";
     if(tab==="people")   h=drawPeople();
     if(tab==="perms")    h=drawPerms();
@@ -4346,6 +4353,7 @@ function openRestore(){
     var fr=new FileReader();
     fr.onload=function(){
       try{ data=JSON.parse(fr.result); }catch(e){ data=null; }
+      if(!$("#rs-info") || !$("#rs-go")) return;
       if(!data || !data.entries){ $("#rs-info").textContent="That does not look like a backup from this app."; $("#rs-go").disabled=true; return; }
       var miss=count(data);
       $("#rs-info").innerHTML="Taken "+esc(String(data.takenAt||"").slice(0,16).replace("T"," "))+
@@ -4612,7 +4620,7 @@ function doLogin(){
       else setNet("off",(res&&res.message)||"");
     }).catch(function(err){
       if(Object.keys(DB.accounts).length) setNet("off",err.message);
-      else $("#gate-err").textContent="Could not reach the server. Check your connection..";
+      else $("#gate-err").textContent="Could not reach the server. Check your connection.";
     });
   }
   setTimeout(function(){ var p=$("#gate-pw"); if(p && $("#gate").classList.contains("show") && !isTouch()) p.focus(); },120);
