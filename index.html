@@ -1053,6 +1053,7 @@ function myPerms(){
     edit: a || p.edit!==false,
     del:  a || (p.edit!==false && p.del!==false),
     importExport: a ? true : p.importExport===true,
+    bank: a ? true : p.bank===true,
     undo: a || (p.edit!==false && p.undo!==false),
     accounts: (!a && p.accounts && p.accounts!=="all") ? p.accounts : "all"
   };
@@ -1086,26 +1087,65 @@ function toast(msg,undoFn){
 }
 
 /* =========================================================== NETWORK ===== */
+/* ------------------------------------------------- WHICH ADDRESS TO CALL --
+   When a browser is signed into more than one Google account, Google quietly
+   rewrites
+       script.google.com/macros/s/<id>/exec
+   into
+       script.google.com/macros/u/1/s/<id>/exec
+   and that rewritten address returns 404 for a public web app. Nothing is
+   wrong with the deployment; the door is simply being knocked on at the wrong
+   house number. The /a/~/ form is never rewritten, so we prefer it — and if
+   whichever one we are using stops answering, we switch to the other and
+   remember the one that works.                                              */
+function apiForms(){
+  var u=String(API_URL||"");
+  var m=u.match(/^https:\/\/script\.google\.com\/(?:a\/[^\/]+\/)?macros\/(?:u\/\d+\/)?s\/([^\/]+)\/exec/);
+  if(!m) return [u];
+  return ["https://script.google.com/a/~/macros/s/"+m[1]+"/exec",
+          "https://script.google.com/macros/s/"+m[1]+"/exec"];
+}
+var API_PICK="";
+function apiBase(){
+  if(API_PICK) return API_PICK;
+  var forms=apiForms(), saved=lsGet("apibase","");
+  API_PICK = (saved && forms.indexOf(saved)>-1) ? saved : forms[0];
+  return API_PICK;
+}
+function apiNextForm(){
+  var forms=apiForms();
+  if(forms.length<2) return apiBase();
+  var i=forms.indexOf(apiBase());
+  API_PICK=forms[(i+1)%forms.length];
+  lsSet("apibase",API_PICK);
+  return API_PICK;
+}
+function apiWorked(){ if(lsGet("apibase","")!==apiBase()) lsSet("apibase",apiBase()); }
+
 function api(action, payload){
   payload = payload||{}; payload.action=action;
   if(action!=="login" && action!=="ping") payload.token=AUTH.token;
   var body = JSON.stringify(payload);
   if(DEMO) return Promise.resolve({ok:false,error:"DEMO"});
-  return fetch(API_URL,{method:"POST",body:body,headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow"})
+  var url = apiBase();
+  return fetch(url,{method:"POST",body:body,headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow"})
     .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
     .catch(function(err){
-      if(body.length>5500) throw err;
-      return jsonp(payload);
-    });
+      if(body.length>5500){ apiNextForm(); throw err; }
+      return jsonp(payload, url);
+    })
+    .then(function(res){ apiWorked(); return res; })
+    .catch(function(err){ apiNextForm(); throw err; });
 }
-function jsonp(payload){
+function jsonp(payload, url){
+  url = url || apiBase();
   return new Promise(function(res,rej){
     var cb="hcb"+Math.random().toString(36).slice(2), s=document.createElement("script"), done=false;
     var t=setTimeout(function(){ if(!done){done=true;clean();rej(new Error("timeout"));} },25000);
     function clean(){ clearTimeout(t); try{delete window[cb];}catch(e){window[cb]=undefined;} if(s.parentNode) s.parentNode.removeChild(s); }
     window[cb]=function(d){ if(done) return; done=true; clean(); res(d); };
     s.onerror=function(){ if(done) return; done=true; clean(); rej(new Error("network")); };
-    s.src=API_URL+(API_URL.indexOf("?")>-1?"&":"?")+"callback="+cb+"&p="+encodeURIComponent(JSON.stringify(payload));
+    s.src=url+(url.indexOf("?")>-1?"&":"?")+"callback="+cb+"&p="+encodeURIComponent(JSON.stringify(payload));
     document.body.appendChild(s);
   });
 }
@@ -1463,7 +1503,7 @@ function renderAll(){
 }
 function applyRole(){
   var ie = can("importExport") ? "" : "none";
-  $("#btn-import").style.display = ie;
+  $("#btn-import").style.display = (can("importExport")||can("bank")) ? "" : "none";
   $("#btn-export").style.display = ie;
   $("#btn-admin").style.display = isAdmin() ? "" : "none";
   document.body.classList.toggle("readonly", readOnly());
@@ -1631,7 +1671,7 @@ function renderTable(){
     empty.style.display="";
     empty.innerHTML = a.entries.length
       ? "<h3>Nothing matches your filters</h3><div>Clear them to see all "+a.entries.length+" entries.</div>"
-      : "<h3>This account is empty</h3><div>Tap <b>+</b> to add your first entry."+(isAdmin()?" Or use <b>Import</b> to paste rows from Google Sheets.":"")+"</div>";
+      : "<h3>This account is empty</h3><div>Tap <b>+</b> to add your first entry."+(isAdmin()?" Or use <b>Import</b> to drop in a bank statement or paste rows from Google Sheets.":"")+"</div>";
   } else empty.style.display="none";
 
   var fin=0,fout=0,ft=0;
@@ -3494,6 +3534,7 @@ function openMenu(){
   var items=[
     ["History","Every change, who and when","history"],
     ["Accounts","Rename, currency, opening balance","accounts"],
+    can("bank")?["Import a bank statement","A Wio CSV, straight into the SIAM sheet","bank"]:null,
     can("importExport")?["Import","Paste rows from Google Sheets","import"]:null,
     can("importExport")?["Export","CSV and snapshots","export"]:null,
     isAdmin()?["Admin settings","People, permissions, money, backups","admin"]:null,
@@ -3511,6 +3552,7 @@ function openMenu(){
       var d=b.dataset.do; closeModal();
       if(d==="history") openHistory(null);
       if(d==="accounts") openAccounts();
+      if(d==="bank") return openBankImport();
       if(d==="import") openImport();
       if(d==="export") openExport();
       if(d==="admin") return openAdmin();
@@ -3565,6 +3607,26 @@ function openHistory(entryId){
 }
 
 /* ---- import ---- */
+/* Two very different jobs wear the same word "import", so ask which. */
+function openImportChooser(){
+  if(!can("importExport") && !can("bank")) return nope("Import is not switched on for you");
+  if(!can("importExport")) return openBankImport();
+  if(!can("bank")) return openImport();
+  openModal('<header><div><h3>Import</h3><p>Where is it coming from?</p></div>'+
+      '<button class="tbtn" data-close>\u2715</button></header>'+
+    '<div class="body"><div class="menulist">'+
+      '<button data-imp="bank"><div><b>\ud83c\udfe6 A bank statement</b><br>'+
+        '<span>Wio, FAB, RAK \u2014 drop in the CSV or Excel file and it works out the columns</span></div></button>'+
+      '<button data-imp="sheet"><div><b>\ud83d\udcd1 Rows from Google Sheets</b><br>'+
+        '<span>Copy cells in Sheets and paste them in</span></div></button>'+
+    '</div></div>');
+  $$("#modal [data-imp]").forEach(function(b){
+    b.onclick=function(){
+      var d=b.dataset.imp; closeModal();
+      setTimeout(function(){ d==="bank"? openBankImport() : openImport(); },100);
+    };
+  });
+}
 function openImport(){
   if(!can("importExport")) return nope("Import is not switched on for you");
   if(!isAdmin()) return;
@@ -3649,6 +3711,724 @@ function openImport(){
     toast("Imported "+imported+" entries"+(keepTop?" at the top, with 2 blank rows under them":""));
   }
 }
+/* ===================================================== BANK STATEMENT =====
+   Wio Business will not give a website a live feed — it publishes no public
+   API, and in the UAE the only lawful road to account data runs through the
+   Central Bank's Open Finance framework, which needs a licence. So: download
+   the statement as CSV, drop it in here, choose the dates, and only the lines
+   that are genuinely new are written into SIAM.
+
+   The file is read on this device. Nothing is uploaded anywhere — not even to
+   your own Sheet — until you press the button.
+
+   One Wio export can hold several accounts and more than one currency in the
+   same file, so the important work here is letting you say exactly which
+   slice of it you want.
+   ========================================================================== */
+
+/* --------- a very small ZIP reader, so .xlsx opens with no library --------- */
+function zipEntries(buf){
+  var dv=new DataView(buf), u8=new Uint8Array(buf), end=-1;
+  var floor=Math.max(0,u8.length-66000);
+  for(var i=u8.length-22;i>=floor;i--) if(dv.getUint32(i,true)===0x06054b50){ end=i; break; }
+  if(end<0) return Promise.reject(new Error("That does not look like a spreadsheet file."));
+  var n=dv.getUint16(end+10,true), cd=dv.getUint32(end+16,true), list=[], p=cd;
+  for(var k=0;k<n;k++){
+    if(dv.getUint32(p,true)!==0x02014b50) break;
+    var nameLen=dv.getUint16(p+28,true), extraLen=dv.getUint16(p+30,true), cmtLen=dv.getUint16(p+32,true);
+    var name="";
+    for(var c=0;c<nameLen;c++) name+=String.fromCharCode(u8[p+46+c]);
+    list.push({name:name, method:dv.getUint16(p+10,true), csize:dv.getUint32(p+20,true),
+               lho:dv.getUint32(p+42,true)});
+    p+=46+nameLen+extraLen+cmtLen;
+  }
+  list.forEach(function(e){
+    e.start=e.lho+30+dv.getUint16(e.lho+26,true)+dv.getUint16(e.lho+28,true);
+  });
+  var want=/^xl\/(workbook\.xml|sharedStrings\.xml|styles\.xml|worksheets\/|_rels\/workbook\.xml\.rels)/;
+  list=list.filter(function(e){ return want.test(e.name); });
+  return Promise.all(list.map(function(e){
+    var slice=u8.subarray(e.start, e.start+e.csize);
+    if(e.method===0) return Promise.resolve({name:e.name, data:slice});
+    if(e.method!==8) return Promise.resolve({name:e.name, data:null});
+    if(typeof DecompressionStream==="undefined")
+      return Promise.reject(new Error("This browser cannot open .xlsx — save the statement as CSV instead."));
+    var rs=new Blob([slice]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+    return new Response(rs).arrayBuffer().then(function(ab){ return {name:e.name, data:new Uint8Array(ab)}; });
+  })).then(function(all){
+    var map={};
+    all.forEach(function(e){ if(e.data) map[e.name]=e.data; });
+    return map;
+  });
+}
+function unxml(s){
+  return String(s).replace(/&#(\d+);/g,function(_,d){ return String.fromCharCode(+d); })
+    .replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"')
+    .replace(/&apos;/g,"'").replace(/&amp;/g,"&");
+}
+function colNum(ref){
+  var m=String(ref).match(/^([A-Z]+)/); if(!m) return 0;
+  var n=0, s=m[1];
+  for(var i=0;i<s.length;i++) n=n*26+(s.charCodeAt(i)-64);
+  return n-1;
+}
+function serialDate(n){
+  var ms=Date.UTC(1899,11,30)+Math.round(n)*86400000, d=new Date(ms);
+  return d.getUTCFullYear()+"-"+("0"+(d.getUTCMonth()+1)).slice(-2)+"-"+("0"+d.getUTCDate()).slice(-2);
+}
+function xlsxSheets(map){
+  var dec=new TextDecoder();
+  var txt=function(k){ return map[k]? dec.decode(map[k]) : ""; };
+  var shared=[];
+  txt("xl/sharedStrings.xml").replace(/<si>([\s\S]*?)<\/si>/g,function(_,inner){
+    var t="";
+    inner.replace(/<t[^>]*>([\s\S]*?)<\/t>/g,function(__,x){ t+=x; return ""; });
+    shared.push(unxml(t)); return "";
+  });
+  var styles=txt("xl/styles.xml"), custom={}, isDate=[];
+  styles.replace(/<numFmt[^>]*numFmtId="(\d+)"[^>]*formatCode="([^"]*)"/g,function(_,id,code){
+    custom[id]=unxml(code); return ""; });
+  var xfs=(styles.match(/<cellXfs[\s\S]*?<\/cellXfs>/)||[""])[0];
+  xfs.replace(/<xf\b[^>]*>/g,function(tag){
+    var m=tag.match(/numFmtId="(\d+)"/), id=m?m[1]:"0", n=+id;
+    var code=(custom[id]||"").replace(/\[[^\]]*\]/g,"").replace(/"[^"]*"/g,"");
+    isDate.push((n>=14&&n<=22)||(n>=45&&n<=47)||/[ymd]/i.test(code));
+    return "";
+  });
+  var rels={};
+  txt("xl/_rels/workbook.xml.rels").replace(/<Relationship\b[^>]*>/g,function(tag){
+    var id=(tag.match(/Id="([^"]+)"/)||[])[1], tgt=(tag.match(/Target="([^"]+)"/)||[])[1];
+    if(id&&tgt) rels[id]=String(tgt).replace(/^\/?xl\//,"").replace(/^\//,"");
+    return "";
+  });
+  var out=[];
+  txt("xl/workbook.xml").replace(/<sheet\b[^>]*>/g,function(tag){
+    var name=unxml((tag.match(/name="([^"]*)"/)||[])[1]||"Sheet");
+    var rid=(tag.match(/r:id="([^"]+)"/)||[])[1];
+    var path="xl/"+(rels[rid]||"");
+    if(map[path]) out.push({name:name, rows:sheetRows(dec.decode(map[path]))});
+    return "";
+  });
+  if(!out.length) Object.keys(map).forEach(function(k){
+    if(/^xl\/worksheets\/sheet\d+\.xml$/.test(k)) out.push({name:k, rows:sheetRows(dec.decode(map[k]))});
+  });
+  return out;
+
+  function sheetRows(xml){
+    var rows=[];
+    xml.replace(/<row\b[^>]*>([\s\S]*?)<\/row>/g,function(_,body){
+      var line=[];
+      body.replace(/<c\b([^>]*)(?:\/>|>([\s\S]*?)<\/c>)/g,function(__,attrs,inner){
+        var ref=(attrs.match(/r="([A-Z]+\d+)"/)||[])[1];
+        var t=(attrs.match(/t="([^"]*)"/)||[])[1]||"n";
+        var s=+((attrs.match(/s="(\d+)"/)||[])[1]||-1);
+        var v="";
+        if(t==="inlineStr"){
+          (inner||"").replace(/<t[^>]*>([\s\S]*?)<\/t>/g,function(___,x){ v+=x; return ""; });
+          v=unxml(v);
+        } else {
+          var raw=((inner||"").match(/<v[^>]*>([\s\S]*?)<\/v>/)||[])[1];
+          if(raw==null) v="";
+          else if(t==="s") v=shared[+raw]!=null?shared[+raw]:"";
+          else if(t==="str") v=unxml(raw);
+          else {
+            var num=parseFloat(raw);
+            v=(!isNaN(num) && s>=0 && isDate[s] && num>0) ? serialDate(num) : unxml(raw);
+          }
+        }
+        var c=ref?colNum(ref):line.length;
+        while(line.length<c) line.push("");
+        line[c]=String(v);
+        return "";
+      });
+      rows.push(line); return "";
+    });
+    return rows;
+  }
+}
+/* ------------------------------ CSV / pasted text ------------------------- */
+function sniffDelim(text){
+  var head=text.split(/\r?\n/).slice(0,8).join("\n"), best=",", n=-1;
+  [",",";","\t","|"].forEach(function(d){
+    var c=head.split(d).length;
+    if(c>n){ n=c; best=d; }
+  });
+  return best;
+}
+function parseDelimited(text, d){
+  d = d || sniffDelim(text);
+  var rows=[], row=[], cell="", q=false, i=0;
+  text=String(text).replace(/^﻿/,"");
+  while(i<text.length){
+    var ch=text[i];
+    if(q){
+      if(ch==='"'){ if(text[i+1]==='"'){ cell+='"'; i++; } else q=false; }
+      else cell+=ch;
+    } else if(ch==='"'){ q=true; }
+    else if(ch===d){ row.push(cell); cell=""; }
+    else if(ch==="\n"){ row.push(cell); rows.push(row); row=[]; cell=""; }
+    else if(ch==="\r"){ }
+    else cell+=ch;
+    i++;
+  }
+  if(cell.length||row.length){ row.push(cell); rows.push(row); }
+  return rows.filter(function(r){ return r.some(function(c){ return String(c).trim()!==""; }); })
+             .map(function(r){ return r.map(function(c){ return String(c).trim(); }); });
+}
+
+/* ------------- working out which column is which, without guessing --------
+   Exact heading names first — that is what stops "Transaction type" being
+   mistaken for the description, which is exactly what a loose match does to a
+   Wio file. Only if a heading is unrecognised do we fall back to patterns.  */
+var COL_EXACT = {
+  "date":"date", "transaction date":"date", "value date":"date", "booking date":"date", "posting date":"date",
+  "description":"desc", "narration":"desc", "particulars":"desc", "details":"desc",
+  "amount":"amount", "transaction amount":"amount",
+  "notes":"notes", "note":"notes", "memo":"notes",
+  "account currency":"cur", "currency":"cur", "ccy":"cur",
+  "account number":"acct", "account iban":"acct", "iban":"acct", "account":"acct",
+  "transaction type":"type", "type":"type",
+  "balance":"bal", "running balance":"bal", "closing balance":"bal",
+  "debit":"out", "withdrawal":"out", "money out":"out", "paid out":"out",
+  "credit":"in", "deposit":"in", "money in":"in", "paid in":"in",
+  "ref. number":"ref", "reference number":"ref", "ref no":"ref"
+};
+var COL_LOOSE = [
+  ["date",  /^(date|txn date|transaction date|value date)/i],
+  ["cur",   /currency|^ccy$/i],
+  ["type",  /^(transaction )?type$/i],
+  ["acct",  /^(account (number|iban)|iban)$/i],
+  ["out",   /^(debit|withdrawal|money out|paid out|dr)\b/i],
+  ["in",    /^(credit|deposit|money in|paid in|cr)\b/i],
+  ["amount",/^(amount|value|amt)\b/i],
+  ["bal",   /balance/i],
+  ["notes", /^(notes?|memo|remarks)\b/i],
+  ["desc",  /^(description|details|narration|particulars|merchant|payee|beneficiary|to \/ from)/i]
+];
+function looksLikeMoney(v){
+  var t=String(v==null?"":v).trim();
+  if(!t) return false;
+  t=t.replace(/(AED|USD|GBP|EUR|THB|PKR|SAR|DHS|DH)/gi,"").replace(/[$£€¥]/g,"").trim();
+  return /^[-+(]?\d[\d,]*(\.\d+)?\)?-?$/.test(t);
+}
+/* When a bank gives us both "Account IBAN" and "Account number", or both
+   "Transaction type" and "Description", the exact name wins outright — column
+   order must never decide it.                                              */
+var COL_PREFER = {"date":"date", "description":"desc", "notes":"notes", "amount":"amount",
+                  "account currency":"cur", "account number":"acct", "transaction type":"type",
+                  "balance":"bal"};
+function readStatement(grid){
+  var best={score:-1,row:-1,map:null};
+  for(var r=0;r<Math.min(grid.length,25);r++){
+    var m={}, score=0;
+    grid[r].forEach(function(cell,c){
+      var t=String(cell||"").trim().toLowerCase();
+      if(!t) return;
+      var k=COL_EXACT[t];
+      if(k && m[k]==null){ m[k]=c; score+=2; return; }
+      for(var i=0;i<COL_LOOSE.length;i++){
+        if(COL_LOOSE[i][1].test(t) && m[COL_LOOSE[i][0]]==null){ m[COL_LOOSE[i][0]]=c; score++; return; }
+      }
+    });
+    grid[r].forEach(function(cell,c){
+      var k=COL_PREFER[String(cell||"").trim().toLowerCase()];
+      if(k) m[k]=c;
+    });
+    if(m.date!=null && (m.amount!=null||m.out!=null||m["in"]!=null) && score>best.score)
+      best={score:score,row:r,map:m};
+  }
+  if(best.row<0) return sniff(grid);
+  return {headerRow:best.row, map:best.map, body:grid.slice(best.row+1), guessed:false};
+
+  function sniff(g){
+    var cols=0; g.forEach(function(r){ cols=Math.max(cols,r.length); });
+    var dateCol=-1, amtCol=-1, descCol=-1, dh0=0, ah0=0, stats=[];
+    for(var c=0;c<cols;c++){
+      var dh=0, ah=0, tl=0, n=0;
+      g.slice(0,40).forEach(function(r){
+        var v=r[c]; if(v==null||v==="") return;
+        n++;
+        if(parseDate(v)) dh++;
+        if(looksLikeMoney(v)) ah++;
+        tl+=String(v).length;
+      });
+      if(!n) continue;
+      if(dh/n>0.6 && dh>dh0){ dh0=dh; dateCol=c; }
+      if(ah/n>0.6 && ah>ah0 && c!==dateCol){ ah0=ah; amtCol=c; }
+      stats.push({c:c, avg:tl/n, money:ah/n, date:dh/n});
+    }
+    stats.sort(function(a,b){ return b.avg-a.avg; });
+    for(var i=0;i<stats.length;i++){
+      var t=stats[i];
+      if(t.c!==dateCol && t.c!==amtCol && t.money<0.5 && t.date<0.5){ descCol=t.c; break; }
+    }
+    var m={};
+    if(dateCol>=0) m.date=dateCol;
+    if(amtCol>=0)  m.amount=amtCol;
+    if(descCol>=0) m.desc=descCol;
+    return {headerRow:-1, map:m, body:g, guessed:true};
+  }
+}
+
+/* Where a statement lands by default. In practice always the SIAM sheet — but
+   picked, never hardcoded, because a name is not an identity and that sheet
+   has already been renamed once. Order: whatever you chose last time, then a
+   sheet that looks like SIAM, then whichever tab you are on.               */
+function bankTarget(){
+  var list=visibleAccounts();
+  if(!list.length) return null;
+  var saved=lsGet("bankacct","");
+  for(var i=0;i<list.length;i++) if(list[i].id===saved) return list[i];
+  for(var j=0;j<list.length;j++) if(/^siam\b/i.test(list[j].name)) return list[j];
+  for(var k=0;k<list.length;k++) if(/siam/i.test(list[k].name)) return list[k];
+  var act=list.filter(function(a){ return a.id===S.activeId; })[0];
+  return act || list[0];
+}
+
+/* ------------------------------------------------------------- the window - */
+function openBankImport(){
+  if(!can("bank")) return nope("Bank statement import is not switched on for you");
+  var target=bankTarget();
+  if(!target) return nope("There is no account you can import into");
+  var st={grid:[], sheets:[], sheet:0, map:{}, rows:[], name:"", dmy:true, guessed:false,
+          from:"", to:"", accts:{}, curs:{}, types:{}, convert:false};
+
+  openModal('<header><div><h3>Import a bank statement</h3>'+
+      '<p>Download it from Wio as CSV, then open or drop the file here</p></div>'+
+      '<button class="tbtn" data-close>✕</button></header>'+
+    '<div class="body">'+
+      '<style>'+
+        '.bchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}'+
+        '.bchip{height:32px;padding:0 11px;border-radius:999px;border:1px solid var(--line);'+
+          'font-size:12px;font-weight:600;color:var(--ink-3);background:var(--panel);white-space:nowrap}'+
+        '.bchip.on{background:var(--accent-soft);color:var(--accent);border-color:transparent}'+
+        '.bgroup{margin-top:12px}'+
+        '.bgroup > b{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-3)}'+
+        '.blocked{display:flex;align-items:center;gap:8px;height:42px;padding:0 12px;border-radius:9px;'+
+          'border:1px solid var(--line);background:var(--panel-2);font-weight:700}'+
+        '.blocked span{font-weight:500;color:var(--ink-3);font-size:12px}'+
+        '#bi-prev table{width:100%;border-collapse:collapse;font-size:12.5px}'+
+        '#bi-prev th{text-align:left;padding:7px 9px;font-size:10.5px;letter-spacing:.05em;'+
+          'text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--line);'+
+          'position:sticky;top:0;background:var(--panel)}'+
+        '#bi-prev td{padding:7px 9px;border-bottom:1px solid var(--line-2);vertical-align:top}'+
+        '#bi-prev td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}'+
+      '</style>'+
+      '<div id="bi-drop" style="border:1.5px dashed var(--line);border-radius:12px;padding:22px 16px;text-align:center;cursor:pointer">'+
+        '<div style="font-size:26px;line-height:1">📄</div>'+
+        '<div style="font-weight:700;margin-top:6px">Open a file, or drop it here</div>'+
+        '<div class="hint" style="margin-top:4px">.csv or .xlsx — read on this device, never uploaded</div>'+
+        '<input type="file" id="bi-file" accept=".csv,.xlsx,.xls,text/csv" style="display:none">'+
+      '</div>'+
+      '<p class="hint" style="text-align:center;margin:10px 0">or <b id="bi-paste-toggle" style="cursor:pointer;text-decoration:underline">paste the rows instead</b></p>'+
+      '<textarea id="bi-paste" style="display:none;width:100%;height:110px" placeholder="Copy the rows out of the statement and paste them here"></textarea>'+
+
+      '<div id="bi-setup" style="display:none">'+
+        '<p class="hint" id="bi-summary" style="margin-top:14px"></p>'+
+
+        '<div class="bgroup"><b>Which dates</b>'+
+          '<div class="bchips" id="bi-months"></div>'+
+          '<div class="fields" style="margin-top:8px">'+
+            '<div class="field"><label>From</label><input id="bi-from" type="date"></div>'+
+            '<div class="field"><label>To</label><input id="bi-to" type="date"></div>'+
+          '</div></div>'+
+
+        '<div class="bgroup" id="bi-acctwrap"><b>Which bank account</b><div class="bchips" id="bi-accts"></div></div>'+
+        '<div class="bgroup" id="bi-curwrap"><b>Which currency</b><div class="bchips" id="bi-curs"></div></div>'+
+        '<div class="bgroup" id="bi-typewrap"><b>Which kinds of transaction</b><div class="bchips" id="bi-types"></div></div>'+
+
+        '<div class="fields" style="margin-top:14px">'+
+          '<div class="field"><label>Goes into</label><select id="bi-acct">'+
+            visibleAccounts().map(function(a){
+              return '<option value="'+esc(a.id)+'"'+(a.id===target.id?" selected":"")+'>'+
+                esc(a.name)+'</option>'; }).join("")+'</select></div>'+
+          '<div class="field"><label>Pay by</label><div class="blocked">BANK <span>always</span></div></div>'+
+          '<div class="field wide"><label>Block</label>'+
+            '<label class="chk"><input type="checkbox" id="bi-keeptop" checked> '+
+            'Keep together at top + 2 blank rows</label></div>'+
+          '<div class="field" id="bi-wherewrap" style="display:none"><label>Place</label>'+
+            '<select id="bi-where"><option value="top">At the top</option>'+
+            '<option value="bottom">At the bottom</option></select></div>'+
+          '<div class="field"><label>Ambiguous dates</label><select id="bi-dmy">'+
+            '<option value="1">31/12/2026 — day first</option>'+
+            '<option value="0">12/31/2026 — month first</option></select></div>'+
+        '</div>'+
+
+        '<p class="hint" id="bi-fx"></p>'+
+
+        '<details id="bi-coldet" style="margin-top:12px"><summary style="cursor:pointer;font-size:12px;color:var(--ink-3)">Columns</summary>'+
+          '<div class="fields" style="margin-top:10px">'+
+            ['date|Date','desc|Description','notes|Notes','amount|Amount','out|Money out','in|Money in',
+             'cur|Currency','acct|Account','type|Transaction type','bal|Balance'].map(function(o){
+              var p=o.split("|");
+              return '<div class="field"><label>'+esc(p[1])+'</label><select id="bi-c-'+p[0]+'"></select></div>';
+            }).join("")+
+          '</div></details>'+
+
+        '<label class="chk" style="margin-top:10px"><input type="checkbox" id="bi-showall"> '+
+          'Also show the lines I already have</label>'+
+        '<p class="hint" id="bi-recon"></p>'+
+        '<div id="bi-prev" style="max-height:300px;overflow:auto;margin-top:10px;border:1px solid var(--line);border-radius:10px"></div>'+
+      '</div>'+
+    '</div>'+
+    '<footer><span class="hint" id="bi-status" style="margin-right:auto"></span>'+
+      '<button class="tbtn ghost" data-close>Cancel</button>'+
+      '<button class="tbtn primary" id="bi-go" disabled>Add</button></footer>');
+
+  var drop=$("#bi-drop"), file=$("#bi-file");
+  drop.onclick=function(){ $("#bi-file").click(); };
+  drop.ondragover=function(e){ e.preventDefault(); drop.style.borderColor="var(--accent)"; };
+  drop.ondragleave=function(){ drop.style.borderColor="var(--line)"; };
+  drop.ondrop=function(e){
+    e.preventDefault(); drop.style.borderColor="var(--line)";
+    if(e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  };
+  file.onchange=function(){ if(file.files[0]) loadFile(file.files[0]); };
+  $("#bi-paste-toggle").onclick=function(){
+    var t=$("#bi-paste");
+    t.style.display = t.style.display==="none" ? "" : "none";
+    if(t.style.display==="") t.focus();
+  };
+  $("#bi-paste").oninput=function(){
+    if(!this.value.trim()) return;
+    st.name="pasted rows"; st.sheets=[];
+    st.grid=parseDelimited(this.value, sniffDelim(this.value));
+    afterGrid();
+  };
+  $("#bi-keeptop").onchange=function(){
+    $("#bi-wherewrap").style.display = this.checked ? "none" : "";
+    if(this.checked) $("#bi-where").value="top";
+  };
+  $("#bi-go").onclick=doImportNow;
+  $("#bi-acct").onchange=function(){
+    var id=$("#bi-acct").value;
+    var next=S.accounts.filter(function(a){ return a.id===id; })[0];
+    if(!next) return;
+    target=next; lsSet("bankacct", target.id);
+    /* the currency chips follow the account you picked — unless you have
+       already set them yourself, in which case they are left alone */
+    if(!st.curTouched && Object.keys(st.curs).length){
+      Object.keys(st.curs).forEach(function(c){ st.curs[c] = (!c || c===target.currency); });
+      drawChoices();
+    }
+    refresh();
+  };
+
+  function setStatus(m){ var el=$("#bi-status"); if(el) el.innerHTML=m; }
+  function shrinkDrop(){
+    var d=$("#bi-drop"); if(!d) return;
+    d.style.padding="12px 14px"; d.style.textAlign="left"; d.style.borderStyle="solid";
+    d.innerHTML='<div style="display:flex;align-items:center;gap:10px"><span style="font-size:18px">📄</span>'+
+      '<b style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(st.name)+'</b>'+
+      '<span class="hint">change</span></div>'+
+      '<input type="file" id="bi-file" accept=".csv,.xlsx,.xls,text/csv" style="display:none">';
+    var f=$("#bi-file");
+    f.onchange=function(){ if(f.files[0]) loadFile(f.files[0]); };
+    d.onclick=function(){ f.click(); };
+  }
+  function loadFile(f){
+    st.name=f.name;
+    setStatus("Reading "+esc(f.name)+"…");
+    if(/\.csv$|\.txt$/i.test(f.name) || f.type==="text/csv"){
+      var fr=new FileReader();
+      fr.onload=function(){ st.sheets=[]; st.grid=parseDelimited(String(fr.result)); afterGrid(); };
+      fr.onerror=function(){ setStatus("Could not read that file."); };
+      fr.readAsText(f);
+      return;
+    }
+    var fr2=new FileReader();
+    fr2.onload=function(){
+      zipEntries(fr2.result).then(function(map){
+        var sheets=xlsxSheets(map).filter(function(s){ return s.rows.length; });
+        if(!sheets.length) throw new Error("No rows found in that workbook.");
+        st.sheets=sheets; st.grid=sheets[0].rows;
+        afterGrid();
+      }).catch(function(err){ setStatus(esc(err.message||"Could not open that file.")); });
+    };
+    fr2.readAsArrayBuffer(f);
+  }
+
+  /* ---------------------------------------------- file -> rows we can use - */
+  function afterGrid(keepMap){
+    if(!$("#bi-setup")) return;
+    if(!st.grid.length){ setStatus("Nothing readable in that file."); return; }
+    var read=readStatement(st.grid);
+    st.body=read.body; st.guessed=read.guessed;
+    st.head = read.headerRow>=0 ? st.grid[read.headerRow] : null;
+    st.cols=0; st.grid.forEach(function(r){ st.cols=Math.max(st.cols,r.length); });
+    if(!keepMap) st.map=read.map;
+    if(st.name && st.name!=="pasted rows") shrinkDrop();
+    $("#bi-setup").style.display="";
+    if(st.guessed) $("#bi-coldet").open=true;
+    fillColumnPickers();
+    buildRows(true);
+  }
+  function fillColumnPickers(){
+    ["date","desc","notes","amount","out","in","cur","acct","type","bal"].forEach(function(k){
+      var sel=$("#bi-c-"+k); if(!sel) return;
+      sel.innerHTML='<option value="-1">— none —</option>'+
+        Array.apply(null,{length:st.cols}).map(function(_,c){
+          var label = st.head && String(st.head[c]||"").trim()
+            ? String(st.head[c]).trim().slice(0,28)
+            : "Column "+String.fromCharCode(65+c);
+          return '<option value="'+c+'">'+esc(label)+'</option>';
+        }).join("");
+      sel.value=String(st.map[k]==null ? -1 : st.map[k]);
+      sel.onchange=function(){
+        var v=+this.value;
+        if(v<0) delete st.map[k]; else st.map[k]=v;
+        buildRows(true);
+      };
+    });
+    $("#bi-dmy").onchange=function(){ st.dmy=this.value==="1"; buildRows(true); };
+    $("#bi-showall").onchange=drawPreview;
+  }
+  /* every usable line in the file, before any filtering */
+  function buildRows(resetFilters){
+    var m=st.map;
+    var rows=[];
+    (st.body||[]).forEach(function(r){
+      var d = m.date!=null ? parseDate(r[m.date], st.dmy) : "";
+      var amt=NaN;
+      if(m.amount!=null) amt=parseAmount(r[m.amount]);
+      else {
+        var o=m.out!=null?parseAmount(r[m.out]):NaN, i=m["in"]!=null?parseAmount(r[m["in"]]):NaN;
+        if(!isNaN(o)&&Math.abs(o)>0) amt=-Math.abs(o);
+        else if(!isNaN(i)&&Math.abs(i)>0) amt=Math.abs(i);
+      }
+      var desc = m.desc!=null ? String(r[m.desc]||"").trim() : "";
+      var note = m.notes!=null ? String(r[m.notes]||"").trim() : "";
+      if(/^n\/a$/i.test(note)) note="";
+      /* description and notes together — unless the bank has written the same
+         thing twice, which Wio does on every currency exchange */
+      var details = desc;
+      if(note && note.toLowerCase()!==desc.toLowerCase())
+        details = desc ? desc+" — "+note : note;
+      var cur = m.cur!=null ? String(r[m.cur]||"").trim().toUpperCase() : "";
+      var acct= m.acct!=null ? String(r[m.acct]||"").trim() : "";
+      var type= m.type!=null ? String(r[m.type]||"").trim() : "";
+      if(!d && isNaN(amt) && !details) return;
+      rows.push({date:d, desc:desc, note:note, details:details||"(no description)",
+                 amount:amt, cur:cur, acct:acct, type:type,
+                 ok: !!d && !isNaN(amt) && amt!==0});
+    });
+    st.rows=rows;
+    if(resetFilters) resetChoices();
+    drawChoices();
+    refresh();
+  }
+  function resetChoices(){
+    var dates=st.rows.filter(function(r){ return r.date; }).map(function(r){ return r.date; }).sort();
+    st.from=dates[0]||""; st.to=dates[dates.length-1]||"";
+    $("#bi-from").value=st.from; $("#bi-to").value=st.to;
+    st.accts={}; st.curs={}; st.types={};
+    st.rows.forEach(function(r){
+      if(r.acct) st.accts[r.acct]=true;
+      if(r.cur)  st.curs[r.cur]=true;
+      if(r.type) st.types[r.type]=true;
+    });
+    /* a currency the SIAM sheet is not kept in starts switched off — bringing
+       USD lines into an AED book without saying so would quietly wreck it */
+    Object.keys(st.curs).forEach(function(c){ if(c && c!==target.currency) st.curs[c]=false; });
+    st.convert=false; st.curTouched=false;
+  }
+  function drawChoices(){
+    /* months, so a file covering more than one is one tap per month */
+    var months={};
+    st.rows.forEach(function(r){ if(r.date) months[monthKey(r.date)]=1; });
+    var keys=Object.keys(months).sort();
+    var mw=$("#bi-months");
+    mw.innerHTML = keys.length<2 ? "" :
+      '<button class="bchip" data-mon="all">Everything</button>'+
+      keys.map(function(k){ return '<button class="bchip" data-mon="'+esc(k)+'">'+esc(monthName(k))+'</button>'; }).join("");
+    $$("#bi-months [data-mon]").forEach(function(b){
+      b.onclick=function(){
+        var k=b.dataset.mon;
+        if(k==="all"){
+          var all=st.rows.filter(function(r){return r.date;}).map(function(r){return r.date;}).sort();
+          st.from=all[0]||""; st.to=all[all.length-1]||"";
+        } else {
+          var inMon=st.rows.filter(function(r){ return monthKey(r.date)===k; }).map(function(r){return r.date;}).sort();
+          st.from=inMon[0]||""; st.to=inMon[inMon.length-1]||"";
+        }
+        $("#bi-from").value=st.from; $("#bi-to").value=st.to;
+        refresh();
+      };
+    });
+    $("#bi-from").onchange=function(){ st.from=this.value; refresh(); };
+    $("#bi-to").onchange=function(){ st.to=this.value; refresh(); };
+
+    chipGroup("#bi-accts", "#bi-acctwrap", st.accts, "acct", function(v){
+      var n=st.rows.filter(function(r){ return r.acct===v; });
+      var cur=n.length?n[0].cur:"";
+      return (String(v).length>8 ? "…"+String(v).slice(-8) : v)+(cur?" · "+cur:"")+" · "+n.length;
+    });
+    chipGroup("#bi-curs", "#bi-curwrap", st.curs, "cur", function(v){
+      return v+" · "+st.rows.filter(function(r){ return r.cur===v; }).length;
+    });
+    chipGroup("#bi-types", "#bi-typewrap", st.types, "type", function(v){
+      return v+" · "+st.rows.filter(function(r){ return r.type===v; }).length;
+    });
+  }
+  function chipGroup(sel, wrapSel, obj, kind, label){
+    var keys=Object.keys(obj);
+    $(wrapSel).style.display = keys.length>1 ? "" : "none";
+    if(keys.length<2){ $(sel).innerHTML=""; return; }
+    $(sel).innerHTML=keys.sort().map(function(v){
+      return '<button class="bchip'+(obj[v]?" on":"")+'" data-k="'+esc(kind)+'" data-v="'+esc(v)+'">'+esc(label(v))+'</button>';
+    }).join("");
+    $$(sel+" [data-v]").forEach(function(b){
+      b.onclick=function(){
+        var o = b.dataset.k==="acct"?st.accts:(b.dataset.k==="cur"?st.curs:st.types);
+        if(b.dataset.k==="cur") st.curTouched=true;
+        o[b.dataset.v]=!o[b.dataset.v];
+        b.classList.toggle("on", o[b.dataset.v]);
+        refresh();
+      };
+    });
+  }
+  /* the lines that survive every filter */
+  function chosen(){
+    return st.rows.filter(function(r){
+      if(!r.ok) return false;
+      if(st.from && r.date<st.from) return false;
+      if(st.to   && r.date>st.to)   return false;
+      if(r.acct && st.accts[r.acct]===false) return false;
+      if(r.cur  && st.curs[r.cur]===false)  return false;
+      if(r.type && st.types[r.type]===false) return false;
+      return true;
+    });
+  }
+  function refresh(){
+    markDuplicates();
+    drawPreview();
+  }
+  /* Counted, not just matched: two payments of the same amount on the same
+     day are two payments, and only the ones beyond what the ledger already
+     holds are new.                                                          */
+  function markDuplicates(){
+    var have={};
+    target.entries.forEach(function(e){
+      if(isHidden(e)) return;
+      var k=e.date+"|"+(Math.round((Number(e.amount)||0)*100)/100);
+      (have[k]=have[k]||[]).push(e);
+    });
+    var used={};
+    st.rows.forEach(function(r){ r.dupe=null; });
+    chosen().forEach(function(r){
+      var amt=finalAmount(r);
+      var k=r.date+"|"+(Math.round(amt*100)/100);
+      var list=have[k]||[], n=used[k]||0;
+      if(list.length>n){ r.dupe=list[n]; used[k]=n+1; }
+    });
+  }
+  function finalAmount(r){
+    if(!r.cur || r.cur===target.currency) return r.amount;
+    return st.convert ? Math.round(r.amount*USD_RATE*100)/100 : r.amount;
+  }
+  function finalDetails(r){
+    if(st.convert && r.cur && r.cur!==target.currency)
+      return r.details+" ("+r.cur+" "+Math.abs(r.amount).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" @ "+USD_RATE+")";
+    return r.details;
+  }
+  function drawPreview(){
+    var pick=chosen();
+    var neu=pick.filter(function(r){ return !r.dupe; });
+    var dup=pick.filter(function(r){ return r.dupe; });
+    var showAll=$("#bi-showall").checked;
+    var show=showAll?pick:neu;
+
+    /* what is in this file at all */
+    var dates=st.rows.filter(function(r){return r.date;}).map(function(r){return r.date;}).sort();
+    var nAcct=Object.keys(st.accts).length, nCur=Object.keys(st.curs).length;
+    $("#bi-summary").innerHTML = !dates.length ? "" :
+      "<b>"+st.rows.length+" lines</b> in this file, "+esc(fmtDate(dates[0]))+" to "+
+      esc(fmtDate(dates[dates.length-1]))+
+      (nAcct>1?", "+nAcct+" bank accounts":"")+(nCur>1?", "+nCur+" currencies":"")+"."+
+      (st.guessed?' <b style="color:var(--warn)">No column headings recognised — check the Columns list below.</b>':"");
+
+    /* mixed currency is the one thing that can silently corrupt a ledger */
+    var offCur={};
+    pick.forEach(function(r){ if(r.cur && r.cur!==target.currency) offCur[r.cur]=(offCur[r.cur]||0)+1; });
+    var offKeys=Object.keys(offCur);
+    $("#bi-fx").innerHTML = !offKeys.length ? "" :
+      '<b style="color:var(--warn)">'+offKeys.map(function(c){ return offCur[c]+" "+c+" line"+(offCur[c]===1?"":"s"); }).join(", ")+
+      '</b> selected, but '+esc(target.name)+' is kept in '+esc(target.currency)+'. '+
+      '<label class="chk" style="display:inline-flex;margin-left:6px"><input type="checkbox" id="bi-convert"'+
+      (st.convert?" checked":"")+'> convert at '+USD_RATE+'</label>'+
+      (st.convert?"":" Leave it unticked and switch those currencies off above, or the figures will be wrong.");
+    var cv=$("#bi-convert");
+    if(cv) cv.onchange=function(){ st.convert=this.checked; refresh(); };
+
+    $("#bi-prev").innerHTML='<table><thead><tr><th style="width:32px"></th><th>Date</th>'+
+      '<th>Details of payment</th><th style="text-align:right">Total</th></tr></thead><tbody>'+
+      show.slice(0,400).map(function(r){
+        var idx=st.rows.indexOf(r), amt=finalAmount(r);
+        return '<tr'+(r.dupe?' style="opacity:.5"':"")+'><td>'+
+          (r.dupe? '<span title="already in the ledger">✓</span>'
+                 : '<input type="checkbox" data-bi="'+idx+'" checked style="width:19px;height:19px">')+
+          '</td><td style="white-space:nowrap">'+esc(fmtDate(r.date))+'</td>'+
+          '<td>'+esc(finalDetails(r))+(r.dupe?'<br><span class="hint">already there</span>':"")+'</td>'+
+          '<td class="n" style="color:'+(amt<0?"var(--neg)":"var(--pos)")+'">'+
+            esc(fmt(amt, target.currency))+'</td></tr>';
+      }).join("")+'</tbody></table>'+
+      (show.length>400?'<p class="hint" style="padding:10px">Showing the first 400 of '+show.length+'.</p>':"")+
+      (show.length?"":'<p class="hint" style="padding:16px;text-align:center">Nothing selected. Widen the dates or switch a filter back on.</p>');
+    $$("#bi-prev [data-bi]").forEach(function(c){ c.onchange=count; });
+
+    var sum=0; neu.forEach(function(r){ sum+=finalAmount(r); });
+    $("#bi-recon").innerHTML = neu.length
+      ? "These "+neu.length+" come to <b>"+esc(fmt(sum,target.currency,{plus:true}))+"</b>, and would take "+
+        esc(target.name)+" from <b>"+esc(fmt(totals(target).bal,target.currency))+"</b> to <b>"+
+        esc(fmt(totals(target).bal+sum,target.currency))+"</b>."
+      : "";
+    count();
+    var bits=['<b>'+neu.length+' new</b>'];
+    if(dup.length) bits.push(dup.length+" already here");
+    var skipped=st.rows.filter(function(r){return r.ok;}).length-pick.length;
+    if(skipped>0) bits.push(skipped+" filtered out");
+    setStatus(bits.join(" · "));
+  }
+  function count(){
+    var n=$$("#bi-prev [data-bi]:checked").length;
+    $("#bi-go").disabled=!n;
+    $("#bi-go").textContent = n? "Add "+n+" entr"+(n===1?"y":"ies")+" to "+target.name : "Add";
+  }
+
+  function doImportNow(){
+    var picked=$$("#bi-prev [data-bi]:checked").map(function(c){ return st.rows[+c.dataset.bi]; })
+      .filter(function(r){ return r && r.ok && !r.dupe; });
+    if(!picked.length) return;
+    picked.sort(function(a,b){ return a.date<b.date?-1:(a.date>b.date?1:0); });
+    var keepTop=$("#bi-keeptop").checked;
+    var where = keepTop ? "top" : $("#bi-where").value;
+    var rows=picked.map(function(r){
+      return {id:uid(), date:r.date, details:finalDetails(r), payBy:"BANK",
+              amount:finalAmount(r), tag:""};
+    });
+    var added=rows.length;
+    if(keepTop){                       /* the two spacer rows travel with the block */
+      rows.push({id:uid(), date:"", details:"", payBy:"BANK", amount:0, tag:""});
+      rows.push({id:uid(), date:"", details:"", payBy:"BANK", amount:0, tag:""});
+    }
+    var base=target.entries.reduce(function(m,x){ return Math.min(m,x.pos); },0);
+    rows.forEach(function(r,i){
+      DB.entries[r.id]=Object.assign({accountId:target.id, deleted:"",
+        pos: where==="bottom" ? (1000+i) : (base-rows.length+i),
+        createdBy:AUTH.user, createdAt:new Date().toISOString(),
+        updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, r);
+    });
+    var chunks=[];
+    for(var i=0;i<rows.length;i+=120) chunks.push(rows.slice(i,i+120));
+    for(var c=chunks.length-1;c>=0;c--)
+      op({t:"import", accountId:target.id, where:where, rows:chunks[c], via:"bank"});
+    S.activeId=target.id;
+    closeModal(); rebuild(); renderAll();
+    toast("Added "+added+" entr"+(added===1?"y":"ies")+" to "+target.name+
+      (keepTop?", kept together with 2 blank rows under them":""));
+  }
+}
+
 function looksAmount(v){
   var t=String(v==null?"":v).trim();
   if(!t) return false;
@@ -3886,12 +4666,14 @@ var PERMROWS = [
   {k:"edit",         l:"Add and edit",      h:"add entries, change cells, move rows"},
   {k:"del",          l:"Delete",            h:"delete entries, accounts and vehicles"},
   {k:"undo",         l:"Undo others",       h:"reverse someone else's change from the activity feed"},
-  {k:"importExport", l:"Import / export",   h:"paste rows in, take data out"}
+  {k:"importExport", l:"Import / export",   h:"paste rows in, take data out"},
+  {k:"bank",         l:"Bank statements",   h:"import a Wio CSV statement into the SIAM sheet"}
 ];
 function permVal(cfg, name, k){
   if((cfg.admins||[]).indexOf(name)>-1) return true;
   var p=(cfg.perms||{})[name]||{};
   if(k==="importExport") return p.importExport===true;
+  if(k==="bank") return p.bank===true;
   return p[k]!==false;
 }
 function openAdmin(resume){
@@ -4418,7 +5200,7 @@ function bind(){
   $("#sel-all-box").onclick=function(ev){ ev.stopPropagation(); selectAll(this.checked); };
   $("#btn-sort").onclick=sortByDate;
   $("#btn-print").onclick=function(){ window.print(); };
-  $("#btn-import").onclick=openImport;
+  $("#btn-import").onclick=openImportChooser;
   $("#btn-export").onclick=openExport;
   $("#btn-accounts").onclick=openAccounts;
   $("#btn-admin").onclick=openAdmin;
