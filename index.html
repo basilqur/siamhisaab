@@ -1313,7 +1313,7 @@ function acct(){
 }
 function mainCurrency(){
   var count={},best="AED",n=0;
-  S.accounts.forEach(function(a){ count[a.currency]=(count[a.currency]||0)+1; });
+  (visibleAccounts().length?visibleAccounts():S.accounts).forEach(function(a){ count[a.currency]=(count[a.currency]||0)+1; });
   Object.keys(count).forEach(function(c){ if(count[c]>n){n=count[c];best=c;} });
   return best;
 }
@@ -1482,13 +1482,40 @@ function withRem(e,on){ return withTok(e,"rem",on); }
 function withHide(e,on){ return withTok(e,"hide",on); }
 function remList(){
   var out=[];
-  (isAll()?S.accounts:[acct()]).forEach(function(a){
+  (isAll()?visibleAccounts():[acct()]).forEach(function(a){
     (a.entries||[]).forEach(function(e){ if(isRem(e)) out.push({e:e,acc:a}); });
   });
   return out;
 }
 function tagLabel(id){ return (S.tagLabels&&S.tagLabels[id])||(TAGS.filter(function(t){return t.id===id;})[0]||{}).label||id; }
 function includedInAll(a){ return canSeeAccount(a.id) && !EXCLUDE_FROM_ALL.test(a.name); }
+/* ---------------------------------------------------------- WHAT YOU SEE --
+   An account someone cannot open must not leak out of the side of the app
+   either — not as a balance on the ALL sheet, not as a line in the activity
+   feed, not in the change log, not in an export. The audit trail names its
+   account, so that name is what we match on.                               */
+function visibleNames(){
+  var m={};
+  visibleAccounts().forEach(function(a){ m[String(a.name||"").trim().toUpperCase()]=1; });
+  return m;
+}
+function canSeeAudit(r){
+  if(isAdmin()) return true;
+  var acc=String((r&&r.account)||"").trim();
+  if(!acc) return true;                       /* signing in, and other account-less notes */
+  var up=acc.toUpperCase();
+  if(up==="SARIM CARS") return can("cars");
+  if(up==="ADMIN") return false;
+  var names=visibleNames();
+  if(!names[up]) return false;
+  /* a MOVE names the account it came from as well — do not leak that either */
+  if(String(r.action)==="MOVE"){
+    var from=String(r.oldValue||"").trim().toUpperCase();
+    if(from && !names[from]) return false;
+  }
+  return true;
+}
+function visibleAudit(list){ return (list||[]).filter(canSeeAudit); }
 
 /* ============================================================ RENDER ===== */
 function renderAll(){
@@ -1703,7 +1730,7 @@ function renderAllView(){
     '<div class="alltot"><div class="k">Receivable − payable</div><div class="v num">'+fmt(T.recv-T.pay,main)+'</div>'+
     '<div class="s">'+fmt(T.recv,main)+' owed to you · '+fmt(T.pay,main)+' you owe</div></div></div>';
 
-  var rows=S.accounts.map(function(a){
+  var rows=visibleAccounts().map(function(a){
     var t=totals(a), inc=includedInAll(a);
     return '<tr class="click '+(inc?"":"ex")+'" data-go="'+a.id+'">'+
       '<td>'+esc(a.name)+(inc?'':'<span class="exbadge">not counted</span>')+'</td>'+
@@ -1728,7 +1755,7 @@ function renderAllView(){
   $$("#allview tr[data-go]").forEach(function(tr){
     tr.onclick=function(){ S.activeId=tr.dataset.go; cacheAll(); renderAll(); };
   });
-  $("#footnote").innerHTML='<b>'+S.accounts.length+'</b> accounts · read-only summary · open an account to make changes';
+  $("#footnote").innerHTML='<b>'+visibleAccounts().length+'</b> accounts · read-only summary · open an account to make changes';
 }
 function renderReminders(){
   var list=remList(), a=acct();
@@ -1794,7 +1821,7 @@ function renderSide(){
 }
 function allSide(kind){
   var out=[];
-  S.accounts.forEach(function(a){ (kind==="pay"?a.pay:a.recv).forEach(function(x){ out.push({x:x,acc:a}); }); });
+  visibleAccounts().forEach(function(a){ (kind==="pay"?a.pay:a.recv).forEach(function(x){ out.push({x:x,acc:a}); }); });
   return out;
 }
 function sideItem(o,kind){
@@ -1906,7 +1933,7 @@ function undoAudit(r){
   toast("Undone — the undo is recorded in History too");
 }
 function renderFeed(){
-  var rows=(DB.audit||[]).slice(0,25);
+  var rows=visibleAudit(DB.audit).slice(0,25);
   $("#feed").innerHTML = rows.length ? rows.map(function(r,i){
     return '<div class="fi"><div class="av" style="background:'+personColor(r.user)+'">'+esc(initials(r.user))+'</div>'+
       '<div class="tx"><b>'+esc(r.user)+'</b> '+auditLine(r)+
@@ -1914,7 +1941,7 @@ function renderFeed(){
       (canUndo(r)?'<button class="undo" data-undo="'+i+'" title="Undo this change">undo</button>':'')+'</div>';
   }).join("") : '<div class="fi" style="color:var(--ink-3)">Nothing yet — changes appear here as they happen.</div>';
   $$("#feed [data-undo]").forEach(function(b){
-    b.onclick=function(){ undoAudit((DB.audit||[])[+b.dataset.undo]); };
+    b.onclick=function(){ undoAudit(rows[+b.dataset.undo]); };
   });
 }
 
@@ -1970,7 +1997,7 @@ function renderBulk(){
   $("#bulk-hide").onclick=function(){ toggleHide(Object.keys(PICK), true); };
   $("#bulk-show").onclick=function(){ toggleHide(Object.keys(PICK), false); };
   var mv=$("#bulk-move");
-  mv.innerHTML='<option value="">Move to…</option>'+S.accounts.filter(function(a){return a.id!==S.activeId;})
+  mv.innerHTML='<option value="">Move to…</option>'+visibleAccounts().filter(function(a){return a.id!==S.activeId;})
     .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption();
 }
 function bulkTag(tag){
@@ -3422,7 +3449,7 @@ function openCarImport(){
 /* ====================================================== CONTEXT MENU ===== */
 function openCtx(x,y,id){
   var e=findEntry(id); if(!e) return;
-  var c=$("#ctx"), others=S.accounts.filter(function(a){return a.id!==S.activeId;});
+  var c=$("#ctx"), others=visibleAccounts().filter(function(a){return a.id!==S.activeId;});
   c.innerHTML='<div class="lab">Colour tag</div><div class="swatches">'+
     TAGS.map(function(t){ return '<button class="sw2 '+(colourOf(e)===t.id?"on":"")+'" style="background:'+t.color+'" data-tag="'+t.id+'" title="'+esc(tagLabel(t.id))+'"></button>'; }).join("")+
     '<button class="sw2 '+(!colourOf(e)?"on":"")+'" style="background:var(--panel-2);color:var(--ink-3);border:1px dashed var(--line)" data-tag="" title="No tag">✕</button></div>'+
@@ -3576,9 +3603,9 @@ function openHistory(entryId){
   var call = entryId ? api("history",{entryId:entryId}) : api("audit",{limit:600});
   call.then(function(res){
     if(!res||!res.ok){ $("#h-body").innerHTML='<div class="hint">Could not load the log. '+esc((res&&res.message)||"")+'</div>'; return; }
-    rows=res.rows||[]; draw();
+    rows=visibleAudit(res.rows||[]); draw();
   }).catch(function(){
-    rows=DB.audit||[]; draw();
+    rows=visibleAudit(DB.audit); draw();
     var s=$("#h-sub"); if(s) s.textContent="Offline — showing what is cached on this device.";
   });
   if($("#h-q")) $("#h-q").addEventListener("input",draw);
@@ -3641,7 +3668,7 @@ function openImport(){
       '<div class="field"><label>Ambiguous dates</label><select id="im-dmy"><option value="1">31/12/2026 (day first)</option><option value="0">12/31/2026 (month first)</option></select></div>'+
       '<div class="field"><label>Place</label><select id="im-where"><option value="top">At the top</option><option value="bottom">At the bottom</option></select></div>'+
       '<div class="field"><label>Block</label><label class="chk" id="im-keeptop-wrap"><input type="checkbox" id="im-keeptop"> Keep together at top + 2 blank rows</label></div>'+
-      '<div class="field"><label>Import into</label><select id="im-acct">'+S.accounts.map(function(a){return '<option value="'+a.id+'" '+(a.id===S.activeId?"selected":"")+'>'+esc(a.name)+'</option>';}).join("")+'</select></div>'+
+      '<div class="field"><label>Import into</label><select id="im-acct">'+visibleAccounts().map(function(a){return '<option value="'+a.id+'" '+(a.id===S.activeId?"selected":"")+'>'+esc(a.name)+'</option>';}).join("")+'</select></div>'+
     '</div><div id="im-status" class="hint"></div><div class="prev" id="im-prev" style="display:none"></div>'+
   '</div><footer><span class="hint" id="im-count" style="margin-right:auto"></span><button class="tbtn ghost" data-close>Cancel</button><button class="tbtn primary" id="im-go" disabled>Import</button></footer>');
   var parsed=[], src=$("#im-src");
@@ -4499,8 +4526,8 @@ function openExport(){
     '<button class="tbtn ghost" id="ex-log" style="height:42px;justify-content:flex-start">🕘 <b>Change log</b></button>'+
   '</div></div><footer><button class="tbtn ghost" data-close>Close</button></footer>');
   if($("#ex-csv")) $("#ex-csv").onclick=function(){ exportCSV([acct()]); closeModal(); };
-  $("#ex-csv-all").onclick=function(){ exportCSV(S.accounts); closeModal(); };
-  $("#ex-json").onclick=function(){ download("hisaab-snapshot-"+stamp()+".json", JSON.stringify({accounts:S.accounts, exportedBy:AUTH.user, exportedAt:new Date().toISOString()},null,1), "application/json"); closeModal(); };
+  $("#ex-csv-all").onclick=function(){ exportCSV(visibleAccounts()); closeModal(); };
+  $("#ex-json").onclick=function(){ download("hisaab-snapshot-"+stamp()+".json", JSON.stringify({accounts:visibleAccounts(), exportedBy:AUTH.user, exportedAt:new Date().toISOString()},null,1), "application/json"); closeModal(); };
   $("#ex-log").onclick=function(){ closeModal(); openHistory(null); };
 }
 function download(name,text,mime){
