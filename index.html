@@ -953,7 +953,9 @@ var Q    = [];
 var S    = {accounts:[], cars:[], activeId:null, carsView:"register", theme:"light", tagLabels:{}};
 var ui   = {q:"", tag:"all", payBy:"all", month:"all", lastPick:null, cq:"", cstatus:"all", cbatch:"all", cmodel:"all"};
 var PICK = {};
-var net  = {state:"live", lastErr:"", sending:false, lastPull:0, bannerHidden:false, hot:0, signal:"off"};
+var net  = {state:"live", lastErr:"", sending:false, pulling:false, lastPull:0, bannerHidden:false,
+            hot:0, signal:"off", rtt:700, fails:0, quiet:0, backoffUntil:0};
+var NET_TIMEOUT = 20000;   /* a request that has not answered by now is dead */
 var lastActivity = Date.now();
 var DEMO = false;
 
@@ -1122,20 +1124,47 @@ function apiNextForm(){
 }
 function apiWorked(){ if(lsGet("apibase","")!==apiBase()) lsSet("apibase",apiBase()); }
 
+/* Every request gets a hard time limit and is timed, because how long the
+   round trip actually takes is what the whole rhythm of the app is paced on.
+   A slow connection must make it ask LESS often, not pile requests on top of
+   each other until Google queues them and everything times out.            */
 function api(action, payload){
   payload = payload||{}; payload.action=action;
   if(action!=="login" && action!=="ping") payload.token=AUTH.token;
   var body = JSON.stringify(payload);
   if(DEMO) return Promise.resolve({ok:false,error:"DEMO"});
-  var url = apiBase();
-  return fetch(url,{method:"POST",body:body,headers:{"Content-Type":"text/plain;charset=utf-8"},redirect:"follow"})
+  var url = apiBase(), t0 = Date.now();
+  var ctrl = (typeof AbortController!=="undefined") ? new AbortController() : null;
+  var killer = setTimeout(function(){ if(ctrl) try{ ctrl.abort(); }catch(e){} }, NET_TIMEOUT);
+  var opts = {method:"POST", body:body, headers:{"Content-Type":"text/plain;charset=utf-8"}, redirect:"follow"};
+  if(ctrl) opts.signal = ctrl.signal;
+  return fetch(url, opts)
     .then(function(r){ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
     .catch(function(err){
-      if(body.length>5500){ apiNextForm(); throw err; }
-      return jsonp(payload, url);
+      if(body.length>5500) throw err;
+      return jsonp(payload, url);            /* same address, other transport */
     })
-    .then(function(res){ apiWorked(); return res; })
-    .catch(function(err){ apiNextForm(); throw err; });
+    .then(function(res){
+      clearTimeout(killer);
+      noteRtt(Date.now()-t0);
+      net.fails=0; net.backoffUntil=0; apiWorked();
+      return res;
+    })
+    .catch(function(err){
+      clearTimeout(killer);
+      net.fails++;
+      /* Only give up on this address after it has failed three times running.
+         Rotating on every blip made a flaky line alternate between a working
+         address and a broken one, which looked exactly like the app being
+         broken half the time.                                              */
+      if(net.fails>=3 && net.fails%3===0) apiNextForm();
+      net.backoffUntil = Date.now() + Math.min(1500*Math.pow(1.7, Math.min(net.fails,8)), 45000);
+      throw err;
+    });
+}
+function noteRtt(ms){
+  ms = Math.max(120, Math.min(ms, 30000));
+  net.rtt = Math.round(net.rtt*0.7 + ms*0.3);
 }
 function jsonp(payload, url){
   url = url || apiBase();
@@ -1149,18 +1178,53 @@ function jsonp(payload, url){
     document.body.appendChild(s);
   });
 }
+/* One dropped request is not "offline". A blip on a hotel wifi used to throw
+   the red banner up immediately and it never stopped flashing; now it takes
+   three failures in a row before the app claims anything is wrong.         */
 function setNet(state,msg){
   net.state=state; net.lastErr=msg||"";
   var el=$("#sync"); if(!el) return;
-  el.className="sync"+(state==="saving"?" saving":"")+(state==="off"?" off":"");
+  var reallyOff = state==="off" && net.fails>=3;
+  var wobbling  = state==="off" && !reallyOff;
+  el.className="sync"+(state==="saving"||wobbling?" saving":"")+(reallyOff?" off":"");
   var pend=Q.length;
   el.querySelector("span").textContent = DEMO ? "Demo"
-    : state==="off" ? (pend? pend+" waiting" : "Offline")
+    : reallyOff ? (pend? pend+" waiting" : "Offline")
+    : wobbling  ? "Reconnecting…"
     : state==="saving" ? (pend? "Saving "+pend+"…" : "Saving…") : "Live";
-  var b=$("#banner"), show = state==="off" && !net.bannerHidden && !DEMO;
+  var b=$("#banner"), show = reallyOff && !net.bannerHidden && !DEMO;
   b.classList.toggle("show", show);
   if(show) $("#banner-txt").innerHTML = "<b>Can't reach the ledger.</b> "+
     (pend? pend+" change"+(pend>1?"s":"")+" saved on this device, will upload automatically. " : "")+(msg?"("+esc(msg)+")":"");
+}
+
+/* --------------------------------------------------- DO NOT TOUCH MY EDIT --
+   A poll landing while a cell is open used to rebuild the table, throw the
+   caret away and jump the page. Nothing may redraw the ledger while an editor
+   is on screen: the data still merges, the drawing waits.                  */
+var RENDER_PENDING=false;
+function isEditing(){
+  return !!document.querySelector("#tbody .edit, #allview .edit, #carsbody .edit");
+}
+/* Redrawing the rows must never move the page. Both scrollers are put back:
+   the table's own on a laptop, the window on a phone where the whole page
+   scrolls instead.                                                         */
+function keepPlace(fn){
+  var tw=$("#tablewrap");
+  var top = tw ? tw.scrollTop : 0;
+  var wy  = window.scrollY || window.pageYOffset || 0;
+  var el=document.activeElement, id=el&&el.id, ss=null, se=null;
+  try{ ss=el.selectionStart; se=el.selectionEnd; }catch(e){}
+  fn();
+  if(tw && tw.scrollTop!==top) tw.scrollTop=top;
+  if((window.scrollY||window.pageYOffset||0)!==wy) window.scrollTo(0,wy);
+  if(id){
+    var n=document.getElementById(id);
+    if(n && n!==document.activeElement){
+      n.focus();
+      if(ss!=null){ try{ n.setSelectionRange(ss,se); }catch(e){} }
+    }
+  }
 }
 
 /* ------------------------------------------------------------ merge state */
@@ -1185,7 +1249,9 @@ function ingest(res){
   (res.deletedCars||[]).forEach(function(id){ delete DB.cars[id]; });
   (res.deletedCosts||[]).forEach(function(id){ delete DB.costs[id]; });
   if(res.audit && res.audit.length) DB.audit=res.audit;
-  rebuild(); cacheAll(); renderAll();
+  rebuild(); cacheAll();
+  if(isEditing()){ RENDER_PENDING=true; return; }   /* the drawing can wait */
+  renderAll();
   flashIds.forEach(function(id){
     var tr=$('#tbody tr[data-id="'+id+'"]');
     if(tr){ tr.classList.add("flash"); setTimeout(function(){ tr.classList.remove("flash"); },1800); }
@@ -1328,7 +1394,8 @@ function op(o){
 }
 var flushTimer=null, backoff=1000;
 function flush(){
-  if(DEMO || net.sending || !Q.length || !AUTH.token) return;
+  if(DEMO || net.sending || net.pulling || !Q.length || !AUTH.token) return;
+  if(net.backoffUntil && Date.now()<net.backoffUntil) return;
   net.sending=true; setNet("saving");
   var batch=Q.slice(0,25);
   api("push",{ops:batch, since:DB.since, rev:DB.rev}).then(function(res){
@@ -1346,8 +1413,8 @@ function flush(){
 function retry(msg){
   setNet("off", msg);
   clearTimeout(flushTimer);
-  backoff=Math.min(backoff*1.8, 30000);
-  flushTimer=setTimeout(flush, backoff);
+  backoff=Math.min(Math.max(backoff*1.8, 1500), 45000);
+  flushTimer=setTimeout(function(){ if(!document.hidden) flush(); }, backoff);
 }
 
 /* ---------------------------------------------------------------- polling */
@@ -1363,25 +1430,58 @@ function othersOnline(){
   (DB.online||[]).forEach(function(o){ if(o.user!==AUTH.user) n++; });
   return n;
 }
+/* How long to wait before asking again. The floor is twice the round trip we
+   are actually measuring, so a fast line stays snappy and a slow one stops
+   stacking requests on top of each other — which was the whole failure.    */
 function pollWait(){
-  if(document.hidden)                       return 1e9;   /* a hidden tab asks nothing */
-  if(net.signal==="on")                     return 25000; /* being told, so barely ask */
-  if(net.hot > Date.now())                  return 1400;  /* something is happening */
-  if(Date.now()-lastActivity > 180000)      return 30000; /* you have wandered off */
-  return othersOnline() ? 3000 : 8000;                    /* nobody else on = nothing to miss */
+  if(document.hidden) return 1e9;
+  var floor = Math.max(1200, net.rtt*2);
+  if(net.signal==="on")                return Math.max(25000, floor);
+  if(net.hot > Date.now())             return Math.max(1500,  floor);
+  if(Date.now()-lastActivity > 180000) return Math.max(30000, floor);
+  return Math.max(othersOnline() ? 4000 : 10000, floor);
+}
+/* One self-rescheduling timer instead of three setIntervals. A background tab
+   stops it dead — nothing is asked, nothing is drawn, no quota is spent —
+   and coming back to the tab starts it again with an immediate catch-up.   */
+var loopTimer=null, feedTimer=null;
+function startLoops(){
+  stopLoops();
+  (function tick(){
+    loopTimer=setTimeout(function(){
+      if(!document.hidden){
+        if(RENDER_PENDING && !isEditing()){ RENDER_PENDING=false; renderAll(); }
+        pollTick();
+        if(Q.length && !net.sending && !net.pulling) flush();
+      }
+      tick();
+    }, 900);
+  })();
+  feedTimer=setInterval(function(){ if(!document.hidden) renderFeed(); }, 60000);
+}
+function stopLoops(){
+  clearTimeout(loopTimer); loopTimer=null;
+  clearInterval(feedTimer); feedTimer=null;
 }
 function pollTick(force){
-  if(DEMO || !AUTH.token || document.hidden || net.sending) return;
+  if(DEMO || !AUTH.token || document.hidden) return;
+  if(net.pulling || net.sending) return;                        /* never two at once */
+  if(!force && isEditing()) return;                             /* you are mid-edit */
   if(!force && Date.now()-net.lastPull < pollWait()) return;
-  net.lastPull=Date.now();
+  if(!force && net.backoffUntil && Date.now() < net.backoffUntil) return;
+  net.pulling=true; net.lastPull=Date.now();
   api("pull",{rev:DB.rev, since:DB.since}).then(function(res){
+    net.pulling=false;
     if(res && res.ok){
       if(net.state==="off") setNet(Q.length?"saving":"live");
       if(res.changed){ goHot(); ingest(res); }
       else { DB.online=res.online||DB.online; renderPeople(); }
       if(Q.length) flush();
     } else if(res && res.error==="AUTH") signedOut();
-  }).catch(function(err){ setNet("off", err.message); });
+  }).catch(function(err){
+    net.pulling=false;
+    setNet("off", err.message);
+  });
 }
 
 /* ------------------------------------------------------- the instant channel
@@ -1519,6 +1619,7 @@ function visibleAudit(list){ return (list||[]).filter(canSeeAudit); }
 
 /* ============================================================ RENDER ===== */
 function renderAll(){
+  RENDER_PENDING=false;
   document.documentElement.setAttribute("data-theme", S.theme||"light");
   $("#btn-theme").textContent = S.theme==="dark"?"Light":"Dark";
   applyRole();
@@ -1691,7 +1792,12 @@ function renderTable(){
     '<td class="c-pay"></td>'+
     '<td class="c-amt num" id="opening-cell">'+esc(fmt(a.opening,a.currency))+'</td>'+
     '<td class="c-bal num">'+esc(fmt(a.opening,a.currency))+'</td><td class="c-act"></td></tr>';
-  $("#tbody").innerHTML=html;
+  (function(){
+    var tw=$("#tablewrap"), top=tw?tw.scrollTop:0, wy=window.scrollY||window.pageYOffset||0;
+    $("#tbody").innerHTML=html;
+    if(tw) tw.scrollTop=top;
+    if((window.scrollY||window.pageYOffset||0)!==wy) window.scrollTo(0,wy);
+  })();
 
   var empty=$("#empty");
   if(!rows.length){
@@ -5345,15 +5451,18 @@ function bind(){
   });
   document.addEventListener("mousemove",function(){ lastActivity=Date.now(); });
   document.addEventListener("visibilitychange",function(){
-    if(document.hidden){ stopSignal(); return; }
-    lastActivity=Date.now(); goHot(15000); pollTick(true); startSignal();
+    if(document.hidden){ stopLoops(); stopSignal(); return; }
+    lastActivity=Date.now(); net.fails=0; net.backoffUntil=0;
+    goHot(15000); startLoops(); pollTick(true); startSignal();
   });
-  window.addEventListener("online",function(){ goHot(15000); flush(); pollTick(true); startSignal(); });
+  window.addEventListener("online",function(){
+    net.fails=0; net.backoffUntil=0;
+    goHot(15000); startLoops(); flush(); pollTick(true); startSignal();
+  });
+  window.addEventListener("offline",function(){ setNet("off","no connection"); });
   window.addEventListener("beforeunload",function(e){ if(Q.length){ e.preventDefault(); e.returnValue=""; } });
   var rt; window.addEventListener("resize",function(){ clearTimeout(rt); rt=setTimeout(function(){ if(isAll()) renderAllView(); else renderTable(); },250); });
-  setInterval(function(){ pollTick(); },700);
-  setInterval(function(){ if(Q.length && !net.sending) flush(); },5000);
-  setInterval(renderFeed,60000);
+  startLoops();
 }
 
 /* =============================================================== BOOT ==== */
