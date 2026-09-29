@@ -2119,8 +2119,7 @@ function renderBulk(){
   var mv=$("#bulk-move");
   mv.innerHTML='<option value="">'+(BULKMODE==="copy"?"Copy to…":"Move to…")+'</option>'+
     visibleAccounts().filter(function(a){return a.id!==S.activeId;})
-    .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+
-    (BULKMODE==="copy"?"":splitOption());
+    .map(function(a){return '<option value="'+a.id+'">'+esc(a.name)+'</option>';}).join("")+splitOption();
 }
 function bulkTag(tag){
   if(!canWrite()) return;
@@ -2636,23 +2635,26 @@ function halves(v){
 function splitOption(){
   return splitPair() ? '<option value="__SPLIT__">'+esc(SPLIT_ACCOUNTS.join(" + "))+' — split 50/50</option>' : '';
 }
-function splitEntries(ids){
+function splitEntries(ids, copy){
   if(!canWrite()) return;
   var pair=splitPair();
   if(!pair) return toast("Both "+SPLIT_ACCOUNTS.join(" and ")+" accounts are needed for that");
+  if(!canTarget(pair[0].id) || !canTarget(pair[1].id)) return;
   var from=acct(), cur=from.currency;
   var list=ids.map(function(id){ return findEntry(id); }).filter(Boolean);
   if(!list.length) return;
+  var tail = copy
+    ? "\n\nThe original stays in "+from.name+" as well."
+    : "\n\nThe entr"+(list.length===1?"y is":"ies are")+" removed from "+from.name+".";
   var msg;
   if(list.length===1){
     var h=halves(list[0].amount);
-    msg="Split "+fmt(list[0].amount,cur)+" between two accounts?\n\n"+
-        pair[0].name+"   "+fmt(h[0],cur)+"\n"+pair[1].name+"   "+fmt(h[1],cur)+
-        "\n\nThe entry is removed from "+from.name+".";
+    msg=(copy?"Copy ":"Split ")+fmt(list[0].amount,cur)+" 50/50 into two accounts?\n\n"+
+        pair[0].name+"   "+fmt(h[0],cur)+"\n"+pair[1].name+"   "+fmt(h[1],cur)+tail;
   } else {
     var tot=list.reduce(function(s2,e){ return s2+(Number(e.amount)||0); },0);
-    msg="Split "+list.length+" entries ("+fmt(tot,cur)+") 50/50 between "+pair[0].name+" and "+pair[1].name+
-        "?\n\nThey are removed from "+from.name+".";
+    msg=(copy?"Copy ":"Split ")+list.length+" entries ("+fmt(tot,cur)+") 50/50 between "+
+        pair[0].name+" and "+pair[1].name+"?"+tail;
   }
   if(!confirm(msg)) return;
 
@@ -2669,15 +2671,18 @@ function splitEntries(ids){
       op({t:"addEntry", e:c});
       made.push(c.id);
     });
-    delete DB.entries[e.id];
-    op({t:"delete", id:e.id});
+    if(!copy){
+      delete DB.entries[e.id];
+      op({t:"delete", id:e.id});
+    }
   });
   clearPick(); rebuild(); renderAll();
-  toast(list.length+(list.length===1?" entry":" entries")+" split between "+pair[0].name+" and "+pair[1].name,
+  toast(list.length+(list.length===1?" entry":" entries")+(copy?" copied 50/50 into ":" split between ")+
+        pair[0].name+" and "+pair[1].name+(copy?" — the original"+(list.length===1?" is":"s are")+" still here":""),
     function(){
       made.forEach(function(id){ delete DB.entries[id]; op({t:"delete", id:id}); });
-      originals.forEach(function(e){ op({t:"restore", id:e.id}); });
-      rebuild(); renderAll(); toast("Split undone");
+      if(!copy) originals.forEach(function(e){ op({t:"restore", id:e.id}); });
+      rebuild(); renderAll(); toast(copy?"Copy undone":"Split undone");
     });
 }
 
@@ -3654,7 +3659,6 @@ function openCtx(x,y,id){
       $$("#ctx-mode button",c).forEach(function(x){ x.classList.toggle("on", x===b); });
       if(mv){
         mv.options[0].textContent = ctxMode==="copy" ? "Copy it to…" : "Choose account…";
-        Array.prototype.forEach.call(mv.options,function(o){ if(o.value==="__SPLIT__") o.disabled=(ctxMode==="copy"); });
       }
       var h=$("#ctx-modehint",c);
       if(h) h.textContent = ctxMode==="copy"
@@ -3663,7 +3667,7 @@ function openCtx(x,y,id){
     };
   });
   if(mv) mv.onchange=function(){
-    if(mv.value==="__SPLIT__"){ closeCtx(); return splitEntries([e.id]); }
+    if(mv.value==="__SPLIT__"){ var cp=(ctxMode==="copy"); closeCtx(); return splitEntries([e.id], cp); }
     var target=S.accounts.filter(function(a){return a.id===mv.value;})[0]; if(!target) return;
     if(ctxMode==="copy"){ closeCtx(); return copyEntries([e.id], target.id); }
     if(!canTarget(target.id)) return;
@@ -5428,7 +5432,7 @@ function bind(){
   });
   $("#bulk-move").onchange=function(){
     var v=this.value; this.value="";
-    if(v==="__SPLIT__") return splitEntries(Object.keys(PICK));
+    if(v==="__SPLIT__") return splitEntries(Object.keys(PICK), BULKMODE==="copy");
     if(!v) return;
     if(BULKMODE==="copy") return copyEntries(Object.keys(PICK), v);
     bulkMove(v);
