@@ -309,6 +309,71 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .costrow:last-child{border-bottom:none}
 .costrow .d{flex:1;min-width:0;overflow-wrap:anywhere}
 .costrow .a{width:110px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+#ao-detail .costrow .d .sub{display:block;font-size:11px;color:var(--ink-3);margin-top:2px;font-weight:500}
+#sn-body .costrow .d .sub{display:block;font-size:11px;color:var(--ink-3);margin-top:2px;font-weight:500}
+#sn-body .costrow .d .chg{display:block;font-size:12px;margin-top:3px}
+#sn-body .costrow .d .chg s{color:var(--neg);opacity:.8}
+#sn-body .costrow .d .chg b{color:var(--pos);font-weight:600}
+#modal.vhmode{width:min(1240px,100%);height:88vh}
+#modal.vhmode .body.vhbody{display:grid;grid-template-columns:minmax(0,1fr) 320px;padding:0;flex:1 1 auto;min-height:0;overflow:hidden}
+.vhmain{overflow:auto;padding:16px 18px 22px;min-width:0}
+.vhside{overflow:auto;border-left:1px solid var(--line);background:var(--panel-2);padding:6px 10px 14px}
+.vhgrp{font-size:12.5px;font-weight:600;color:var(--ink-2);padding:14px 8px 6px}
+.vhitem{display:block;width:100%;text-align:left;border-radius:10px;padding:11px 12px 10px 30px;margin:2px 0;border:1px solid transparent;position:relative;color:var(--ink)}
+.vhitem:hover{background:var(--panel)}
+.vhitem.on{background:var(--panel);border-color:var(--line);box-shadow:var(--shadow)}
+.vhitem .nm{font-weight:700;font-size:13px;margin-bottom:2px;color:var(--accent)}
+.vhitem .tm{font-size:14px;font-weight:600}
+.vhitem .cur{font-size:12px;color:var(--ink-3);margin-top:2px}
+.vhitem .ed{display:flex;flex-wrap:wrap;gap:3px 12px;margin-top:6px;font-size:12.5px;color:var(--ink-2)}
+.vhitem .ed i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+.vhitem .ct{font-size:11.5px;color:var(--ink-3);margin-top:3px}
+.vhitem.pending{border:1px dashed var(--warn);background:var(--warn-soft)}
+.vhtabs{display:flex;gap:2px;overflow-x:auto;border-bottom:1px solid var(--line);margin:14px 0 10px;scrollbar-width:none}
+.vhtabs button{padding:8px 12px;font-size:12.5px;font-weight:600;color:var(--ink-3);border-bottom:2px solid transparent;white-space:nowrap}
+.vhtabs button.on{color:var(--ink);border-bottom-color:var(--accent)}
+.vhtabs button i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--warn);margin-left:6px;vertical-align:1px}
+.vhtitle{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.vhmeta{font-size:12.5px;color:var(--ink-3);margin-top:3px}
+.vhbadges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.vhbadge{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12.5px;font-weight:600;border:1px solid var(--line)}
+.vhbadge.good{background:var(--pos-soft);color:var(--pos);border-color:transparent}
+.vhbadge.bad{background:var(--neg-soft);color:var(--neg);border-color:transparent}
+button.vhbadge{cursor:pointer}
+.vhrow.add{background:var(--pos-soft)!important}
+.vhrow.edit{background:var(--warn-soft)!important}
+.vhrow.del{background:var(--neg-soft)!important}
+.vhrow.del .d,.vhrow.del .a{text-decoration:line-through;text-decoration-color:color-mix(in srgb,var(--neg) 60%,transparent)}
+.vhrow .vhwas{display:block;font-size:11.5px;color:var(--warn);margin-top:2px}
+.vhrow .vhwho{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.vhopts{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 8px;font-size:12.5px;color:var(--ink-2)}
+.vhopts label{display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.vhopts input{width:16px;height:16px;accent-color:var(--accent)}
+@media(max-width:760px){
+  #modal.vhmode{height:92dvh}
+  #modal.vhmode .body.vhbody{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .vhside{order:-1;max-height:32vh;border-left:0;border-bottom:1px solid var(--line)}
+  .vhmain{padding:12px}
+}
+.snbox{border-radius:12px;padding:12px 14px;margin:0 0 10px;font-size:13px;line-height:1.5;border:1px solid var(--line)}
+.snbox b.t{display:block;font-size:14px;margin-bottom:2px}
+.snbox.good{background:var(--pos-soft);border-color:color-mix(in srgb,var(--pos) 35%,transparent);color:var(--ink)}
+.snbox.good b.t{color:var(--pos)}
+.snbox.bad{background:var(--neg-soft);border-color:color-mix(in srgb,var(--neg) 40%,transparent);color:var(--ink)}
+.snbox.bad b.t{color:var(--neg)}
+.snbox.info{background:var(--panel-2)}
+.snhead{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin:16px 0 6px}
+#sn-body .atable tr.click td:first-child::before{content:none}
+#sn-body .atable tr.snexp td{padding:0!important;border:0!important;margin:0!important;font-weight:400;display:block}
+#sn-body .atable tr.snexp{padding:0!important;border:0!important;background:none!important}
+#sn-body .snled{max-height:360px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:8px}
+#sn-body .snled .costrow .n{width:30px;color:var(--ink-3);font-size:11.5px;text-align:right;flex:0 0 auto}
+#ao-detail .costrow .a{width:124px}
+#ao-detail .costrow .a+.a{width:124px;font-weight:500}
+@media(max-width:620px){ #ao-detail .costrow{flex-wrap:wrap}
+  #ao-detail .costrow .d{flex:1 1 100%}
+  #ao-detail .costrow .a{flex:1 1 45%;width:auto;text-align:left}
+  #ao-detail .costrow .a+.a{text-align:right} }
 .costrow .x{opacity:.35;color:var(--ink-3);padding:2px 5px;border-radius:5px}
 .costrow:hover .x{opacity:1}
 .costrow .x:hover{color:var(--neg);background:var(--neg-soft)}
@@ -712,6 +777,7 @@ body.allview-on .fab{display:none!important}
     flex-wrap:wrap;justify-content:center;gap:8px;padding:10px;overflow:visible}
   .bulkbar.show{transform:translateY(0)}
   .bulkbar b{font-size:12.5px;width:100%;text-align:center;padding:0}
+  #bulk-calc{flex:1 1 42%;height:38px}
   .bulkbar .bdiv{display:none}
   #bulk-tags{width:100%;justify-content:center;gap:9px!important}
   .bulkbar .sw2{width:30px;height:30px}
@@ -760,9 +826,12 @@ body.allview-on .fab{display:none!important}
     <div class="spacer"></div>
     <div class="people" id="people"></div>
     <div class="sync" id="sync" title="Sync status"><i></i><span>Live</span></div>
+    <button class="tbtn ghost" id="btn-refresh" title="Fetch the Sheet right now (r)" style="min-width:34px;padding:0 9px">&#8635;</button>
     <div id="actions" style="display:flex;gap:2px">
       <button class="tbtn only-wide" id="btn-import">⊕ Import</button>
       <button class="tbtn only-wide" id="btn-history">History</button>
+      <button class="tbtn only-wide" id="btn-asof" title="Balances on any past date, worked out from today's book">&#128197; Balances</button>
+      <button class="tbtn only-wide" id="btn-snap" title="Version history — like Google Sheets">&#128274; Versions</button>
       <button class="tbtn only-wide" id="btn-export">↧ Export</button>
       <button class="tbtn only-wide" id="btn-accounts">⚙ Accounts</button>
       <button class="tbtn only-wide" id="btn-admin">🛡 Admin</button>
@@ -804,7 +873,7 @@ body.allview-on .fab{display:none!important}
 
       <div class="addrow" id="addrow">
         <input id="f-date" type="date">
-        <input id="f-det" type="text" placeholder="Details of payment…">
+        <input id="f-det" type="text" placeholder="DETAILS OF PAYMENT…" style="text-transform:uppercase">
         <select id="f-pay"><option>CASH</option><option>BANK</option></select>
         <div class="seg" id="seg"><button data-sign="-1" class="on">OUT</button><button data-sign="1">IN</button></div>
         <input id="f-amt" type="text" inputmode="decimal" placeholder="0.00">
@@ -888,6 +957,8 @@ body.allview-on .fab{display:none!important}
 
 <div class="bulkbar" id="bulkbar">
   <b id="bulk-n">0 selected</b>
+  <b id="bulk-sum" class="num" style="font-weight:700"></b>
+  <button class="tbtn" id="bulk-calc" title="Add these up, plus or minus">&#129518; Add up</button>
   <div class="bdiv"></div>
   <div id="bulk-tags" style="display:flex;gap:6px"></div>
   <div class="bdiv"></div>
@@ -944,6 +1015,10 @@ var CUR_DEC = {JPY:0, KRW:0};
 var $ = function(s,r){return (r||document).querySelector(s);};
 var $$ = function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));};
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8);}
+/* Details of payment are always stored and shown in capitals, whatever was
+   typed. One column, one look — and searching stops depending on how somebody
+   happened to type it that day.                                            */
+function UP(v){ return String(v==null?"":v).toUpperCase(); }
 function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
 function isTouch(){ return window.matchMedia("(max-width:760px)").matches; }
 var BELL='<svg class="bell" width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">'+
@@ -964,6 +1039,9 @@ var Q    = [];
 var S    = {accounts:[], cars:[], activeId:null, carsView:"register", theme:"light", tagLabels:{}};
 var ui   = {q:"", tag:"all", payBy:"all", month:"all", lastPick:null, cq:"", cstatus:"all", cbatch:"all", cmodel:"all"};
 var PICK = {};
+/* Each tab keeps its own place in the list. Flicking between accounts should
+   put you back where you were, not throw you to the top every time.        */
+var SCROLL = {};
 var net  = {state:"live", lastErr:"", sending:false, pulling:false, lastPull:0, bannerHidden:false,
             hot:0, signal:"off", rtt:700, fails:0, quiet:0, backoffUntil:0};
 var NET_TIMEOUT = 20000;   /* a request that has not answered by now is dead */
@@ -1673,10 +1751,11 @@ function renderTabs(){
   el.innerHTML=html;
   $$(".tab[data-id]",el).forEach(function(b){
     b.onclick=function(){
+      if(b.dataset.id===S.activeId) return;
+      saveScroll();
       S.activeId=b.dataset.id; clearPick();
       ui.q="";$("#q").value="";ui.tag="all";ui.payBy="all";ui.month="all";$("#f-payby").value="all";
-      cacheAll(); renderAll();
-      var t=$("#tablewrap"); if(t) t.scrollTop=0;
+      cacheAll(); renderAll(); restoreScroll();
     };
   });
   if($("#tab-add")) $("#tab-add").onclick=addAccount;
@@ -1788,7 +1867,7 @@ function renderTable(){
       '<td class="c-date" data-field="date">'+(isBlank?"":esc(isTouch()?fmtDateShort(e.date):fmtDate(e.date)))+'</td>'+
       '<td class="c-det" data-field="details">'+(rem?BELL:"")+(anc?ANCH:"")+
         (hid?'<button class="unhide" data-hide="'+e.id+'" title="Not counted — click to count it again">'+EYE+'</button>':'')+
-        esc(e.details||"")+'</td>'+
+        esc(UP(e.details))+'</td>'+
       '<td class="c-pay" data-field="payBy">'+(isBlank?"":'<span class="pill '+(String(e.payBy).toUpperCase()==="BANK"?"bank":"")+'">'+esc(e.payBy||"CASH")+'</span>')+'</td>'+
       '<td class="c-amt num amt '+(v===0?"zero":(v<0?"neg":"pos"))+'" data-field="amount">'+(isBlank?"":fmt(v,a.currency,{plus:true}))+'</td>'+
       '<td class="c-bal num">'+(isBlank?"":(hid?"—":(off?"·":esc(fmt(bal[e.id],a.currency)))))+'</td>'+
@@ -1871,7 +1950,7 @@ function renderAllView(){
     '<td class="num" data-l="Balance" style="color:'+(T.bal<0?"var(--neg)":"var(--pos)")+'">'+fmt(T.bal,main)+'</td></tr></tfoot></table>'+
     '<p class="hint" style="margin-top:14px">Any account with “CASH” in its name is listed but left out of the total, so cash held inside another account is not counted twice. Tap a row to open that account.</p>';
   $$("#allview tr[data-go]").forEach(function(tr){
-    tr.onclick=function(){ S.activeId=tr.dataset.go; cacheAll(); renderAll(); };
+    tr.onclick=function(){ saveScroll(); S.activeId=tr.dataset.go; cacheAll(); renderAll(); restoreScroll(); };
   });
   $("#footnote").innerHTML='<b>'+visibleAccounts().length+'</b> accounts · read-only summary · open an account to make changes';
 }
@@ -1882,7 +1961,7 @@ function renderReminders(){
   $("#rem-list").innerHTML = list.length ? list.map(function(o){
     var v=Number(o.e.amount)||0;
     return '<div class="rem-item" data-go="'+o.e.id+'" data-acc="'+o.acc.id+'">'+
-      '<div class="bd"><div class="nm">'+(esc(o.e.details||"")||'<span style="color:var(--ink-3)">(no details)</span>')+'</div>'+
+      '<div class="bd"><div class="nm">'+(esc(UP(o.e.details))||'<span style="color:var(--ink-3)">(NO DETAILS)</span>')+'</div>'+
       '<div class="mt">'+esc(o.e.date?fmtDateShort(o.e.date):"no date")+(isAll()?' · '+esc(o.acc.name):'')+'</div></div>'+
       '<span class="am" style="color:'+(v<0?"var(--neg)":(v>0?"var(--pos)":"var(--ink-3)"))+'">'+(v?fmt(v,o.acc.currency):"")+'</span>'+
       '<button class="x" data-remoff="'+o.e.id+'" title="Remove from reminders">✕</button></div>';
@@ -1981,6 +2060,8 @@ function auditLine(r){
     case "RECEIVABLE_REMOVED": return "removed the receivable <b>"+esc(r.note)+"</b>"+acc;
     case "PAYABLE_REMOVED":    return "removed the payable <b>"+esc(r.note)+"</b>"+acc;
     case "LOGIN":   return "signed in";
+    case "VERSION_NAMED": return "named a version <b>\u201c"+esc(r.note||"")+"\u201d</b>";
+    case "SNAPSHOT": return "saved a version of the book";
     default:        return esc(r.action)+what;
   }
 }
@@ -2064,6 +2145,23 @@ function renderFeed(){
 }
 
 /* ======================================================= SELECT / BULK === */
+function scrollKey(){ return S.activeId||"__none__"; }
+function saveScroll(){
+  var tw=$("#tablewrap"), cb=$("#carsbody"), av=$("#allview");
+  SCROLL[scrollKey()]={ tw: tw?tw.scrollTop:0, cb: cb?cb.scrollTop:0, av: av?av.scrollTop:0,
+                        win: window.scrollY||window.pageYOffset||0 };
+}
+function restoreScroll(){
+  var s=SCROLL[scrollKey()]||{tw:0,cb:0,av:0,win:0};
+  var put=function(){
+    var tw=$("#tablewrap"); if(tw) tw.scrollTop=s.tw;
+    var cb=$("#carsbody");  if(cb) cb.scrollTop=s.cb;
+    var av=$("#allview");   if(av) av.scrollTop=s.av;
+    window.scrollTo(0, s.win);
+  };
+  put();                                   /* now, and again once it has laid out */
+  requestAnimationFrame(function(){ put(); requestAnimationFrame(put); });
+}
 function pickCount(){ return Object.keys(PICK).length; }
 var BULKMODE="move";
 function clearPick(){ PICK={}; ui.lastPick=null; BULKMODE="move"; renderBulk(); syncSelAllBox(); }
@@ -2105,6 +2203,10 @@ function renderBulk(){
   bar.classList.toggle("show", n>0);
   if(!n) return;
   $("#bulk-n").textContent=n+" selected";
+  var ssum=0; Object.keys(PICK).forEach(function(id){ var e=DB.entries[id]; if(e) ssum+=Number(e.amount)||0; });
+  $("#bulk-sum").textContent=fmt(ssum, acct().currency, {plus:true});
+  $("#bulk-sum").style.color = ssum<0?"var(--neg)":(ssum>0?"var(--pos)":"var(--ink-3)");
+  $("#bulk-calc").onclick=function(){ openCalc(); };
   $("#bulk-tags").innerHTML=TAGS.map(function(t){
     return '<button class="sw2" style="background:'+t.color+'" data-tag="'+t.id+'" title="Tag as '+esc(tagLabel(t.id))+'"></button>';
   }).join("")+'<button class="sw2" style="background:var(--panel-2);border:1px dashed var(--line);color:var(--ink-3)" data-tag="" title="Clear tag">✕</button>'+
@@ -2168,7 +2270,7 @@ function copyEntries(ids, toId){
   var made=[];
   list.forEach(function(e,i){
     var p=base-list.length+i;
-    var c={id:uid(), accountId:toId, date:e.date, details:e.details, payBy:e.payBy,
+    var c={id:uid(), accountId:toId, date:e.date, details:UP(e.details), payBy:e.payBy,
            amount:Number(e.amount)||0, tag:e.tag||""};
     DB.entries[c.id]=Object.assign({pos:p, deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
       updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
@@ -2213,7 +2315,7 @@ function startEdit(td){
     el.value=String(e.payBy||"CASH").toUpperCase();
   }
   else if(field==="amount"){ el=document.createElement("input"); el.type="text"; el.inputMode="decimal"; el.value=String(e.amount); el.className="amt"; }
-  else { el=document.createElement("textarea"); el.value=e.details||""; }
+  else { el=document.createElement("textarea"); el.value=e.details||""; el.style.textTransform="uppercase"; }
   el.className="edit "+(el.className||"");
   var done=false;
   function commit(){
@@ -2221,7 +2323,7 @@ function startEdit(td){
     var val=el.value, old=e[field], changed=false;
     if(field==="amount"){ var n=parseAmount(val); if(!isNaN(n)&&n!==e.amount){ e.amount=n; changed=true; } }
     else if(field==="date"){ if(val&&val!==e.date){ e.date=val; changed=true; } }
-    else if(val!==e[field]){ e[field]=val; changed=true; }
+    else { if(field==="details") val=UP(val); if(val!==e[field]){ e[field]=val; changed=true; } }
     if(changed){
       if(DB.entries[e.id]){ DB.entries[e.id][field]=e[field]; DB.entries[e.id].updatedBy=AUTH.user; DB.entries[e.id].updatedAt=new Date().toISOString(); }
       op({t:"update", id:e.id, field:field, val:e[field], old:old});
@@ -2665,7 +2767,7 @@ function splitEntries(ids, copy){
     var h=halves(e.amount);
     pair.forEach(function(t,i){
       base[i]-=1;
-      var c={id:uid(), accountId:t.id, date:e.date, details:e.details, payBy:e.payBy, amount:h[i], tag:e.tag};
+      var c={id:uid(), accountId:t.id, date:e.date, details:UP(e.details), payBy:e.payBy, amount:h[i], tag:e.tag};
       DB.entries[c.id]=Object.assign({pos:base[i], deleted:"", createdBy:AUTH.user, createdAt:new Date().toISOString(),
         updatedBy:AUTH.user, updatedAt:new Date().toISOString()}, c);
       op({t:"addEntry", e:c});
@@ -3687,7 +3789,7 @@ function openCtx(x,y,id){
       if(act==="below") return insertBlank(e.id,"below");
       if(act==="dup"){
         var dp=e.pos-0.5;
-        var copy={id:uid(), accountId:acct().id, date:e.date, details:e.details, payBy:e.payBy, amount:e.amount, tag:e.tag};
+        var copy={id:uid(), accountId:acct().id, date:e.date, details:UP(e.details), payBy:e.payBy, amount:e.amount, tag:e.tag};
         DB.entries[copy.id]=Object.assign({},copy,{pos:dp,createdBy:AUTH.user,createdAt:new Date().toISOString(),updatedBy:AUTH.user,updatedAt:new Date().toISOString()});
         op({t:"addEntry", e:copy});
         op({t:"update", id:copy.id, field:"pos", val:dp});   // keep it next to the original
@@ -3720,6 +3822,7 @@ function openModal(html){
   $$("#modal [data-close]").forEach(function(b){ b.onclick=closeModal; });
 }
 function closeModal(){
+  $("#modal").classList.remove("vhmode");
   var ar=$("#addrow");
   if(ar && ar.parentNode && ar.parentNode.id==="add-host"){
     document.body.classList.remove("addopen");
@@ -3745,6 +3848,9 @@ function openAddSheet(){
 /* ---- menu sheet (mobile) ---- */
 function openMenu(){
   var items=[
+    ["Refresh now","Fetch the Sheet this second","refresh"],
+    ["Version history","Every saved version, like Google Sheets","snap"],
+    ["Balances on a date","What every account held on any past day","asof"],
     ["History","Every change, who and when","history"],
     ["Accounts","Rename, currency, opening balance","accounts"],
     can("bank")?["Import a bank statement","A Wio CSV, straight into the SIAM sheet","bank"]:null,
@@ -3763,6 +3869,9 @@ function openMenu(){
   $$("#modal [data-do]").forEach(function(b){
     b.onclick=function(){
       var d=b.dataset.do; closeModal();
+      if(d==="refresh") return refreshNow();
+      if(d==="asof") return openAsOf();
+      if(d==="snap") return openSnapshots();
       if(d==="history") openHistory(null);
       if(d==="accounts") openAccounts();
       if(d==="bank") return openBankImport();
@@ -3775,6 +3884,650 @@ function openMenu(){
       if(d==="out") signOut();
     };
   });
+}
+
+/* ===================================================== BALANCES ON A DATE ==
+   What did every account hold on the 12th? The ledger knows: take the opening
+   balance and add everything dated on or before that day. Entries left out of
+   the totals stay left out, exactly as they are on the live sheet.
+   This reads the book as it stands now, filtered by date — it is not a replay
+   of the change log, so an entry someone back-dated last week does count
+   towards that older day. That is almost always what you want.
+   ========================================================================== */
+function entryDates(){
+  var seen={}, out=[];
+  visibleAccounts().forEach(function(a){
+    a.entries.forEach(function(e){
+      if(isHidden(e)) return;
+      var d=String(e.date||"").slice(0,10);
+      if(d && !seen[d]){ seen[d]=1; out.push(d); }
+    });
+  });
+  return out.sort();
+}
+function balanceAsOf(a, iso){
+  var r={bal:Number(a.opening)||0, cash:0, bank:0, n:0, last:""};
+  a.entries.forEach(function(e){
+    if(isHidden(e)) return;
+    var d=String(e.date||"").slice(0,10);
+    if(!d || d>iso) return;
+    var v=Number(e.amount)||0;
+    r.bal+=v; r.n++;
+    if(d>r.last) r.last=d;
+    if(String(e.payBy||"").toUpperCase()==="BANK") r.bank+=v; else r.cash+=v;
+  });
+  return r;
+}
+/* The rows that make up that balance, oldest first, with the balance after
+   each one. Ordered by date here rather than by where the row sits in the
+   list, so the last line always lands on the figure in the table above.   */
+function entriesAsOf(a, iso){
+  var rows=a.entries.filter(function(e){
+    if(isHidden(e)) return false;
+    var d=String(e.date||"").slice(0,10);
+    return d && d<=iso;
+  }).slice().sort(function(x,y){
+    var dx=String(x.date||"").slice(0,10), dy=String(y.date||"").slice(0,10);
+    if(dx!==dy) return dx<dy?-1:1;
+    return (Number(x.pos)||0)-(Number(y.pos)||0);
+  });
+  var run=Number(a.opening)||0, out=[];
+  rows.forEach(function(e){ run+=Number(e.amount)||0; out.push({e:e, run:run}); });
+  return out;
+}
+function undatedMoney(){
+  var n=0, sum=0;
+  visibleAccounts().forEach(function(a){
+    a.entries.forEach(function(e){
+      if(isHidden(e) || String(e.date||"").trim()) return;
+      var v=Number(e.amount)||0;
+      if(Math.abs(v)<0.005) return;
+      n++; sum+=v;
+    });
+  });
+  return {n:n, sum:sum};
+}
+function openAsOf(){
+  var dates=entryDates();
+  var day = dates.length ? dates[dates.length-1] : todayISO();
+  if(todayISO()>day) day=todayISO();
+  var und=undatedMoney();
+
+  openModal('<header><div><h3>Balances on a date</h3><p>Worked out from today\u2019s book. To prove nothing has been changed since, use <b>Versions</b>.</p></div>'+
+    '<button class="tbtn" data-close>\u2715</button></header>'+
+    '<div class="body">'+
+      '<div class="fields" style="margin-top:0;align-items:flex-end">'+
+        '<div class="field"><label>Date</label><input id="ao-date" type="date" value="'+esc(day)+'"></div>'+
+        '<div class="field"><label>Step through the days with entries</label>'+
+          '<div style="display:flex;gap:6px;align-items:center">'+
+            '<button class="tbtn ghost" id="ao-prev" title="Earlier">\u25c0</button>'+
+            '<select id="ao-list" style="min-width:150px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:0 8px"></select>'+
+            '<button class="tbtn ghost" id="ao-next" title="Later">\u25b6</button>'+
+          '</div></div>'+
+        '<div class="field"><label>&nbsp;</label><button class="tbtn" id="ao-today">Today</button></div>'+
+      '</div>'+
+      (und.n?'<p class="hint" style="color:var(--warn)"><b>'+und.n+' entr'+(und.n===1?"y has":"ies have")+
+        ' no date</b> ('+esc(fmt(und.sum,mainCurrency()))+'). They cannot be placed in time, so they are left out '+
+        'of every figure below — give them a date and they will appear.</p>':'')+
+      '<div id="ao-body" style="margin-top:4px"></div>'+
+      '<div id="ao-detail"></div>'+
+    '</div>'+
+    '<footer><span class="hint" id="ao-note" style="margin-right:auto"></span>'+
+    '<button class="tbtn ghost" id="ao-csv">\u2193 CSV</button>'+
+    '<button class="tbtn primary" data-close>Close</button></footer>');
+
+  var openAcc="";
+  var sel=$("#ao-list");
+  sel.innerHTML=dates.slice().reverse().map(function(d){
+    return '<option value="'+esc(d)+'">'+esc(fmtDateShort(d))+'</option>'; }).join("")
+    || '<option value="">no entries yet</option>';
+  $("#ao-date").onchange=function(){ day=this.value||todayISO(); draw(); };
+  sel.onchange=function(){ if(this.value){ day=this.value; $("#ao-date").value=day; draw(); } };
+  $("#ao-today").onclick=function(){ day=todayISO(); $("#ao-date").value=day; draw(); };
+  $("#ao-prev").onclick=function(){ step(-1); };
+  $("#ao-next").onclick=function(){ step(1); };
+  $("#ao-csv").onclick=csv;
+  draw();
+
+  function step(dir){
+    if(!dates.length) return;
+    var i;
+    if(dir<0){ for(i=dates.length-1;i>=0;i--) if(dates[i]<day){ day=dates[i]; break; } }
+    else { for(i=0;i<dates.length;i++) if(dates[i]>day){ day=dates[i]; break; } }
+    $("#ao-date").value=day; draw();
+  }
+  function prevDate(){
+    for(var i=dates.length-1;i>=0;i--) if(dates[i]<day) return dates[i];
+    return "";
+  }
+  function rows(){
+    return visibleAccounts().map(function(a){
+      return {a:a, now:balanceAsOf(a,day), was: prevDate()? balanceAsOf(a,prevDate()) : null};
+    });
+  }
+  function draw(){
+    if(!$("#ao-body")) return;
+    var list=rows(), pd=prevDate(), main=mainCurrency();
+    var T={n:0,cash:0,bank:0,bal:0,was:0};
+    list.forEach(function(r){
+      if(!includedInAll(r.a)) return;
+      T.n+=r.now.n; T.cash+=r.now.cash; T.bank+=r.now.bank; T.bal+=r.now.bal;
+      if(r.was) T.was+=r.was.bal;
+    });
+    $("#ao-body").innerHTML=
+      '<div class="alltot" style="margin-bottom:12px"><div class="k">All counted accounts on '+esc(fmtDate(day))+'</div>'+
+        '<div class="v num" style="color:'+(T.bal<0?"var(--neg)":"var(--pos)")+'">'+esc(fmt(T.bal,main))+'</div>'+
+        '<div class="s">'+T.n+' entries up to then · cash '+esc(fmt(T.cash,main))+' · bank '+esc(fmt(T.bank,main))+
+        (pd?' · '+(T.bal-T.was>=0?"up ":"down ")+esc(fmt(Math.abs(T.bal-T.was),main))+' since '+esc(fmtDateShort(pd)):'')+
+        '</div></div>'+
+      '<table class="atable"><thead><tr><th>Account</th><th>Entries</th><th>Cash</th><th>Bank</th>'+
+      '<th>Balance</th><th>'+(pd?"Change since "+esc(fmtDateShort(pd)):"Change")+'</th></tr></thead><tbody>'+
+      list.map(function(r){
+        var ch = r.was ? r.now.bal-r.was.bal : 0;
+        var inc = includedInAll(r.a);
+        return '<tr class="click '+(inc?"":"ex")+'" data-ac="'+esc(r.a.id)+'" title="See the entries behind this">'+
+          '<td>'+(openAcc===r.a.id?"\u25be ":"\u25b8 ")+esc(r.a.name)+(inc?"":'<span class="exbadge">not counted</span>')+'</td>'+
+          '<td class="num" data-l="Entries">'+r.now.n+'</td>'+
+          '<td class="num" data-l="Cash">'+esc(fmt(r.now.cash,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Bank">'+esc(fmt(r.now.bank,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Balance" style="font-weight:700;color:'+(r.now.bal<0?"var(--neg)":"var(--ink)")+'">'+
+            esc(fmt(r.now.bal,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Change" style="color:'+(Math.abs(ch)<0.005?"var(--ink-3)":(ch<0?"var(--neg)":"var(--pos)"))+'">'+
+            (r.was? (Math.abs(ch)<0.005?"\u2014":esc(fmt(ch,r.a.currency,{plus:true}))) : "\u2014")+'</td></tr>';
+      }).join("")+'</tbody>'+
+      '<tfoot><tr><td>TOTAL <span style="font-weight:500;color:var(--ink-3)">(counted accounts)</span></td>'+
+        '<td class="num" data-l="Entries">'+T.n+'</td>'+
+        '<td class="num" data-l="Cash">'+esc(fmt(T.cash,main))+'</td>'+
+        '<td class="num" data-l="Bank">'+esc(fmt(T.bank,main))+'</td>'+
+        '<td class="num" data-l="Balance">'+esc(fmt(T.bal,main))+'</td>'+
+        '<td class="num" data-l="Change">'+(pd?esc(fmt(T.bal-T.was,main,{plus:true})):"\u2014")+'</td></tr></tfoot></table>';
+    $$("#ao-body tr[data-ac]").forEach(function(tr){
+      tr.onclick=function(){ openAcc = (openAcc===tr.dataset.ac) ? "" : tr.dataset.ac; draw(); };
+    });
+    detail();
+    $("#ao-note").textContent = dates.length
+      ? dates.length+" days have entries, "+fmtDateShort(dates[0])+" to "+fmtDateShort(dates[dates.length-1])
+      : "No dated entries yet";
+    if(sel && dates.indexOf(day)>-1) sel.value=day;
+  }
+  /* the last ten entries that built the figure above */
+  function detail(){
+    var box=$("#ao-detail"); if(!box) return;
+    var a=visibleAccounts().filter(function(x){ return x.id===openAcc; })[0];
+    if(!a){ box.innerHTML=""; return; }
+    var all=entriesAsOf(a,day), last=all.slice(-10).reverse(), b=balanceAsOf(a,day);
+    box.innerHTML='<div class="costbox" style="margin-top:14px">'+
+      '<div class="costrow" style="background:var(--panel-2);font-weight:700">'+
+        '<span class="d">'+esc(a.name)+' \u2014 last '+Math.min(10,last.length)+' up to '+esc(fmtDateShort(day))+
+          '<span class="sub" style="font-weight:500">'+all.length+' entr'+(all.length===1?"y":"ies")+' up to then \u00b7 '+
+          'cash '+esc(fmt(b.cash,a.currency))+' \u00b7 bank '+esc(fmt(b.bank,a.currency))+'</span></span>'+
+        '<span class="a">'+esc(fmt(b.bal,a.currency))+'</span></div>'+
+      (last.length? last.map(function(r){
+        var e=r.e, v=Number(e.amount)||0, col=colourOf(e), t=tagOf(col);
+        return '<div class="costrow'+(t?" "+t.cls:"")+'">'+
+          '<span class="d">'+(isRem(e)?BELL:"")+esc(UP(e.details)||"(NO DETAILS)")+
+            '<span class="sub">'+esc(fmtDateShort(e.date))+' \u00b7 '+esc(e.payBy||"CASH")+'</span></span>'+
+          '<span class="a" style="color:'+(v<0?"var(--neg)":(v>0?"var(--pos)":"var(--ink-3)"))+'">'+
+            esc(fmt(v,a.currency,{plus:true}))+'</span>'+
+          '<span class="a" style="color:var(--ink-3)">'+esc(fmt(r.run,a.currency))+'</span></div>';
+      }).join("")
+       : '<div class="costrow" style="color:var(--ink-3)">Nothing dated on or before '+esc(fmtDateShort(day))+
+         ' \u2014 the balance is just the opening figure.</div>')+
+      (all.length>10?'<div class="costrow" style="color:var(--ink-3);font-size:11.5px">'+
+        (all.length-10)+' earlier entr'+(all.length-10===1?"y is":"ies are")+' folded into the running balance above.</div>':"")+
+      '</div>';
+  }
+  function csv(){
+    var list=rows(), lines=[["BALANCES AS AT",fmtDate(day)].map(csvCell).join(",")];
+    lines.push(["ACCOUNT","ENTRIES UP TO THEN","CASH","BANK","BALANCE","CURRENCY","COUNTED IN TOTAL"].map(csvCell).join(","));
+    list.forEach(function(r){
+      lines.push([r.a.name,r.now.n,r.now.cash,r.now.bank,r.now.bal,r.a.currency,includedInAll(r.a)?"YES":"NO"].map(csvCell).join(","));
+    });
+    download("hisaab-balances-"+day+".csv", lines.join("\n"), "text/csv");
+    toast("Saved to your downloads");
+  }
+}
+
+/* ============================================================ ADD UP =====
+   Tick the rows you care about, press Add up, and work the figures by hand:
+   every line starts with the sign it actually has, and you can flip any of
+   them to take it off instead. Nothing here changes the ledger.
+   ========================================================================== */
+function openCalc(ids){
+  var list=(ids||Object.keys(PICK)).map(function(id){ return DB.entries[id]; }).filter(Boolean);
+  if(!list.length) return toast("Tick some rows first");
+  var cur=acct().currency, sign={}, extra=0;
+  var real=function(){ list.forEach(function(e){ sign[e.id]=(Number(e.amount)||0)<0?-1:1; }); };
+  real();
+
+  openModal('<header><div><h3>Add up</h3><p>'+list.length+' selected · nothing here changes the ledger</p></div>'+
+    '<button class="tbtn" data-close>\u2715</button></header>'+
+    '<div class="body">'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">'+
+        '<button class="tbtn ghost" id="cl-real">Their real signs</button>'+
+        '<button class="tbtn ghost" id="cl-plus">All +</button>'+
+        '<button class="tbtn ghost" id="cl-minus">All \u2212</button>'+
+        '<button class="tbtn ghost" id="cl-flip">Flip every one</button>'+
+      '</div>'+
+      '<div id="cl-rows" style="max-height:320px;overflow:auto;border:1px solid var(--line);border-radius:10px"></div>'+
+      '<div class="fields" style="margin-top:10px">'+
+        '<div class="field"><label>One more figure (optional)</label>'+
+          '<input id="cl-extra" inputmode="decimal" placeholder="0.00" style="text-align:right"></div>'+
+      '</div>'+
+      '<div class="kvbox" id="cl-sum" style="margin-top:4px"></div>'+
+    '</div>'+
+    '<footer><span class="hint" style="margin-right:auto">Tap any amount to flip it between + and \u2212</span>'+
+    '<button class="tbtn ghost" id="cl-copy">Copy the answer</button>'+
+    '<button class="tbtn primary" data-close>Done</button></footer>');
+
+  $("#cl-real").onclick=function(){ real(); draw(); };
+  $("#cl-plus").onclick=function(){ list.forEach(function(e){ sign[e.id]=1; }); draw(); };
+  $("#cl-minus").onclick=function(){ list.forEach(function(e){ sign[e.id]=-1; }); draw(); };
+  $("#cl-flip").onclick=function(){ list.forEach(function(e){ sign[e.id]=-sign[e.id]; }); draw(); };
+  $("#cl-extra").addEventListener("input",function(){ var n=parseAmount(this.value); extra=isNaN(n)?0:n; total(); });
+  $("#cl-copy").onclick=function(){
+    var r=result();
+    var txt=String(Math.round(r.net*100)/100);
+    if(navigator.clipboard && navigator.clipboard.writeText)
+      navigator.clipboard.writeText(txt).then(function(){ toast("Copied "+txt); },function(){ toast("The answer is "+txt); });
+    else toast("The answer is "+txt);
+  };
+  draw();
+
+  function result(){
+    var plus=0, minus=0;
+    list.forEach(function(e){
+      var v=Math.abs(Number(e.amount)||0);
+      if(sign[e.id]<0) minus+=v; else plus+=v;
+    });
+    if(extra>0) plus+=extra; else minus+=Math.abs(extra);
+    return {plus:plus, minus:minus, net:plus-minus};
+  }
+  function total(){
+    if(!$("#cl-sum")) return;
+    var r=result();
+    $("#cl-sum").innerHTML=
+      '<div><span>Added</span><b class="num" style="color:var(--pos)">'+esc(fmt(r.plus,cur))+'</b></div>'+
+      '<div><span>Taken off</span><b class="num" style="color:var(--neg)">'+esc(fmt(r.minus,cur))+'</b></div>'+
+      '<div style="background:var(--accent-soft);border-color:transparent"><span>Answer</span>'+
+        '<b class="num" style="color:'+(r.net<0?"var(--neg)":"var(--ink)")+'">'+esc(fmt(r.net,cur))+'</b></div>'+
+      '<div><span>Lines</span><b>'+list.length+(extra?" + 1":"")+'</b></div>';
+  }
+  function draw(){
+    if(!$("#cl-rows")) return;
+    $("#cl-rows").innerHTML=list.map(function(e){
+      var v=Math.abs(Number(e.amount)||0), neg=sign[e.id]<0;
+      return '<div class="costrow" data-cs="'+esc(e.id)+'" style="cursor:pointer">'+
+        '<button class="tbtn ghost" style="width:34px;padding:0;color:'+(neg?"var(--neg)":"var(--pos)")+
+          ';font-weight:800">'+(neg?"\u2212":"+")+'</button>'+
+        '<span class="d">'+esc(UP(e.details)||"(no details)")+
+          '<span style="display:block;font-size:11px;color:var(--ink-3)">'+esc(e.date?fmtDateShort(e.date):"no date")+
+          ' · '+esc(e.payBy||"CASH")+'</span></span>'+
+        '<span class="a" style="color:'+(neg?"var(--neg)":"var(--pos)")+'">'+(neg?"\u2212":"+")+esc(fmt(v,cur).replace(cur+" ",""))+'</span>'+
+        '</div>';
+    }).join("");
+    $$("#cl-rows [data-cs]").forEach(function(row){
+      row.onclick=function(){ var id=row.dataset.cs; sign[id]=-sign[id]; draw(); };
+    });
+    total();
+  }
+}
+
+/* ======================================================= VERSION HISTORY ==
+   Works like version history in Google Sheets. The Sheet saves a version
+   whenever something has changed (it checks every hour), so the list only
+   shows moments when something actually happened, and who did it. Opening a
+   version shows the book exactly as it was, highlights what changed in that
+   version, proves the copy has not been touched, and lists anything in that
+   period that has been edited, deleted or back-dated since.
+   ========================================================================== */
+var SNAPFIELD={date:"Date", details:"Details", payBy:"Pay by", amount:"Amount", account:"Account", counted:"Counted"};
+function openSnapshots(openId){
+  if(DEMO){
+    openModal('<header><div><h3>Version history</h3><p>Every saved version of the book</p></div><button class="tbtn" data-close>\u2715</button></header>'+
+      '<div class="body"><p class="hint">Version history is kept by your Google Sheet, so it only exists in the live app \u2014 not in demo mode.</p></div>'+
+      '<footer><button class="tbtn primary" data-close>Close</button></footer>');
+    return;
+  }
+  var st={list:[], admin:false, hourly:false, upToDate:true, removed:0, keepDays:90, folder:"",
+          sel:"", cur:null, tab:"summary", hl:true, unmod:true, filter:"all", showSince:false};
+  openModal('<header><div><h3>Version history</h3><p id="vh-sub">Saved automatically whenever something changes</p></div>'+
+      '<div style="display:flex;gap:8px;align-items:center">'+
+        '<select id="vh-filter" style="height:34px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:0 8px">'+
+          '<option value="all">All versions</option><option value="named">Named versions</option></select>'+
+        '<button class="tbtn" data-close>\u2715</button></div></header>'+
+    '<div class="body vhbody"><div class="vhmain" id="vh-main"><div class="hint">Loading\u2026</div></div>'+
+      '<aside class="vhside" id="vh-side"></aside></div>'+
+    '<footer><span class="hint" id="vh-note" style="margin-right:auto"></span>'+
+      '<button class="tbtn ghost" id="vh-csv" style="display:none">\u2193 CSV</button>'+
+      '<button class="tbtn ghost" id="vh-verify" style="display:none">Check every version</button>'+
+      (readOnly()?'':'<button class="tbtn" id="vh-name">\u270e Name current version</button>')+
+      '<button class="tbtn primary" data-close>Close</button></footer>');
+  $("#modal").classList.add("vhmode");
+  $("#vh-filter").onchange=function(){ st.filter=this.value; drawList(); };
+  $("#vh-verify").onclick=verifyAll;
+  $("#vh-csv").onclick=csv;
+  if($("#vh-name")) $("#vh-name").onclick=nameCurrent;
+  loadList(openId);
+
+  function main(h){ var m=$("#vh-main"); if(m) m.innerHTML=h; return !!m; }
+  function loadList(select){
+    api("snapList",{}).then(function(res){
+      if(!$("#vh-side")) return;
+      if(res && res.error==="BAD_ACTION") return notInstalled();
+      if(!res || !res.ok) return main('<p class="hint" style="color:var(--neg)">Could not load the versions. '+esc((res&&res.message)||"")+'</p>');
+      st.list=res.rows||[]; st.admin=!!res.admin; st.hourly=!!res.hourly; st.upToDate=!!res.upToDate;
+      st.removed=res.removed||0; st.keepDays=res.keepDays||90; st.folder=res.folderUrl||"";
+      $("#vh-verify").style.display = st.admin && st.list.length ? "" : "none";
+      $("#vh-note").innerHTML = (st.hourly?"Checked every hour":"<b style='color:var(--neg)'>The hourly check is not running</b>")+
+        " \u00b7 kept in full for "+st.keepDays+" days, then the last of each month"+
+        (st.removed?" \u00b7 "+st.removed+" older tidied away":"")+
+        (st.folder?' \u00b7 <a href="'+esc(st.folder)+'" target="_blank" rel="noopener">Drive folder \u2197</a>':"");
+      drawList();
+      var pick = select || (st.list[0] && st.list[0].id);
+      if(pick) openVersion(pick); else main('<p class="hint">No versions yet.</p>');
+    }).catch(function(err){ main('<p class="hint" style="color:var(--neg)">Could not reach the Sheet \u2014 '+esc(err.message)+'</p>'); });
+  }
+  function notInstalled(){
+    $("#vh-side").innerHTML="";
+    main('<div class="snbox info"><b class="t">Version history is not switched on yet</b>'+
+      'The app is ready, but the Sheet needs the <b>Snapshots.gs</b> file added to its Apps Script, '+
+      'one line added to Code.gs, and <b>installSnapshots</b> run once. Until then nothing is being recorded.</div>');
+  }
+
+  /* ---------- the list, grouped the way Sheets groups it ---------- */
+  function groupOf(iso){
+    var d=new Date(iso), now=new Date();
+    var d0=new Date(d.getFullYear(),d.getMonth(),d.getDate()), n0=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+    var days=Math.round((n0-d0)/864e5);
+    if(days<=0) return "Today";
+    if(days===1) return "Yesterday";
+    if(days<7) return d.toLocaleDateString("en-US",{weekday:"long"});
+    if(days<14) return "Last week";
+    if(d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth()) return "This month";
+    return d.toLocaleDateString("en-US",{month:"long",year: d.getFullYear()===now.getFullYear()?undefined:"numeric"});
+  }
+  function when(iso){
+    var d=new Date(iso);
+    return d.toLocaleDateString("en-US",{month:"long",day:"numeric"})+", "+d.toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+  }
+  function editorsHtml(v){
+    var eds=(v.editors||[]);
+    if(!eds.length) return '<div class="ed"><span><i style="background:var(--ink-3)"></i>'+(v.by==="SETUP"?"version history switched on":"automatic")+'</span></div>';
+    return '<div class="ed">'+eds.map(function(n){ return '<span><i style="background:'+personColor(n)+'"></i>'+esc(n)+'</span>'; }).join("")+'</div>';
+  }
+  function drawList(){
+    var side=$("#vh-side"); if(!side) return;
+    var rows=st.list.filter(function(v){ return st.filter!=="named" || v.name; });
+    var h="", last="";
+    if(!st.upToDate && st.filter==="all")
+      h+='<div class="vhgrp">Now</div><div class="vhitem pending"><div class="tm">Changes not saved as a version yet</div>'+
+         '<div class="cur">They are saved within the hour.'+(readOnly()?'':' <a href="#" id="vh-savenow">Save now</a>')+'</div></div>';
+    rows.forEach(function(v,i){
+      var g=groupOf(v.takenAt);
+      if(g!==last){ h+='<div class="vhgrp">'+esc(g)+'</div>'; last=g; }
+      var isCur = st.upToDate && v.id===(st.list[0]&&st.list[0].id);
+      h+='<button class="vhitem'+(v.id===st.sel?" on":"")+'" data-v="'+esc(v.id)+'">'+
+         (v.name?'<div class="nm">'+esc(v.name)+'</div>':'')+
+         '<div class="tm">'+esc(when(v.takenAt))+'</div>'+
+         (isCur?'<div class="cur">Current version</div>':'')+
+         editorsHtml(v)+
+         (v.changes!=null && v.changes>0?'<div class="ct">'+v.changes+' change'+(v.changes===1?"":"s")+'</div>':'')+
+         '</button>';
+    });
+    if(!rows.length) h+='<p class="hint" style="padding:12px 8px">'+(st.filter==="named"?"No named versions yet. Use \u201cName current version\u201d to name one.":"No versions yet.")+'</p>';
+    side.innerHTML=h;
+    $$("#vh-side [data-v]").forEach(function(b){ b.onclick=function(){ openVersion(b.dataset.v); }; });
+    var sn=$("#vh-savenow"); if(sn) sn.onclick=function(e){ e.preventDefault(); saveNow(""); };
+  }
+  function nameCurrent(){
+    var m=$("#vh-main"); if(!m) return;
+    var was=$("#vh-namebox"); if(was) was.parentNode.removeChild(was);
+    var box=document.createElement("div");
+    box.className="snbox info"; box.id="vh-namebox";
+    box.innerHTML='<b class="t">Name current version</b>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+
+        '<input id="vh-namein" maxlength="80" placeholder="e.g. Before month-end close" '+
+          'style="flex:1 1 220px;height:36px;border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:0 10px;outline:none">'+
+        '<button class="tbtn primary" id="vh-namego">Save name</button>'+
+        '<button class="tbtn ghost" id="vh-namex">Cancel</button></div>'+
+      '<div class="hint" style="margin-top:6px">If there are changes not saved as a version yet, a new version is saved first and given this name. Named versions are never tidied away.</div>';
+    m.insertBefore(box, m.firstChild);
+    m.scrollTop=0;
+    var inp=$("#vh-namein"); inp.focus();
+    var go=function(){ var v=inp.value.trim(); if(!v){ inp.focus(); return; } box.parentNode.removeChild(box); saveNow(v); };
+    $("#vh-namego").onclick=go;
+    inp.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); go(); } if(e.key==="Escape"){ e.stopPropagation(); box.parentNode.removeChild(box); } });
+    $("#vh-namex").onclick=function(){ box.parentNode.removeChild(box); };
+  }
+  function saveNow(name){
+    toast(name?"Naming the current version\u2026":"Saving a version\u2026");
+    api("snapNow",{name:name}).then(function(res){
+      if(res && res.ok){
+        toast(res.unchanged ? (name?"Named \u201c"+name+"\u201d":"Nothing has changed since the last version")
+                            : (name?"Saved and named \u201c"+name+"\u201d":"Version saved"));
+        loadList(res.snap.id);
+      } else toast((res&&res.message)||"Could not save a version");
+    }).catch(function(err){ toast("Could not reach the Sheet \u2014 "+err.message); });
+  }
+
+  /* ---------- one version ---------- */
+  function openVersion(id){
+    st.sel=id; st.tab="summary"; st.showSince=false;
+    drawList();
+    $("#vh-csv").style.display="none";
+    main('<div class="hint">Opening this version and comparing it\u2026</div>');
+    api("snapGet",{id:id}).then(function(res){
+      if(!$("#vh-main") || st.sel!==id) return;
+      if(!res || !res.ok) return main('<p class="hint" style="color:var(--neg)">'+esc((res&&res.message)||"Could not open it")+'</p>');
+      st.cur=res; drawVersion();
+    }).catch(function(err){ main('<p class="hint" style="color:var(--neg)">Could not reach the Sheet \u2014 '+esc(err.message)+'</p>'); });
+  }
+  function prevListed(id){
+    for(var i=0;i<st.list.length;i++) if(st.list[i].id===id) return st.list[i+1]||null;
+    return null;
+  }
+  function changedAccounts(){
+    var iv=st.cur.inVersion, m={};
+    if(!iv) return m;
+    iv.added.concat(iv.edited).forEach(function(x){ m[x.accountId]=1; });
+    iv.deleted.forEach(function(x){ m[x.accountId]=1; });
+    iv.accounts.forEach(function(x){ m[x.id]=1; });
+    return m;
+  }
+  function curOf(accId){
+    var a=(st.cur.data.accounts||[]).filter(function(x){ return x.id===accId; })[0]
+       || S.accounts.filter(function(x){ return x.id===accId; })[0];
+    return a ? (a.currency||"AED") : mainCurrency();
+  }
+  function drawVersion(){
+    var res=st.cur, v=res.snap, ck=res.check||{}, df=res.diff||{count:0}, iv=res.inVersion;
+    $("#vh-csv").style.display=res.missing?"none":"";
+    var h='<div class="vhtitle">'+esc(v.name||when(v.takenAt))+'</div>'+
+      '<div class="vhmeta">'+(v.name?esc(when(v.takenAt))+' \u00b7 ':'')+
+        ((v.editors||[]).length?'changes by '+esc(v.editors.join(", ")):(v.by==="SETUP"?"version history switched on":"saved automatically"))+
+        (v.changes?' \u00b7 '+v.changes+' change'+(v.changes===1?"":"s"):'')+' \u00b7 '+v.entries+' entries</div>';
+    /* the two things that matter, at a glance */
+    var seal = res.missing ? '<span class="vhbadge bad">\u26a0 File missing</span>'
+      : !ck.fileOk ? '<span class="vhbadge bad">\u26a0 Altered since it was saved</span>'
+      : !ck.chainOk ? '<span class="vhbadge bad">\u26a0 Link to the previous version broken</span>'
+      : '<span class="vhbadge good" title="Fingerprint '+esc(ck.hash)+'">&#128274; Sealed \u2014 exactly as saved</span>';
+    var since = res.missing ? '' : df.count
+      ? '<button class="vhbadge bad" id="vh-since">\u2717 '+df.count+' change'+(df.count===1?"":"s")+' to this period since \u2014 see them</button>'
+      : '<span class="vhbadge good">\u2713 Nothing in it has been changed since</span>';
+    h+='<div class="vhbadges">'+seal+since+'</div>';
+    if(res.missing){ h+='<div class="snbox bad" style="margin-top:12px"><b class="t">The file for this version is missing</b>'+esc(res.message||"")+'</div>'; main(h); return; }
+    if(!ck.fileOk) h+='<div class="snbox bad" style="margin-top:12px"><b class="t">Do not rely on this version</b>Its contents no longer match the fingerprint recorded when it was saved.</div>';
+    else if(!ck.chainOk) h+='<div class="snbox bad" style="margin-top:12px"><b class="t">A version record has been changed</b>This version no longer links to the one before it.</div>';
+    if(st.showSince || df.count===0) h+='';
+    if(st.showSince) h+=sinceHtml();
+    /* account tabs, like the app's own */
+    var accs=(res.data.accounts||[]).slice().sort(function(a,b){ return (Number(a.pos)||0)-(Number(b.pos)||0); });
+    var ch=changedAccounts();
+    h+='<div class="vhtabs"><button data-t="summary" class="'+(st.tab==="summary"?"on":"")+'">Summary</button>'+
+      accs.map(function(a){ return '<button data-t="'+esc(a.id)+'" class="'+(st.tab===a.id?"on":"")+'">'+esc(a.name)+(ch[a.id]?'<i title="Changed in this version"></i>':'')+'</button>'; }).join("")+'</div>';
+    if(st.tab==="summary") h+=summaryHtml(accs);
+    else { var a=accs.filter(function(x){ return x.id===st.tab; })[0]; h+= a ? ledgerHtml(a) : ''; }
+    main(h);
+    $$("#vh-main .vhtabs [data-t]").forEach(function(b){ b.onclick=function(){ st.tab=b.dataset.t; drawVersion(); }; });
+    var sb=$("#vh-since"); if(sb) sb.onclick=function(){ st.showSince=!st.showSince; drawVersion(); };
+    var o1=$("#vh-hl"); if(o1) o1.onchange=function(){ st.hl=this.checked; drawVersion(); };
+    var o2=$("#vh-unmod"); if(o2) o2.onchange=function(){ st.unmod=this.checked; drawVersion(); };
+    $$("#vh-main [data-goacc]").forEach(function(tr){ tr.onclick=function(){ st.tab=tr.dataset.goacc; drawVersion(); }; });
+  }
+  function compareNote(){
+    var res=st.cur;
+    if(res.first) return 'This is the first version \u2014 there is nothing before it to compare with.';
+    if(res.prevGone) return 'The versions before this one were tidied away under the '+st.keepDays+'-day rule, so there is nothing to compare it with.';
+    return 'Highlighted against the version before it ('+esc(when(res.prevAt))+').';
+  }
+  function summaryHtml(accs){
+    var res=st.cur, v=res.snap, prev=prevListed(v.id), df=res.diff, ch=changedAccounts();
+    return '<p class="hint" style="margin:0 0 8px">'+compareNote()+' Tap an account to see its entries as they were.</p>'+
+      '<table class="atable"><thead><tr><th>Account</th><th>Entries</th><th>Balance in this version</th>'+
+      '<th>Changed in this version</th><th>Same period in today\u2019s book</th></tr></thead><tbody>'+
+      accs.map(function(a){
+        var t=(v.totals||{})[a.id]||{bal:0,n:0};
+        var pt = prev && prev.id && (prev.totals||{})[a.id];
+        var moved = (prev && !res.prevGone && !res.first) ? (Number(t.bal)||0)-(pt?Number(pt.bal)||0:0) : null;
+        var now=df.rebuilt[a.id], drift=(now==null?0:now)-(Number(t.bal)||0);
+        return '<tr class="click" data-goacc="'+esc(a.id)+'">'+
+          '<td>'+esc(a.name)+(ch[a.id]?' <span style="color:var(--warn)">\u25cf</span>':'')+'</td>'+
+          '<td class="num" data-l="Entries">'+(t.n||0)+'</td>'+
+          '<td class="num" data-l="Balance" style="font-weight:700">'+esc(fmt(t.bal,a.currency))+'</td>'+
+          '<td class="num" data-l="Changed in this version" style="color:'+(moved==null||Math.abs(moved)<0.005?"var(--ink-3)":(moved<0?"var(--neg)":"var(--pos)"))+'">'+
+            (moved==null?"\u2014":(Math.abs(moved)<0.005?"\u2014":esc(fmt(moved,a.currency,{plus:true}))))+'</td>'+
+          '<td class="num" data-l="Today\u2019s book" style="color:'+(Math.abs(drift)<0.005?"var(--pos)":"var(--neg)")+'">'+
+            (now==null?"\u2014":(Math.abs(drift)<0.005?"\u2713 same":esc(fmt(now,a.currency))+' ('+esc(fmt(drift,a.currency,{plus:true}))+')'))+'</td></tr>';
+      }).join("")+'</tbody></table>';
+  }
+  /* the account exactly as the ledger showed it, with this version's changes marked */
+  function ledgerHtml(a){
+    var res=st.cur, iv=res.inVersion||{added:[],edited:[],deleted:[]};
+    var add={}, ed={}, del=[];
+    iv.added.forEach(function(x){ if(x.accountId===a.id) add[x.id]=x; });
+    iv.edited.forEach(function(x){ if(x.accountId===a.id) ed[x.id]=x; });
+    iv.deleted.forEach(function(x){ if(x.accountId===a.id) del.push(x); });
+    var rows=(res.data.entries||[]).filter(function(e){ return e.accountId===a.id; });
+    var run=Number(a.opening)||0, bal={}, sorted=rows.slice().sort(function(x,y){ return (Number(x.pos)||0)-(Number(y.pos)||0); });
+    for(var i=sorted.length-1;i>=0;i--){ if(!isHidden(sorted[i])) run+=Number(sorted[i].amount)||0; bal[sorted[i].id]=run; }
+    var all=sorted.map(function(e){ return {e:e, kind: add[e.id]?"add":(ed[e.id]?"edit":"")}; });
+    if(st.hl) del.forEach(function(x){ all.push({e:x, kind:"del"}); });
+    all.sort(function(p,q){ return (Number(p.e.pos)||0)-(Number(q.e.pos)||0); });
+    var nChanged=Object.keys(add).length+Object.keys(ed).length+del.length;
+    var shown=all.filter(function(r){ return st.unmod || r.kind; });
+    var who=function(x){ return esc(x.by||"?")+(x.at?" \u00b7 "+esc(fmtWhen(x.at)):""); };
+    var no=0;
+    var h='<div class="vhopts">'+
+      '<label><input type="checkbox" id="vh-hl" '+(st.hl?"checked":"")+'> Highlight changes</label>'+
+      '<label><input type="checkbox" id="vh-unmod" '+(st.unmod?"checked":"")+'> Show unmodified rows</label>'+
+      '<span class="hint" style="margin-left:auto">'+(nChanged?nChanged+' change'+(nChanged===1?"":"s")+' here in this version':'No changes to this account in this version')+'</span></div>';
+    if(!shown.length) return h+'<p class="hint">'+(rows.length?"Nothing changed in this account in this version.":"No entries in this account in this version.")+'</p>';
+    h+='<div class="costbox" style="margin:0">'+shown.map(function(r){
+      var e=r.e, v=Number(e.amount)||0, hid=isHidden(e), cls=st.hl&&r.kind?" vhrow "+r.kind:"";
+      var num = r.kind==="del" ? "" : String(++no);
+      if(r.kind!=="del" && !st.unmod){ num=String(sorted.indexOf(e)+1); }
+      var extra="";
+      if(st.hl && r.kind==="add") extra='<span class="vhwho">added by '+who(add[e.id])+'</span>';
+      if(st.hl && r.kind==="edit") extra=ed[e.id].changes.map(function(c){
+          var f=c.field==="amount"?function(x){ return esc(fmt(x,a.currency)); }:function(x){ return esc(c.field==="date"?fmtDateShort(x):x); };
+          return '<span class="vhwas">'+esc(SNAPFIELD[c.field]||c.field)+' was '+f(c.from)+'</span>'; }).join("")+
+        '<span class="vhwho">changed by '+who(ed[e.id])+'</span>';
+      if(r.kind==="del") extra='<span class="vhwho">deleted in this version'+(e.by?' by '+who(e):'')+'</span>';
+      return '<div class="costrow'+cls+'"'+(hid&&r.kind!=="del"?' style="opacity:.55"':'')+'>'+
+        '<span style="width:30px;color:var(--ink-3);font-size:11.5px;text-align:right;flex:0 0 auto">'+num+'</span>'+
+        '<span class="d">'+esc(UP(e.details)||"")+
+          '<span class="sub" style="display:block;font-size:11px;color:var(--ink-3);margin-top:2px">'+esc(e.date?fmtDateShort(e.date):"no date")+' \u00b7 '+esc(e.payBy||"CASH")+(hid?' \u00b7 not counted':'')+'</span>'+
+          extra+'</span>'+
+        '<span class="a" style="color:'+(v<0?"var(--neg)":(v>0?"var(--pos)":"var(--ink-3)"))+'">'+esc(fmt(v,a.currency,{plus:true}))+'</span>'+
+        '<span class="a" style="color:var(--ink-3);font-weight:500">'+(r.kind==="del"||hid?"\u2014":esc(fmt(bal[e.id],a.currency)))+'</span></div>';
+    }).join("")+
+    (st.unmod?'<div class="costrow" style="background:var(--panel-2)"><span style="width:30px"></span><span class="d">Opening / carried-forward balance</span>'+
+      '<span class="a">'+esc(fmt(a.opening,a.currency))+'</span><span class="a"></span></div>':'')+'</div>';
+    return h;
+  }
+  /* everything in this version's period that is different in today's book */
+  function sinceHtml(){
+    var res=st.cur, v=res.snap, df=res.diff;
+    var who=function(x){ return esc(x.by||"?")+(x.at?" \u00b7 "+esc(fmtWhen(x.at)):""); };
+    var amt=function(n,id){ return esc(fmt(n, curOf(id))); };
+    var h='<div class="snbox bad" style="margin-top:12px"><b class="t">Changed since this version was saved</b>'+
+      'Entries dated on or before '+esc(fmtDate(v.day))+' that are different in today\u2019s book.</div>';
+    if(df.edited.length) h+='<div class="snhead">Edited since ('+df.edited.length+')</div><div class="costbox">'+
+      df.edited.map(function(x){
+        return '<div class="costrow"><span class="d">'+esc(UP(x.details)||"(NO DETAILS)")+
+          '<span class="sub">'+esc(x.account)+' \u00b7 dated '+esc(fmtDateShort(x.date))+' \u00b7 changed by '+who(x)+'</span>'+
+          x.changes.map(function(c){
+            var f=c.field==="amount"?function(n){ return amt(n,x.accountId); }:function(n){ return esc(c.field==="date"?fmtDateShort(n):n); };
+            return '<span class="chg">'+esc(SNAPFIELD[c.field]||c.field)+': <s>'+f(c.from)+'</s> \u2192 <b>'+f(c.to)+'</b></span>';
+          }).join("")+'</span></div>';
+      }).join("")+'</div>';
+    if(df.deleted.length) h+='<div class="snhead">Deleted since ('+df.deleted.length+')</div><div class="costbox">'+
+      df.deleted.map(function(x){
+        return '<div class="costrow"><span class="d">'+esc(UP(x.details)||"(NO DETAILS)")+
+          '<span class="sub">'+esc(x.account)+' \u00b7 dated '+esc(fmtDateShort(x.date))+' \u00b7 '+(x.gone?'removed from the Sheet entirely':'deleted by '+who(x))+'</span></span>'+
+          '<span class="a" style="color:var(--neg)">'+amt(x.amount,x.accountId)+'</span></div>';
+      }).join("")+'</div>';
+    if(df.added.length) h+='<div class="snhead">Added to that period afterwards ('+df.added.length+')</div><div class="costbox">'+
+      df.added.map(function(x){
+        return '<div class="costrow"><span class="d">'+esc(UP(x.details)||"(NO DETAILS)")+
+          '<span class="sub">'+esc(x.account)+' \u00b7 dated '+esc(fmtDateShort(x.date))+' \u00b7 '+
+          (x.kind==="restored"?'deleted before this version, restored by ':'back-dated \u2014 entered by ')+who(x)+'</span></span>'+
+          '<span class="a">'+amt(x.amount,x.accountId)+'</span></div>';
+      }).join("")+'</div>';
+    if(df.accounts.length) h+='<div class="snhead">Account changes ('+df.accounts.length+')</div><div class="costbox">'+
+      df.accounts.map(function(x){
+        var what = x.change==="opening" ? 'Opening balance: <s>'+amt(x.from,x.id)+'</s> \u2192 <b>'+amt(x.to,x.id)+'</b>'
+                 : x.change==="renamed" ? 'Renamed: <s>'+esc(x.from)+'</s> \u2192 <b>'+esc(x.to)+'</b>' : 'Account deleted';
+        return '<div class="costrow"><span class="d">'+esc(x.account)+'<span class="chg">'+what+'</span>'+(x.at?'<span class="sub">'+esc(fmtWhen(x.at))+'</span>':'')+'</span></div>';
+      }).join("")+'</div>';
+    return h;
+  }
+  function csv(){
+    var res=st.cur; if(!res||res.missing) return;
+    var v=res.snap, accs={}, lines=[];
+    (res.data.accounts||[]).forEach(function(a){ accs[a.id]=a; });
+    lines.push(["VERSION",v.name||"",v.takenAt,"FINGERPRINT",v.hash].map(csvCell).join(","));
+    lines.push(["ACCOUNT","DATE","DETAILS OF PAYMENT","PAY BY","TOTAL","CURRENCY","TAG","ADDED BY","ADDED AT"].map(csvCell).join(","));
+    (res.data.entries||[]).slice().sort(function(x,y){
+      var ax=Number((accs[x.accountId]||{}).pos)||0, ay=Number((accs[y.accountId]||{}).pos)||0;
+      return ax!==ay ? ax-ay : (Number(x.pos)||0)-(Number(y.pos)||0);
+    }).forEach(function(e){
+      var a=accs[e.accountId]||{};
+      lines.push([a.name||"",e.date,e.details,e.payBy,e.amount,a.currency||"",e.tag,e.createdBy,e.createdAt].map(csvCell).join(","));
+    });
+    (res.data.accounts||[]).forEach(function(a){ lines.push([a.name,"","OPENING BALANCE","",a.opening,a.currency,"","",""].map(csvCell).join(",")); });
+    download("hisaab-version-"+v.day+"-"+v.id+".csv", lines.join("\n"), "text/csv");
+    toast("Saved to your downloads");
+  }
+  function verifyAll(){
+    st.sel=""; drawList(); $("#vh-csv").style.display="none";
+    var acc=[], total=0;
+    main('<div class="hint">Re-reading every version file and checking its fingerprint and its link\u2026</div>');
+    step("");
+    function step(from){
+      api("snapVerify", from?{from:from}:{}).then(function(res){
+        if(!$("#vh-main")) return;
+        if(!res || !res.ok) return main('<p class="hint" style="color:var(--neg)">'+esc((res&&res.message)||"Could not check")+'</p>');
+        acc=acc.concat(res.rows||[]); total=res.total||acc.length; draw(res.next||"");
+      }).catch(function(err){ main('<p class="hint" style="color:var(--neg)">Could not reach the Sheet \u2014 '+esc(err.message)+'</p>'); });
+    }
+    function draw(next){
+      var bad=acc.filter(function(r){ return !r.ok; }), tidied=acc.filter(function(r){ return r.removed; }).length;
+      var h = bad.length
+        ? '<div class="snbox bad"><b class="t">\u26a0 '+bad.length+' of '+acc.length+' versions checked so far fail</b>A version file, or the record of versions, has been changed or removed.</div>'
+        : next ? '<div class="snbox info"><b class="t">'+acc.length+' of '+total+' checked \u2014 all good so far</b>Google stops each check after a few minutes, so the rest carries on from here.</div>'
+               : '<div class="snbox good"><b class="t">&#128274; All '+(acc.length-tidied)+' kept versions check out</b>Every file matches its fingerprint and the chain is unbroken'+(tidied?', including across the '+tidied+' tidied away':'')+'.</div>';
+      if(next) h+='<p><button class="tbtn primary" id="vh-more">Carry on checking \u2014 '+(total-acc.length)+' left</button></p>';
+      h+='<div class="costbox">'+acc.slice().reverse().map(function(r){
+        return '<div class="costrow"><span class="d">'+esc(when(r.takenAt))+'<span class="sub" style="display:block;font-size:11px;color:var(--ink-3)">'+
+          (r.removed?"tidied away under the "+st.keepDays+"-day rule \u2014 its link still checks":r.ok?"file and link both good":(r.error?esc(r.error):(!r.fileOk?"file altered":"link to the previous version broken")))+
+          '</span></span><span class="a" style="color:'+(r.removed?"var(--ink-3)":r.ok?"var(--pos)":"var(--neg)")+'">'+(r.removed?"\u2014":r.ok?"\u2713":"\u26a0")+'</span></div>';
+      }).join("")+'</div>';
+      main(h);
+      var m=$("#vh-more"); if(m) m.onclick=function(){ this.disabled=true; this.textContent="Checking\u2026"; step(next); };
+    }
+  }
 }
 
 /* ---- history ---- */
@@ -3883,7 +4636,7 @@ function openImport(){
     parsed=grid.map(function(r){
       var d=map[0]>=0?parseDate(r[map[0]],dmy):"", amt=map[3]>=0?parseAmount(r[map[3]]):NaN;
       var pay=map[2]>=0?String(r[map[2]]||"").trim().toUpperCase():"CASH";
-      return {date:d, details:map[1]>=0?String(r[map[1]]||"").trim():"", payBy:pay||"CASH", amount:amt, ok:!!d&&!isNaN(amt), raw:r};
+      return {date:d, details:UP(map[1]>=0?String(r[map[1]]||"").trim():""), payBy:pay||"CASH", amount:amt, ok:!!d&&!isNaN(amt), raw:r};
     }).filter(function(p){ return p.details||p.date||!isNaN(p.amount); });
     var good=parsed.filter(function(p){return p.ok;});
     $("#im-prev").style.display="";
@@ -3902,7 +4655,7 @@ function openImport(){
     var keepTop=$("#im-keeptop").checked;
     var where=keepTop?"top":$("#im-where").value;
     var rows=parsed.filter(function(p){return p.ok;}).map(function(p){
-      return {id:uid(), date:p.date, details:p.details, payBy:p.payBy, amount:p.amount, tag:""};
+      return {id:uid(), date:p.date, details:UP(p.details), payBy:p.payBy, amount:p.amount, tag:""};
     });
     var imported=rows.length;
     if(keepTop){                       // two spacer rows travel with the block
@@ -4541,8 +5294,8 @@ function openBankImport(){
   }
   function finalDetails(r){
     if(st.convert && r.cur && r.cur!==target.currency)
-      return r.details+" ("+r.cur+" "+Math.abs(r.amount).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" @ "+USD_RATE+")";
-    return r.details;
+      return UP(r.details+" ("+r.cur+" "+Math.abs(r.amount).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2})+" @ "+USD_RATE+")");
+    return UP(r.details);
   }
   function drawPreview(){
     var pick=chosen();
@@ -4811,7 +5564,7 @@ function addEntry(){
   var a=acct(); if(!a.id||isAll()) return toast("Open an account first");
   var raw=$("#f-amt").value.trim(), n=parseAmount(raw);
   if(isNaN(n)){ $("#f-amt").focus(); return toast("Enter an amount"); }
-  var det=$("#f-det").value.trim();
+  var det=UP($("#f-det").value.trim());
   if(!det){ $("#f-det").focus(); return toast("Add a short detail"); }
   var wasUsd=usdOn();
   var mag=Math.abs(n) * (wasUsd?USD_RATE:1);
@@ -4832,7 +5585,7 @@ function sideAction(kind,id,act){
   if(!item) return;
   if(act==="settle"){
     var e={id:uid(), accountId:a.id, date:todayISO(),
-      details:(kind==="recv"?"RECEIVED FROM ":"PAID TO ")+item.name, payBy:"CASH",
+      details:UP((kind==="recv"?"RECEIVED FROM ":"PAID TO ")+item.name), payBy:"CASH",
       amount: kind==="recv"?Math.abs(item.amount):-Math.abs(item.amount), tag:""};
     var min=a.entries.reduce(function(m,x){return Math.min(m,x.pos);},0)-1;
     DB.entries[e.id]=Object.assign({pos:min,createdBy:AUTH.user,createdAt:new Date().toISOString(),updatedBy:AUTH.user,updatedAt:new Date().toISOString()},e);
@@ -4862,6 +5615,33 @@ function sortByDate(){
   order.forEach(function(id,i){ if(DB.entries[id]) DB.entries[id].pos=i; });
   op({t:"reorder", accountId:a.id, order:order});
   rebuild(); renderAll(); toast("Sorted newest first");
+}
+/* ------------------------------------------------------------- refresh ---
+   The app checks by itself, but sometimes you just want to know you are
+   looking at this second's figures. This throws away the polite waiting and
+   asks for the whole Sheet again.                                          */
+function refreshNow(){
+  var b=$("#btn-refresh");
+  if(DEMO){ toast("Demo mode — there is no Sheet to fetch"); return; }
+  if(refreshNow.busy) return;
+  refreshNow.busy=true;
+  if(b){ b.disabled=true; b.textContent="\u22ef"; }
+  net.bannerHidden=false; net.fails=0; net.backoffUntil=0; net.lastPull=0;
+  goHot(20000);
+  var done=function(){ refreshNow.busy=false; if(b){ b.disabled=false; b.innerHTML="&#8635;"; } };
+  if(Q.length) flush();
+  api("pull",{rev:0, full:true}).then(function(res){
+    done();
+    if(res && res.ok){
+      ingest(res);
+      setNet(Q.length?"saving":"live");
+      toast(Q.length? "Up to date — "+Q.length+" of yours still going up" : "Up to date");
+    } else if(res && res.error==="AUTH") signedOut();
+    else { setNet("off",(res&&res.message)||""); toast("Could not reach the Sheet"); }
+  }).catch(function(err){
+    done(); setNet("off",err.message);
+    toast("Could not reach the Sheet — "+err.message);
+  });
 }
 function signOut(){
   if(Q.length && !confirm(Q.length+" change(s) have not reached the Sheet yet. Sign out anyway?")) return;
@@ -5418,6 +6198,9 @@ function bind(){
   $("#btn-accounts").onclick=openAccounts;
   $("#btn-admin").onclick=openAdmin;
   $("#btn-history").onclick=function(){ openHistory(null); };
+  $("#btn-refresh").onclick=refreshNow;
+  $("#btn-asof").onclick=openAsOf;
+  $("#btn-snap").onclick=function(){ openSnapshots(); };
   $("#btn-menu").onclick=openMenu;
   $("#feed-all").onclick=function(){ openHistory(null); };
   $("#btn-theme").onclick=function(){ S.theme=S.theme==="dark"?"light":"dark"; cacheAll(); renderAll(); };
@@ -5533,6 +6316,7 @@ function bind(){
     if(typing) return;
     if(e.key==="/"){ e.preventDefault(); $("#q").focus(); }
     if(e.key.toLowerCase()==="n"){ e.preventDefault(); if(isTouch()) openAddSheet(); else $("#f-det").focus(); }
+    if(e.key.toLowerCase()==="r"){ e.preventDefault(); refreshNow(); }
   });
   document.addEventListener("mousemove",function(){ lastActivity=Date.now(); });
   document.addEventListener("visibilitychange",function(){
@@ -5546,6 +6330,9 @@ function bind(){
   });
   window.addEventListener("offline",function(){ setNet("off","no connection"); });
   window.addEventListener("beforeunload",function(e){ if(Q.length){ e.preventDefault(); e.returnValue=""; } });
+  var sT; var noteScroll=function(){ clearTimeout(sT); sT=setTimeout(saveScroll,160); };
+  $("#tablewrap").addEventListener("scroll",noteScroll,{passive:true});
+  window.addEventListener("scroll",noteScroll,{passive:true});
   var rt; window.addEventListener("resize",function(){ clearTimeout(rt); rt=setTimeout(function(){ if(isAll()) renderAllView(); else renderTable(); },250); });
   startLoops();
 }
