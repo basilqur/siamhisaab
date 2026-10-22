@@ -309,6 +309,13 @@ textarea.edit{resize:vertical;min-height:60px;line-height:1.42}
 .costrow:last-child{border-bottom:none}
 .costrow .d{flex:1;min-width:0;overflow-wrap:anywhere}
 .costrow .a{width:110px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+#ao-detail .costrow .d .sub{display:block;font-size:11px;color:var(--ink-3);margin-top:2px;font-weight:500}
+#ao-detail .costrow .a{width:124px}
+#ao-detail .costrow .a+.a{width:124px;font-weight:500}
+@media(max-width:620px){ #ao-detail .costrow{flex-wrap:wrap}
+  #ao-detail .costrow .d{flex:1 1 100%}
+  #ao-detail .costrow .a{flex:1 1 45%;width:auto;text-align:left}
+  #ao-detail .costrow .a+.a{text-align:right} }
 #sn-body .costrow .d .sub{display:block;font-size:11px;color:var(--ink-3);margin-top:2px;font-weight:500}
 #sn-body .costrow .d .chg{display:block;font-size:12px;margin-top:3px}
 #sn-body .costrow .d .chg s{color:var(--neg);opacity:.8}
@@ -823,6 +830,7 @@ body.allview-on .fab{display:none!important}
     <div id="actions" style="display:flex;gap:2px">
       <button class="tbtn only-wide" id="btn-import">⊕ Import</button>
       <button class="tbtn only-wide" id="btn-history">History</button>
+      <button class="tbtn only-wide" id="btn-asof" title="Balances on any past date, worked out from today's book">&#128197; Balances</button>
       <button class="tbtn only-wide" id="btn-snap" title="Version history — like Google Sheets">&#128274; Versions</button>
       <button class="tbtn only-wide" id="btn-export">↧ Export</button>
       <button class="tbtn only-wide" id="btn-accounts">⚙ Accounts</button>
@@ -3841,6 +3849,7 @@ function openAddSheet(){
 function openMenu(){
   var items=[
     ["Refresh now","Fetch the Sheet this second","refresh"],
+    ["Balances on a date","What every account held on any past day","asof"],
     ["Version history","Every saved version, like Google Sheets","snap"],
     ["History","Every change, who and when","history"],
     ["Accounts","Rename, currency, opening balance","accounts"],
@@ -3861,6 +3870,7 @@ function openMenu(){
     b.onclick=function(){
       var d=b.dataset.do; closeModal();
       if(d==="refresh") return refreshNow();
+      if(d==="asof") return openAsOf();
       if(d==="snap") return openSnapshots();
       if(d==="history") openHistory(null);
       if(d==="accounts") openAccounts();
@@ -3874,6 +3884,208 @@ function openMenu(){
       if(d==="out") signOut();
     };
   });
+}
+
+/* ===================================================== BALANCES ON A DATE ==
+   What did every account hold on the 12th? The ledger knows: take the opening
+   balance and add everything dated on or before that day. Entries left out of
+   the totals stay left out, exactly as they are on the live sheet.
+   This reads the book as it stands now, filtered by date — it is not a replay
+   of the change log, so an entry someone back-dated last week does count
+   towards that older day. That is almost always what you want.
+   ========================================================================== */
+function entryDates(){
+  var seen={}, out=[];
+  visibleAccounts().forEach(function(a){
+    a.entries.forEach(function(e){
+      if(isHidden(e)) return;
+      var d=String(e.date||"").slice(0,10);
+      if(d && !seen[d]){ seen[d]=1; out.push(d); }
+    });
+  });
+  return out.sort();
+}
+function balanceAsOf(a, iso){
+  var r={bal:Number(a.opening)||0, cash:0, bank:0, n:0, last:""};
+  a.entries.forEach(function(e){
+    if(isHidden(e)) return;
+    var d=String(e.date||"").slice(0,10);
+    if(!d || d>iso) return;
+    var v=Number(e.amount)||0;
+    r.bal+=v; r.n++;
+    if(d>r.last) r.last=d;
+    if(String(e.payBy||"").toUpperCase()==="BANK") r.bank+=v; else r.cash+=v;
+  });
+  return r;
+}
+/* The rows that make up that balance, oldest first, with the balance after
+   each one. Ordered by date here rather than by where the row sits in the
+   list, so the last line always lands on the figure in the table above.   */
+function entriesAsOf(a, iso){
+  var rows=a.entries.filter(function(e){
+    if(isHidden(e)) return false;
+    var d=String(e.date||"").slice(0,10);
+    return d && d<=iso;
+  }).slice().sort(function(x,y){
+    var dx=String(x.date||"").slice(0,10), dy=String(y.date||"").slice(0,10);
+    if(dx!==dy) return dx<dy?-1:1;
+    return (Number(x.pos)||0)-(Number(y.pos)||0);
+  });
+  var run=Number(a.opening)||0, out=[];
+  rows.forEach(function(e){ run+=Number(e.amount)||0; out.push({e:e, run:run}); });
+  return out;
+}
+function undatedMoney(){
+  var n=0, sum=0;
+  visibleAccounts().forEach(function(a){
+    a.entries.forEach(function(e){
+      if(isHidden(e) || String(e.date||"").trim()) return;
+      var v=Number(e.amount)||0;
+      if(Math.abs(v)<0.005) return;
+      n++; sum+=v;
+    });
+  });
+  return {n:n, sum:sum};
+}
+function openAsOf(){
+  var dates=entryDates();
+  var day = dates.length ? dates[dates.length-1] : todayISO();
+  if(todayISO()>day) day=todayISO();
+  var und=undatedMoney();
+
+  openModal('<header><div><h3>Balances on a date</h3><p>Worked out from today\u2019s book. To prove nothing has been changed since, use <b>Versions</b>.</p></div>'+
+    '<button class="tbtn" data-close>\u2715</button></header>'+
+    '<div class="body">'+
+      '<div class="fields" style="margin-top:0;align-items:flex-end">'+
+        '<div class="field"><label>Date</label><input id="ao-date" type="date" value="'+esc(day)+'"></div>'+
+        '<div class="field"><label>Step through the days with entries</label>'+
+          '<div style="display:flex;gap:6px;align-items:center">'+
+            '<button class="tbtn ghost" id="ao-prev" title="Earlier">\u25c0</button>'+
+            '<select id="ao-list" style="min-width:150px;height:34px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);padding:0 8px"></select>'+
+            '<button class="tbtn ghost" id="ao-next" title="Later">\u25b6</button>'+
+          '</div></div>'+
+        '<div class="field"><label>&nbsp;</label><button class="tbtn" id="ao-today">Today</button></div>'+
+      '</div>'+
+      (und.n?'<p class="hint" style="color:var(--warn)"><b>'+und.n+' entr'+(und.n===1?"y has":"ies have")+
+        ' no date</b> ('+esc(fmt(und.sum,mainCurrency()))+'). They cannot be placed in time, so they are left out '+
+        'of every figure below — give them a date and they will appear.</p>':'')+
+      '<div id="ao-body" style="margin-top:4px"></div>'+
+      '<div id="ao-detail"></div>'+
+    '</div>'+
+    '<footer><span class="hint" id="ao-note" style="margin-right:auto"></span>'+
+    '<button class="tbtn ghost" id="ao-csv">\u2193 CSV</button>'+
+    '<button class="tbtn primary" data-close>Close</button></footer>');
+
+  var openAcc="";
+  var sel=$("#ao-list");
+  sel.innerHTML=dates.slice().reverse().map(function(d){
+    return '<option value="'+esc(d)+'">'+esc(fmtDateShort(d))+'</option>'; }).join("")
+    || '<option value="">no entries yet</option>';
+  $("#ao-date").onchange=function(){ day=this.value||todayISO(); draw(); };
+  sel.onchange=function(){ if(this.value){ day=this.value; $("#ao-date").value=day; draw(); } };
+  $("#ao-today").onclick=function(){ day=todayISO(); $("#ao-date").value=day; draw(); };
+  $("#ao-prev").onclick=function(){ step(-1); };
+  $("#ao-next").onclick=function(){ step(1); };
+  $("#ao-csv").onclick=csv;
+  draw();
+
+  function step(dir){
+    if(!dates.length) return;
+    var i;
+    if(dir<0){ for(i=dates.length-1;i>=0;i--) if(dates[i]<day){ day=dates[i]; break; } }
+    else { for(i=0;i<dates.length;i++) if(dates[i]>day){ day=dates[i]; break; } }
+    $("#ao-date").value=day; draw();
+  }
+  function prevDate(){
+    for(var i=dates.length-1;i>=0;i--) if(dates[i]<day) return dates[i];
+    return "";
+  }
+  function rows(){
+    return visibleAccounts().map(function(a){
+      return {a:a, now:balanceAsOf(a,day), was: prevDate()? balanceAsOf(a,prevDate()) : null};
+    });
+  }
+  function draw(){
+    if(!$("#ao-body")) return;
+    var list=rows(), pd=prevDate(), main=mainCurrency();
+    var T={n:0,cash:0,bank:0,bal:0,was:0};
+    list.forEach(function(r){
+      if(!includedInAll(r.a)) return;
+      T.n+=r.now.n; T.cash+=r.now.cash; T.bank+=r.now.bank; T.bal+=r.now.bal;
+      if(r.was) T.was+=r.was.bal;
+    });
+    $("#ao-body").innerHTML=
+      '<div class="alltot" style="margin-bottom:12px"><div class="k">All counted accounts on '+esc(fmtDate(day))+'</div>'+
+        '<div class="v num" style="color:'+(T.bal<0?"var(--neg)":"var(--pos)")+'">'+esc(fmt(T.bal,main))+'</div>'+
+        '<div class="s">'+T.n+' entries up to then · cash '+esc(fmt(T.cash,main))+' · bank '+esc(fmt(T.bank,main))+
+        (pd?' · '+(T.bal-T.was>=0?"up ":"down ")+esc(fmt(Math.abs(T.bal-T.was),main))+' since '+esc(fmtDateShort(pd)):'')+
+        '</div></div>'+
+      '<table class="atable"><thead><tr><th>Account</th><th>Entries</th><th>Cash</th><th>Bank</th>'+
+      '<th>Balance</th><th>'+(pd?"Change since "+esc(fmtDateShort(pd)):"Change")+'</th></tr></thead><tbody>'+
+      list.map(function(r){
+        var ch = r.was ? r.now.bal-r.was.bal : 0;
+        var inc = includedInAll(r.a);
+        return '<tr class="click '+(inc?"":"ex")+'" data-ac="'+esc(r.a.id)+'" title="See the entries behind this">'+
+          '<td>'+(openAcc===r.a.id?"\u25be ":"\u25b8 ")+esc(r.a.name)+(inc?"":'<span class="exbadge">not counted</span>')+'</td>'+
+          '<td class="num" data-l="Entries">'+r.now.n+'</td>'+
+          '<td class="num" data-l="Cash">'+esc(fmt(r.now.cash,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Bank">'+esc(fmt(r.now.bank,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Balance" style="font-weight:700;color:'+(r.now.bal<0?"var(--neg)":"var(--ink)")+'">'+
+            esc(fmt(r.now.bal,r.a.currency))+'</td>'+
+          '<td class="num" data-l="Change" style="color:'+(Math.abs(ch)<0.005?"var(--ink-3)":(ch<0?"var(--neg)":"var(--pos)"))+'">'+
+            (r.was? (Math.abs(ch)<0.005?"\u2014":esc(fmt(ch,r.a.currency,{plus:true}))) : "\u2014")+'</td></tr>';
+      }).join("")+'</tbody>'+
+      '<tfoot><tr><td>TOTAL <span style="font-weight:500;color:var(--ink-3)">(counted accounts)</span></td>'+
+        '<td class="num" data-l="Entries">'+T.n+'</td>'+
+        '<td class="num" data-l="Cash">'+esc(fmt(T.cash,main))+'</td>'+
+        '<td class="num" data-l="Bank">'+esc(fmt(T.bank,main))+'</td>'+
+        '<td class="num" data-l="Balance">'+esc(fmt(T.bal,main))+'</td>'+
+        '<td class="num" data-l="Change">'+(pd?esc(fmt(T.bal-T.was,main,{plus:true})):"\u2014")+'</td></tr></tfoot></table>';
+    $$("#ao-body tr[data-ac]").forEach(function(tr){
+      tr.onclick=function(){ openAcc = (openAcc===tr.dataset.ac) ? "" : tr.dataset.ac; draw(); };
+    });
+    detail();
+    $("#ao-note").textContent = dates.length
+      ? dates.length+" days have entries, "+fmtDateShort(dates[0])+" to "+fmtDateShort(dates[dates.length-1])
+      : "No dated entries yet";
+    if(sel && dates.indexOf(day)>-1) sel.value=day;
+  }
+  /* the last ten entries that built the figure above */
+  function detail(){
+    var box=$("#ao-detail"); if(!box) return;
+    var a=visibleAccounts().filter(function(x){ return x.id===openAcc; })[0];
+    if(!a){ box.innerHTML=""; return; }
+    var all=entriesAsOf(a,day), last=all.slice(-10).reverse(), b=balanceAsOf(a,day);
+    box.innerHTML='<div class="costbox" style="margin-top:14px">'+
+      '<div class="costrow" style="background:var(--panel-2);font-weight:700">'+
+        '<span class="d">'+esc(a.name)+' \u2014 last '+Math.min(10,last.length)+' up to '+esc(fmtDateShort(day))+
+          '<span class="sub" style="font-weight:500">'+all.length+' entr'+(all.length===1?"y":"ies")+' up to then \u00b7 '+
+          'cash '+esc(fmt(b.cash,a.currency))+' \u00b7 bank '+esc(fmt(b.bank,a.currency))+'</span></span>'+
+        '<span class="a">'+esc(fmt(b.bal,a.currency))+'</span></div>'+
+      (last.length? last.map(function(r){
+        var e=r.e, v=Number(e.amount)||0, col=colourOf(e), t=tagOf(col);
+        return '<div class="costrow'+(t?" "+t.cls:"")+'">'+
+          '<span class="d">'+(isRem(e)?BELL:"")+esc(UP(e.details)||"(NO DETAILS)")+
+            '<span class="sub">'+esc(fmtDateShort(e.date))+' \u00b7 '+esc(e.payBy||"CASH")+'</span></span>'+
+          '<span class="a" style="color:'+(v<0?"var(--neg)":(v>0?"var(--pos)":"var(--ink-3)"))+'">'+
+            esc(fmt(v,a.currency,{plus:true}))+'</span>'+
+          '<span class="a" style="color:var(--ink-3)">'+esc(fmt(r.run,a.currency))+'</span></div>';
+      }).join("")
+       : '<div class="costrow" style="color:var(--ink-3)">Nothing dated on or before '+esc(fmtDateShort(day))+
+         ' \u2014 the balance is just the opening figure.</div>')+
+      (all.length>10?'<div class="costrow" style="color:var(--ink-3);font-size:11.5px">'+
+        (all.length-10)+' earlier entr'+(all.length-10===1?"y is":"ies are")+' folded into the running balance above.</div>':"")+
+      '</div>';
+  }
+  function csv(){
+    var list=rows(), lines=[["BALANCES AS AT",fmtDate(day)].map(csvCell).join(",")];
+    lines.push(["ACCOUNT","ENTRIES UP TO THEN","CASH","BANK","BALANCE","CURRENCY","COUNTED IN TOTAL"].map(csvCell).join(","));
+    list.forEach(function(r){
+      lines.push([r.a.name,r.now.n,r.now.cash,r.now.bank,r.now.bal,r.a.currency,includedInAll(r.a)?"YES":"NO"].map(csvCell).join(","));
+    });
+    download("hisaab-balances-"+day+".csv", lines.join("\n"), "text/csv");
+    toast("Saved to your downloads");
+  }
 }
 
 /* ============================================================ ADD UP =====
@@ -6043,6 +6255,7 @@ function bind(){
   $("#btn-admin").onclick=openAdmin;
   $("#btn-history").onclick=function(){ openHistory(null); };
   $("#btn-refresh").onclick=refreshNow;
+  $("#btn-asof").onclick=openAsOf;
   $("#btn-snap").onclick=function(){ openSnapshots(); };
   $("#btn-menu").onclick=openMenu;
   $("#feed-all").onclick=function(){ openHistory(null); };
