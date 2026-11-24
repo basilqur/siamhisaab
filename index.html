@@ -1571,6 +1571,7 @@ function pollTick(force){
       if(res.changed){ goHot(); ingest(res); }
       else { DB.online=res.online||DB.online; renderPeople(); }
       liveEnsureKey();
+      fixDatesEverywhere();
       if(Q.length) flush();
       else catchUp();
     } else if(res && res.error==="AUTH") signedOut();
@@ -5880,10 +5881,43 @@ function addSide(kind){
   $("#"+kind+"-n").value=""; $("#"+kind+"-a").value="";
   rebuild(); renderSide(); renderStats();
 }
+/* A date has to be stored as 2026-09-16 for sorting, the month filter and
+   Balances on a date to work. One typed or pasted any other way ("Wed, Sep 16,
+   2026", "16/09/2026") looks exactly the same on screen but sorts as text —
+   "W" comes after "2", so "Sort by date" kept putting it at the very top.
+   This puts such dates right, quietly, the way the rest are stored.          */
+var ISO_DAY=/^\d{4}-\d{2}-\d{2}$/;
+function fixDates(list){
+  var n=0;
+  (list||[]).forEach(function(e){
+    var raw=String(e.date==null?"":e.date).trim();
+    if(!raw || ISO_DAY.test(raw)) return;
+    var good=parseDate(raw); if(!good || !ISO_DAY.test(good)) return;
+    e.date=good;
+    if(DB.entries[e.id]){ DB.entries[e.id].date=good; DB.entries[e.id].updatedBy=AUTH.user; DB.entries[e.id].updatedAt=new Date().toISOString(); }
+    op({t:"update", id:e.id, field:"date", val:good, old:raw});
+    n++;
+  });
+  return n;
+}
+var datesFixed=false;
+function fixDatesEverywhere(){
+  if(datesFixed || !isAdmin() || readOnly() || DEMO || !AUTH.token) return;
+  datesFixed=true;
+  var all=[];
+  S.accounts.forEach(function(a){ if(!acctLocked(a.id)) all=all.concat(a.entries); });
+  if(fixDates(all.slice(0,300))){ rebuild(); if(!isEditing()) renderAll(); }
+}
+function dayKey(e){ var d=String(e.date||""); return ISO_DAY.test(d) ? d : (parseDate(d)||""); }
 function sortByDate(){
   if(isAll()) return;
   var a=acct();
-  var order=a.entries.slice().sort(function(x,y){ return String(y.date||"").localeCompare(String(x.date||"")); }).map(function(e){return e.id;});
+  fixDates(a.entries);
+  var idx={}; a.entries.forEach(function(e,i){ idx[e.id]=i; });
+  var order=a.entries.slice().sort(function(x,y){
+    var c=dayKey(y).localeCompare(dayKey(x));
+    return c || (idx[x.id]-idx[y.id]);                /* same day: keep the order you had */
+  }).map(function(e){return e.id;});
   order.forEach(function(id,i){ if(DB.entries[id]) DB.entries[id].pos=i; });
   op({t:"reorder", accountId:a.id, order:order});
   rebuild(); renderAll(); toast("Sorted newest first");
