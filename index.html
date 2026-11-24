@@ -1338,6 +1338,7 @@ function ingest(res){
   (res.deletedCars||[]).forEach(function(id){ delete DB.cars[id]; });
   (res.deletedCosts||[]).forEach(function(id){ delete DB.costs[id]; });
   if(res.audit && res.audit.length) DB.audit=res.audit;
+  liveNoteFrom(res);
   rebuild(); cacheAll();
   if(isEditing()){ RENDER_PENDING=true; return; }   /* the drawing can wait */
   renderAll();
@@ -1480,6 +1481,7 @@ function op(o){
   Q.push(o); cacheAll();
   setNet(Q.length?"saving":"live");
   flush();
+  liveSoon();
 }
 var flushTimer=null, backoff=1000;
 function flush(){
@@ -1495,9 +1497,10 @@ function flush(){
       goHot(); signalChange(res.rev);
       setNet(Q.length?"saving":"live");
       if(Q.length) flush();
+      else catchUp();
     } else if(res && res.error==="AUTH"){ signedOut(); }
     else retry(res && res.message);
-  }).catch(function(err){ net.sending=false; retry(err.message); });
+  }).catch(function(err){ net.sending=false; retry(err.message); catchUp(); });
 }
 function retry(msg){
   setNet("off", msg);
@@ -1554,7 +1557,7 @@ function stopLoops(){
 }
 function pollTick(force){
   if(DEMO || !AUTH.token || document.hidden) return;
-  if(net.pulling || net.sending) return;                        /* never two at once */
+  if(net.pulling || net.sending){ if(force) net.wantPull=true; return; }   /* never two at once — but remember */
   if(!force && isEditing()) return;                             /* you are mid-edit */
   if(!force && Date.now()-net.lastPull < pollWait()) return;
   if(!force && net.backoffUntil && Date.now() < net.backoffUntil) return;
@@ -1565,12 +1568,23 @@ function pollTick(force){
       if(net.state==="off") setNet(Q.length?"saving":"live");
       if(res.changed){ goHot(); ingest(res); }
       else { DB.online=res.online||DB.online; renderPeople(); }
+      liveEnsureKey();
       if(Q.length) flush();
+      else catchUp();
     } else if(res && res.error==="AUTH") signedOut();
   }).catch(function(err){
     net.pulling=false;
     setNet("off", err.message);
+    catchUp();
   });
+}
+/* A "something changed" that arrived while we were already talking to the
+   Sheet used to be dropped — and then nothing happened until the next routine
+   check, 25 seconds later with Firebase on. That was most of the slowness.   */
+function catchUp(){
+  if(!net.wantPull) return;
+  net.wantPull=false;
+  if(Number(net.sigRev||0) > Number(DB.rev||0)) setTimeout(function(){ pollTick(true); }, 0);
 }
 
 /* ------------------------------------------------------- the instant channel
@@ -1579,45 +1593,245 @@ function pollTick(force){
    on an open connection — so the change lands in well under a second instead of
    waiting for the next check. Nothing but a number ever goes through it: the
    ledger itself always comes from your own Google Sheet.                       */
-var SIG=null, sigTries=0, sigTimer=null;
-function sigUrl(){
+var SIG=null, sigTries=0, sigTimer=null, SIGMODE="root", sigOpened=false;
+function sigBase(){
   var u=String(CFG.signalUrl||"").trim();
-  if(!u) return "";
-  return u.replace(/\/+$/,"").replace(/\.json$/,"")+"/rev.json";
+  return u ? u.replace(/\/+$/,"").replace(/\.json$/,"") : "";
 }
+function sigUrl(){ var b=sigBase(); return b ? b+"/rev.json" : ""; }
 function startSignal(){
   stopSignal();
-  var u=sigUrl(); if(!u || DEMO || !AUTH.token) return;
+  var b=sigBase(); if(!b || DEMO || !AUTH.token) return;
   try{
-    SIG=new EventSource(u);
+    /* the whole database: "rev" (go and ask) and "live" (here is the change) */
+    SIG=new EventSource(SIGMODE==="root" ? b+"/.json" : b+"/rev.json");
+    sigOpened=false;
     ["put","patch"].forEach(function(kind){
       SIG.addEventListener(kind,function(ev){
         sigTries=0;
         var d; try{ d=JSON.parse(ev.data); }catch(e){ return; }
-        var v=d && d.data;
-        var rev=v && (v.r!=null?v.r:v), by=v && v.by;
-        if(by && by===AUTH.user) return;               /* our own echo */
-        if(rev==null || Number(rev)===Number(DB.rev)) return;
-        goHot(); pollTick(true);
+        if(!d) return;
+        var path=String(d.path||"/"), data=d.data;
+        if(SIGMODE!=="root"){ if(path==="/") sigRev(data); return; }
+        if(path==="/"){
+          if(!data || typeof data!=="object") return;
+          if(kind==="put"){ sigRev(data.rev); return; }          /* first look: only the revision matters */
+          Object.keys(data).forEach(function(k){
+            if(k==="rev") sigRev(data[k]);
+            else if(k==="live") liveMany(data[k]);
+            else if(k.indexOf("live/")===0) liveHear(data[k]);
+          });
+          return;
+        }
+        if(path==="/rev"){ sigRev(data); return; }
+        if(path==="/live"){ liveMany(data); return; }
+        if(path.indexOf("/live/")===0 && path.slice(6).indexOf("/")<0){ liveHear(data); return; }
       });
     });
-    SIG.onopen=function(){ sigTries=0; net.signal="on"; setNet(net.state,net.lastErr); };
+    SIG.onopen=function(){ sigTries=0; sigOpened=true; net.signal="on"; setNet(net.state,net.lastErr); };
     SIG.onerror=function(){
+      var never=!sigOpened;
       net.signal="off"; stopSignal();
       sigTries++;
+      /* a database whose rules only open up "rev" still gives us the old signal */
+      if(never && SIGMODE==="root" && sigTries>=2){ SIGMODE="rev"; sigTries=0; }
       clearTimeout(sigTimer);
       sigTimer=setTimeout(startSignal, Math.min(2000*Math.pow(1.7,sigTries), 60000));
     };
   }catch(e){ net.signal="off"; }
+}
+function sigRev(v){
+  if(v==null) return;
+  var rev=(typeof v==="object") ? v.r : v, by=v && v.by, dev=v && v.d;
+  if(dev ? dev===MYDEV : (by && by===AUTH.user)) return;   /* our own echo (another device of yours is not an echo) */
+  if(rev==null || Number(rev)===Number(DB.rev)) return;
+  net.sigRev=Math.max(Number(net.sigRev||0), Number(rev)||0);
+  goHot(); pollTick(true);
+}
+function liveMany(obj){
+  if(!obj || typeof obj!=="object") return;
+  Object.keys(obj).forEach(function(k){ liveHear(obj[k]); });
 }
 function stopSignal(){ if(SIG){ try{ SIG.close(); }catch(e){} SIG=null; } }
 function signalChange(rev){
   var u=sigUrl(); if(!u) return;
   try{
     fetch(u,{method:"PUT",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({r:rev, by:AUTH.user, t:Date.now()})}).catch(function(){});
+      body:JSON.stringify({r:rev, by:AUTH.user, d:MYDEV, t:Date.now()})}).catch(function(){});
   }catch(e){}
 }
+
+/* ------------------------------------------------------ the change itself, live
+   The revision number above only tells the others "go and ask the Sheet" — and
+   the Sheet takes a few seconds to answer. So as well as that, the moment you
+   change something here the changed rows themselves go out through the same
+   Firebase address, and every other screen that is open draws them straight
+   away, the way Google Sheets does. A few seconds later, when your save has
+   landed, their next look at the Sheet confirms it (and corrects anything that
+   came out differently there). The Sheet is still the book; this only gets the
+   news there first.
+
+   What goes through Firebase is locked with a key that lives in your settings,
+   which only people who can sign in are ever sent. Anyone who finds the
+   address sees scrambled text, nothing else.                                  */
+var MYDEV = Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+var LIVE_TABLES = ["entries","side","cars","costs","accounts"];
+var LIVE_DEL = {entries:"deletedEntries", side:"deletedSide", cars:"deletedCars", costs:"deletedCosts", accounts:"deletedAccounts"};
+var LIVEBASE = null, liveTimer=null, liveFirst=0, liveSeq=0, LIVEKEY={str:"", key:null};
+var LIVE_MAX = 400;                 /* bigger than this (an import) → just the "go and ask" signal */
+
+function liveSnap(rec){ try{ return JSON.stringify(rec); }catch(e){ return ""; } }
+/* What this device last agreed with the world on. Anything different from this
+   when you make a change is your change.                                       */
+function liveBaseAll(){
+  LIVEBASE={};
+  LIVE_TABLES.forEach(function(t){
+    var m={}, src=DB[t]||{};
+    Object.keys(src).forEach(function(id){ m[id]=liveSnap(src[id]); });
+    LIVEBASE[t]=m;
+  });
+}
+/* rows that came from the Sheet, or from someone else, are not ours to resend */
+function liveNoteFrom(res){
+  if(!LIVEBASE || !res) return;
+  LIVE_TABLES.forEach(function(t){
+    (res[t]||[]).forEach(function(r){ if(r && r.id!=null) LIVEBASE[t][r.id]=liveSnap((DB[t]||{})[r.id]); });
+    (res[LIVE_DEL[t]]||[]).forEach(function(id){ delete LIVEBASE[t][id]; });
+  });
+}
+function liveOn(){ return !!(sigUrl() && CFG.liveKey && window.crypto && crypto.subtle && !DEMO && AUTH.token); }
+function liveSoon(){
+  if(!liveOn()) return;
+  if(!liveFirst) liveFirst=Date.now();
+  clearTimeout(liveTimer);
+  /* gather a burst (a bulk tag, a paste of rows) into one message, but never hold it long */
+  liveTimer=setTimeout(liveSend, Date.now()-liveFirst>250 ? 0 : 60);
+}
+function liveDiff(){
+  var out={}, n=0;
+  LIVE_TABLES.forEach(function(t){
+    var base=LIVEBASE[t]||(LIVEBASE[t]={}), src=DB[t]||{}, ch=[], gone=[];
+    Object.keys(src).forEach(function(id){
+      var s=liveSnap(src[id]);
+      if(base[id]!==s){ ch.push(src[id]); base[id]=s; }
+    });
+    Object.keys(base).forEach(function(id){ if(!(id in src)){ gone.push(id); delete base[id]; } });
+    if(ch.length){ out[t]=JSON.parse(JSON.stringify(ch)); n+=ch.length; }
+    if(gone.length){ out[LIVE_DEL[t]]=gone; n+=gone.length; }
+  });
+  out._n=n;
+  return out;
+}
+function liveSend(){
+  liveTimer=null; liveFirst=0;
+  if(!LIVEBASE) return liveBaseAll();
+  var p=liveDiff(), n=p._n; delete p._n;
+  if(!n || n>LIVE_MAX || !liveOn()) return;
+  var by=AUTH.user, seq=++liveSeq;
+  liveEncrypt(JSON.stringify(p)).then(function(box){
+    var u=sigBase()+"/live/"+String(by).replace(/[.#$\[\]\/]/g,"_")+".json";
+    return fetch(u,{method:"PUT",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({v:1, by:by, d:MYDEV, t:Date.now(), n:seq, iv:box.iv, c:box.c})});
+  }).catch(function(){ /* the ordinary signal and the next look at the Sheet still get it there */ });
+}
+
+/* ---- the lock: AES-GCM, 256-bit, key from the settings ---- */
+function b64enc(buf){
+  var u=new Uint8Array(buf), s="";
+  for(var i=0;i<u.length;i+=32768) s+=String.fromCharCode.apply(null, u.subarray(i,i+32768));
+  return btoa(s);
+}
+function b64dec(str){
+  var bin=atob(str), u=new Uint8Array(bin.length);
+  for(var i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);
+  return u;
+}
+function liveKey(){
+  var k=String(CFG.liveKey||"");
+  if(LIVEKEY.str===k && LIVEKEY.key) return LIVEKEY.key;
+  LIVEKEY={str:k, key:crypto.subtle.importKey("raw", b64dec(k), {name:"AES-GCM"}, false, ["encrypt","decrypt"])};
+  return LIVEKEY.key;
+}
+function liveEncrypt(text){
+  var iv=crypto.getRandomValues(new Uint8Array(12));
+  return liveKey().then(function(key){
+    return crypto.subtle.encrypt({name:"AES-GCM", iv:iv}, key, new TextEncoder().encode(text));
+  }).then(function(ct){ return {iv:b64enc(iv), c:b64enc(ct)}; });
+}
+function liveDecrypt(m){
+  return liveKey().then(function(key){
+    return crypto.subtle.decrypt({name:"AES-GCM", iv:b64dec(m.iv)}, key, b64dec(m.c));
+  }).then(function(pt){ return JSON.parse(new TextDecoder().decode(pt)); });
+}
+function newLiveKey(){ return b64enc(crypto.getRandomValues(new Uint8Array(32))); }
+
+/* ---- receiving ---- */
+var liveSeen={};
+function liveHear(m){
+  if(!m || typeof m!=="object" || !m.c || !m.iv) return;
+  if(m.d===MYDEV) return;                                   /* our own echo */
+  if(Math.abs(Date.now()-(Number(m.t)||0))>180000) return;  /* old news — the Sheet has it by now */
+  var tag=m.d+":"+m.n; if(liveSeen[tag]) return; liveSeen[tag]=1;
+  if(!CFG.liveKey || !(window.crypto && crypto.subtle)) return;
+  liveDecrypt(m).then(function(p){ liveApply(p, m.by); }).catch(function(){ /* a key we do not have — wait for the Sheet */ });
+}
+function livePendingIds(){
+  var ids={};
+  Q.forEach(function(o){
+    [o.id, o.e&&o.e.id, o.s&&o.s.id, o.c&&o.c.id, o.a&&o.a.id, o.k&&o.k.id].forEach(function(x){ if(x) ids[x]=1; });
+  });
+  return ids;
+}
+function liveApply(p, by){
+  if(!p || typeof p!=="object") return;
+  var mine=livePendingIds(), flash=[], any=false;
+  function okRow(t,r){
+    if(!r || r.id==null || mine[r.id]) return false;        /* we are mid-change on that row ourselves */
+    if(t==="entries"||t==="side") return canSeeAccount(r.accountId);
+    if(t==="cars"||t==="costs") return can("cars");
+    if(t==="accounts") return canSeeAccount(r.id);
+    return false;
+  }
+  LIVE_TABLES.forEach(function(t){
+    if(!DB[t]) DB[t]={};
+    (p[t]||[]).forEach(function(r){
+      if(!okRow(t,r)) return;
+      if(t==="entries"){ var prev=DB.entries[r.id]; if(!prev || liveSnap(prev)!==liveSnap(r)) flash.push(r.id); }
+      DB[t][r.id]=r; any=true;
+    });
+    (p[LIVE_DEL[t]]||[]).forEach(function(id){
+      if(mine[id] || !(id in DB[t])) return;
+      delete DB[t][id]; if(t==="entries") delete PICK[id]; any=true;
+    });
+  });
+  if(!any) return;
+  liveNoteFrom(p);
+  net.liveAt=Date.now(); net.liveBy=by||"";
+  rebuild(); cacheAll();
+  if(isEditing()){ RENDER_PENDING=true; return; }
+  renderAll();
+  flash.forEach(function(id){
+    var tr=$('#tbody tr[data-id="'+id+'"]');
+    if(tr){ tr.classList.add("flash"); setTimeout(function(){ tr.classList.remove("flash"); },1800); }
+  });
+}
+
+/* The first time BASIL opens the app with a Firebase address set, it makes the
+   key and saves it into the settings, so everyone else is sent it on their
+   next look. Nobody has to do anything.                                       */
+var liveKeyTried=false;
+function liveEnsureKey(){
+  if(liveKeyTried || CFG.liveKey || !sigUrl() || !isAdmin() || DEMO || !AUTH.token) return;
+  if(CFG._stripped || !(CFG.users||[]).length || CFG.users.some(function(u){ return !u.password; })) return;
+  if(!(window.crypto && crypto.getRandomValues)) return;
+  liveKeyTried=true;
+  var cfg=JSON.parse(JSON.stringify(CFG));
+  delete cfg._stripped;
+  cfg.liveKey=newLiveKey();
+  op({t:"config", cfg:cfg, what:"live", note:"switched on instant updates"});
+  applyConfig(cfg);
+}
+
 function signedOut(){
   AUTH.token=""; lsSet("token","");
   $("#app").classList.remove("show"); $("#gate").classList.add("show");
@@ -5951,10 +6165,15 @@ function openAdmin(resume){
       'rows the others keep up, and a quiet afternoon costs Google almost nothing — which matters, '+
       'because a free account only gets so much script time a day.</p>'+
       '<h5 class="vh" style="margin-top:16px">Make it truly instant</h5>'+
-      '<p class="hint">Give the app a free Firebase address below and changes land in well under a second, '+
-      'and it will actually call your Sheet <b>less</b> than it does now — because it stops asking and '+
-      'starts being told. Only a revision number ever goes through it. Every figure, every entry and '+
-      'every vehicle still lives in your Google Sheet and comes from there.</p>'+
+      '<p class="hint">Give the app a free Firebase address below and every change shows on everyone\u2019s screen in '+
+      'well under a second, the way Google Sheets does — the changed rows go out through Firebase the moment '+
+      'they are made, and the Sheet confirms them a few seconds later. It also calls your Sheet <b>less</b>, because '+
+      'it stops asking and starts being told. What passes through Firebase is <b>locked</b> with a key only '+
+      'signed-in people are sent, so anyone who finds the address sees scrambled text. Every figure, every '+
+      'entry and every vehicle still lives in your Google Sheet.</p>'+
+      '<div class="hint" style="margin:-4px 0 10px">Instant rows: <b>'+
+        (!on?"off — no address":(draft.liveKey||CFG.liveKey?"on, locked":"switching on — saves itself the next time an admin opens the app"))+
+        '</b>'+(net.liveAt?' · last one from '+esc(net.liveBy||"someone")+' '+esc(fmtWhen(new Date(net.liveAt).toISOString())):'')+'</div>'+
       '<div class="fields"><div class="field" style="flex:1 1 100%"><label>Signal address</label>'+
         '<input id="ad-sig" style="width:100%;font-family:ui-monospace,monospace" placeholder="https://your-project-default-rtdb.firebaseio.com" value="'+esc(draft.signalUrl||"")+'"></div></div>'+
       '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
@@ -5974,9 +6193,9 @@ function openAdmin(resume){
       '<p class="hint" style="color:var(--warn)">Test mode leaves that database open to anyone who has the '+
       'address, and after 30 days Firebase locks it and the channel simply stops (the app keeps working, '+
       'just back to checking every few seconds). To keep it open, go to the <b>Rules</b> tab of the '+
-      'database and set both <b>.read</b> and <b>.write</b> to <b>true</b>. Worth understanding: the only '+
-      'thing that address ever holds is a number saying "something changed" and who changed it. Nobody '+
-      'can read a single entry through it.</p>';
+      'database and set both <b>.read</b> and <b>.write</b> to <b>true</b>. Worth understanding: that address '+
+      'holds a number saying "something changed", who changed it, and the last change each person made — '+
+      '<b>locked</b>. Without the key, which only comes with a sign-in, nobody can read an entry through it.</p>';
   }
 
   /* ------------------------------------------------------ data & safety */
@@ -6141,6 +6360,7 @@ function openAdmin(resume){
        !confirm("You are taking away your own administrator rights.\n\nYou will not be able to open this window again. Continue?")) return;
 
     delete draft._stripped;        /* never store the "no passwords here" marker */
+    if(!draft.liveKey && CFG.liveKey) draft.liveKey=CFG.liveKey;   /* a window opened before the key existed must not drop it */
     op({t:"config", cfg:draft, what:"settings", note:"changed the settings"});
     applyConfig(draft);
     closeModal(); rebuild(); renderAll();
@@ -6411,7 +6631,7 @@ function doLogin(){
       AUTH.token=res.token; AUTH.user=res.user; AUTH.people=res.people||[];
       lsSet("token",res.token); lsSet("user",res.user); lsSet("people",AUTH.people);
       $("#gate-pw").value="";
-      DB.accounts={}; DB.entries={}; DB.side={}; DB.cars={}; DB.costs={};
+      DB.accounts={}; DB.entries={}; DB.side={}; DB.cars={}; DB.costs={}; liveBaseAll();
       ingest(res); showApp(); flush();
       toast("Welcome, "+res.user);
     } else {
@@ -6432,6 +6652,7 @@ function doLogin(){
   if(cached){ DB.rev=cached.rev||0; DB.since=cached.since||""; DB.accounts=cached.accounts||{}; DB.entries=cached.entries||{};
     DB.side=cached.side||{}; DB.cars=cached.cars||{}; DB.costs=cached.costs||{}; DB.audit=cached.audit||[]; }
   Q=lsGet("q",[])||[];
+  liveBaseAll();
   AUTH.token=lsGet("token","")||""; AUTH.user=lsGet("user","")||""; AUTH.people=lsGet("people",[])||[];
   bind(); applyPanelOrder(); applyBrand();
 
