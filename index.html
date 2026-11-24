@@ -1351,6 +1351,8 @@ function applyConfig(c){
   if(!c || typeof c!=="object") return;
   var before=JSON.stringify(CFG);
   var next = Object.assign({}, CFG, c);
+  /* the server's copy decides these — an old value left on this device must not outlive it */
+  if(!c._stripped) delete next._stripped;
   /* A people list is the one thing that must never come back empty or broken —
      losing it is how somebody ends up locked out of their own books.          */
   if(!next.users || !next.users.length || Object.prototype.toString.call(next.users)!=="[object Array]")
@@ -6172,8 +6174,8 @@ function openAdmin(resume){
       'signed-in people are sent, so anyone who finds the address sees scrambled text. Every figure, every '+
       'entry and every vehicle still lives in your Google Sheet.</p>'+
       '<div class="hint" style="margin:-4px 0 10px">Instant rows: <b>'+
-        (!on?"off — no address":(draft.liveKey||CFG.liveKey?"on, locked":"switching on — saves itself the next time an admin opens the app"))+
-        '</b>'+(net.liveAt?' · last one from '+esc(net.liveBy||"someone")+' '+esc(fmtWhen(new Date(net.liveAt).toISOString())):'')+'</div>'+
+        (!on?"off — no address":(draft.liveKey||CFG.liveKey?"on, locked":"not on yet"))+
+        '</b>'+((on && !draft.liveKey && !CFG.liveKey)?' <button class="tbtn primary" id="ad-livekey" style="height:28px;margin-left:8px">Switch on now</button>':'')+(net.liveAt?' · last one from '+esc(net.liveBy||"someone")+' '+esc(fmtWhen(new Date(net.liveAt).toISOString())):'')+'</div>'+
       '<div class="fields"><div class="field" style="flex:1 1 100%"><label>Signal address</label>'+
         '<input id="ad-sig" style="width:100%;font-family:ui-monospace,monospace" placeholder="https://your-project-default-rtdb.firebaseio.com" value="'+esc(draft.signalUrl||"")+'"></div></div>'+
       '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
@@ -6304,6 +6306,11 @@ function openAdmin(resume){
     if($("#ad-theme")) $("#ad-theme").onchange=function(){ draft.defaultTheme=this.value; touch("Default theme "+this.value); };
     if($("#ad-keep")) $("#ad-keep").onchange=function(){ draft.auditKeep=+this.value; touch("Log length changed"); };
 
+    if($("#ad-livekey")) $("#ad-livekey").onclick=function(){
+      draft.liveKey=newLiveKey();
+      this.disabled=true; this.textContent="Ready — press Save changes";
+      touch("Instant rows will switch on when you save");
+    };
     if($("#ad-sig")) $("#ad-sig").oninput=function(){ draft.signalUrl=this.value.trim(); touch("Signal address changed"); };
     if($("#ad-sigtest")) $("#ad-sigtest").onclick=function(){
       var raw=String(draft.signalUrl||"").trim();
@@ -6360,7 +6367,8 @@ function openAdmin(resume){
        !confirm("You are taking away your own administrator rights.\n\nYou will not be able to open this window again. Continue?")) return;
 
     delete draft._stripped;        /* never store the "no passwords here" marker */
-    if(!draft.liveKey && CFG.liveKey) draft.liveKey=CFG.liveKey;   /* a window opened before the key existed must not drop it */
+    if(!draft.liveKey && CFG.liveKey) draft.liveKey=CFG.liveKey;   
+    if(!draft.liveKey && String(draft.signalUrl||"").trim() && window.crypto && crypto.getRandomValues) draft.liveKey=newLiveKey();   /* a window opened before the key existed must not drop it */
     op({t:"config", cfg:draft, what:"settings", note:"changed the settings"});
     applyConfig(draft);
     closeModal(); rebuild(); renderAll();
